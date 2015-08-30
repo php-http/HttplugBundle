@@ -1,0 +1,36 @@
+{
+    "name": "php-http/http-client-bundle",
+    "description": "Symfony bundle to integrate the php-http system into Symfony",
+    "type": "symfony-bundle",
+    "keywords": ["http", "discovery", "adapter", "message", "factory", "bundle"],
+    "homepage": "http://php-http.org",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "David Buchmann",
+            "email": "mail@davidbu.ch"
+        }
+    ],
+    "require": {
+        "php-http/discovery": "^0.1.1",
+        "php-http/adapter": "^0.1.0",
+        "php-http/adapter-implementation": "^0.1.0",
+        "php-http/message-factory": "^0.1.0",
+        "symfony/framework-bundle": "^2.7"
+    },
+    "require-dev": {
+        "php-http/guzzle6-adapter": "^0.1.0",
+        "polishsymfonycommunity/symfony-mocker-container": "~1.0",
+        "matthiasnoback/symfony-dependency-injection-test": "0.*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Http\\ClientBundle\\": ""
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "0.1-dev"
+        }
+    }
+}

@@ -1,0 +1,3 @@
+http_client:
+    classes:
+        client: Nonexisting\Class
