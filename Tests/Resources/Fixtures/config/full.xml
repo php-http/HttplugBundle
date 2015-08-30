@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<container xmlns="http://symfony.com/schema/dic/services">
+
+    <config xmlns="http://example.org/schema/dic/httplug">
+        <main-alias>
+            <client>my_client</client>
+            <message-factory>my_message_factory</message-factory>
+            <uri-factory>my_uri_factory</uri-factory>
+        </main-alias>
+        <classes>
+            <client>Http\Adapter\Guzzle6HttpAdapter</client>
+            <message-factory>Http\Discovery\MessageFactory\GuzzleFactory</message-factory>
+            <uri-factory>Http\Discovery\UriFactory\GuzzleFactory</uri-factory>
+
+        </classes>
+    </config>
+
+</container>

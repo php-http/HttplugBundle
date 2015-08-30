@@ -1,0 +1,5 @@
+framework:
+  secret: php-http
+  test: ~
+
+httplug: ~

@@ -1,0 +1,38 @@
+{
+    "name": "php-http/httplug-bundle",
+    "description": "Symfony bundle to integrate the Httplug generic HTTP client into Symfony",
+    "type": "symfony-bundle",
+    "keywords": ["http", "discovery", "adapter", "message", "factory", "bundle", "httplug", "php-http"],
+    "homepage": "http://php-http.org",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "David Buchmann",
+            "email": "mail@davidbu.ch"
+        }
+    ],
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "require": {
+        "php-http/discovery": "^0.2.0",
+        "php-http/client-implementation": "^1.0",
+        "php-http/message-factory": "^0.2.0",
+        "symfony/framework-bundle": "^2.7|^3.0"
+    },
+    "require-dev": {
+        "symfony/symfony": "^2.7|^3.0",
+        "php-http/guzzle6-adapter": "^0.2",
+        "polishsymfonycommunity/symfony-mocker-container": "~1.0",
+        "matthiasnoback/symfony-dependency-injection-test": "0.*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Http\\HttplugBundle\\": ""
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0-dev"
+        }
+    }
+}

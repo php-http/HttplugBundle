@@ -1,0 +1,3 @@
+httplug:
+    classes:
+        client: Nonexisting\Class
