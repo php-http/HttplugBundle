@@ -7,9 +7,7 @@
 [![Quality Score](https://img.shields.io/scrutinizer/g/php-http/HttplugBundle.svg?style=flat-square)](https://scrutinizer-ci.com/g/php-http/HttplugBundle)
 [![Total Downloads](https://img.shields.io/packagist/dt/php-http/HttplugBundle.svg?style=flat-square)](https://packagist.org/packages/php-http/HttplugBundle)
 
-**Symfony integration for the [php-http Httplug](http://php-http.readthedocs.org/) Http client**
-
-This is early work in progress for now. See the issues for a plan and discussion what should be done.
+**Symfony integration for the [php-http Httplug](http://docs.httplug.io/) HTTP client**
 
 
 ## Install
@@ -39,7 +37,9 @@ public function registerBundles()
 
 The usage documentation is split into two parts. First we explain how to configure the bundle in an application. The second part is for developing reusable Symfony bundles that depend on an HTTP client defined by the Httplug interface.
 
-### Use in applications
+For information how to write applications with the services provided by this bundle, have a look at the [Httplug documentation](http://docs.httplug.io).
+
+### Use in Applications
 
 This bundle provides 3 services: 
 
@@ -63,7 +63,7 @@ httplug:
         uri_factory: ~
 ```
 
-### Use for reusable bundles
+### Use for Reusable Bundles
 
 Rather than code against specific HTTP clients, you want to use the Httplug `Client` interface. To avoid building your own infrastructure to define services for the client, simply `require: php-http/httplug-bundle` in your bundles `composer.json`. You SHOULD provide configuration for each of your services that needs an HTTP client to specify the service to use, defaulting to `httplug.client`. This way, the default case needs no additional configuration for your users.
 
