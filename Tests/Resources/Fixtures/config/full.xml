@@ -6,12 +6,13 @@
             <client>my_client</client>
             <message-factory>my_message_factory</message-factory>
             <uri-factory>my_uri_factory</uri-factory>
+            <stream-factory>my_stream_factory</stream-factory>
         </main-alias>
         <classes>
-            <client>Http\Adapter\Guzzle6HttpAdapter</client>
-            <message-factory>Http\Discovery\MessageFactory\GuzzleFactory</message-factory>
-            <uri-factory>Http\Discovery\UriFactory\GuzzleFactory</uri-factory>
-
+            <client>Http\Adapter\Guzzle6\Client</client>
+            <message-factory>Http\Message\MessageFactory\GuzzleMessageFactory</message-factory>
+            <uri-factory>Http\Message\UriFactory\GuzzleUriFactory</uri-factory>
+            <stream-factory>Http\Message\StreamFactory\GuzzleStreamFactory</stream-factory>
         </classes>
     </config>
 

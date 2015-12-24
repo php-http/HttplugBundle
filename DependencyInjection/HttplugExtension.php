@@ -2,9 +2,11 @@
 
 namespace Http\HttplugBundle\DependencyInjection;
 
+use Http\HttplugBundle\ClientFactory\DummyClient;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
+use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 /**
@@ -22,6 +24,7 @@ class HttplugExtension extends Extension
 
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
 
+        $loader->load('services.xml');
         $loader->load('discovery.xml');
         foreach ($config['classes'] as $service => $class) {
             if (!empty($class)) {
@@ -32,6 +35,22 @@ class HttplugExtension extends Extension
 
         foreach ($config['main_alias'] as $type => $id) {
             $container->setAlias(sprintf('httplug.%s', $type), $id);
+        }
+
+        // Configure client services
+        $first = isset($config['clients']['default']) ? 'default' : null;
+        foreach ($config['clients'] as $name => $arguments) {
+            if ($first === null) {
+                $first = $name;
+            }
+
+            $def = $container->register('httplug.client.'.$name, DummyClient::class);
+            $def->setFactory([new Reference($arguments['factory']), 'createClient'])
+                ->addArgument($arguments['config']);
+        }
+
+        if ($first !== null) {
+            $container->setAlias('httplug.client.default', 'httplug.client.'.$first);
         }
     }
 }
