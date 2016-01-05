@@ -3,8 +3,8 @@
 namespace Http\HttplugBundle\DependencyInjection;
 
 use Http\HttplugBundle\ClientFactory\DummyClient;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
@@ -27,6 +27,18 @@ class HttplugExtension extends Extension
         $loader->load('services.xml');
         $loader->load('plugins.xml');
         $loader->load('discovery.xml');
+
+        $enabled = is_bool($config['toolbar']['enabled']) ? $config['toolbar']['enabled'] : $container->hasParameter('kernel.debug') && $container->getParameter('kernel.debug');
+        if ($enabled) {
+            $loader->load('data-collector.xml');
+            $config['_inject_collector_plugin'] = true;
+
+            if (!empty($config['toolbar']['formatter'])) {
+                $container->getDefinition('httplug.collector.message_journal')
+                    ->replaceArgument(0, new Reference($config['toolbar']['formatter']));
+            }
+        }
+
         foreach ($config['classes'] as $service => $class) {
             if (!empty($class)) {
                 $container->removeDefinition(sprintf('httplug.%s.default', $service));
@@ -52,6 +64,10 @@ class HttplugExtension extends Extension
         foreach ($config['clients'] as $name => $arguments) {
             if ($first === null) {
                 $first = $name;
+            }
+
+            if (isset($config['_inject_collector_plugin'])) {
+                array_unshift($arguments['plugins'], 'httplug.collector.history_plugin');
             }
 
             $def = $container->register('httplug.client.'.$name, DummyClient::class);

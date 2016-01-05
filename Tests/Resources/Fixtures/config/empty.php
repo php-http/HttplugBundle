@@ -1,3 +1,3 @@
 <?php
 
-$container->loadFromExtension('httplug', array());
+$container->loadFromExtension('httplug', []);
