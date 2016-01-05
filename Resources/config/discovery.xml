@@ -16,6 +16,10 @@
              class="Http\Message\UriFactory">
             <factory class="Http\Discovery\UriFactoryDiscovery" method="find"/>
         </service>
+        <service id="httplug.stream_factory.default"
+             class="Http\Message\StreamFactory">
+            <factory class="Http\Discovery\StreamFactoryDiscovery" method="find"/>
+        </service>
 
     </services>
 </container>

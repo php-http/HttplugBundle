@@ -41,11 +41,14 @@ For information how to write applications with the services provided by this bun
 
 ### Use in Applications
 
+#### Custom services
+
 This bundle provides 3 services: 
 
 * `httplug.client` a service that provides the `Http\Client\HttpClient`
 * `httplug.message_factory` a service that provides the `Http\Message\MessageFactory`
 * `httplug.uri_factory` a service that provides the `Http\Message\UriFactory`
+* `httplug.stream_factory` a service that provides the `Http\Message\StreamFactory`
 
 These services are always an alias to another service. You can specify your own service or leave the default, which is the same name with `.default` appended. The default services in turn use the service discovery mechanism to provide the best available implementation. You can specify a class for each of the default services to use instead of discovery, as long as those classes can be instantiated without arguments.
 
@@ -53,14 +56,47 @@ If you need a more custom setup, define the services in your application configu
 
 ```yaml
 httplug:
-    main_alias:
-        client: httplug.client.default
-        message_factory: httplug.message_factory.default
-        uri_factory: httplug.uri_factory.default
-    classes:
-        client: ~ # uses discovery if not specified
-        message_factory: ~
-        uri_factory: ~
+  main_alias:
+    client: httplug.client.default
+    message_factory: httplug.message_factory.default
+    uri_factory: httplug.uri_factory.default
+    stream_factory: httplug.stream_factory.default
+  classes:
+    # uses discovery if not specified
+    client: ~
+    message_factory: ~ 
+    uri_factory: ~
+    stream_factory: ~
+```
+
+#### Configure your client
+
+You can configure your clients with some good default options. The clients are later registered as services. 
+
+```yaml
+httplug:
+  clients: 
+    my_guzzle5: 
+      factory: 'httplug.factory.guzzle5'
+      config:
+        # These options are given to Guzzle without validation. 
+        base_url: 'http://google.se/'
+        defaults:
+          verify_ssl: false
+          timeout: 4
+          headers:
+            Content-Type: 'application/json'
+    acme: 
+      factory: 'httplug.factory.guzzle6'
+      config:
+        base_url: 'http://google.se/'
+       
+```
+
+```php
+
+$httpClient = $this->container->get('httplug.client.my_guzzle5');
+$httpClient = $this->container->get('httplug.client.acme');
 ```
 
 ### Use for Reusable Bundles
