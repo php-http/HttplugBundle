@@ -90,6 +90,10 @@ class Configuration implements ConfigurationInterface
                         ->cannotBeEmpty()
                         ->info('The service id of a factory to use when creating the adapter.')
                     ->end()
+                    ->arrayNode('plugins')
+                        ->info('A list of service ids of plugins. The order is important.')
+                        ->prototype('scalar')->end()
+                    ->end()
                     ->variableNode('config')->end()
                 ->end()
             ->end();
