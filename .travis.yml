@@ -1,38 +1,48 @@
 language: php
 
+sudo: false
+
+cache:
+    directories:
+        - $HOME/.composer/cache
+
 php:
-  - 5.5
-  - 5.6
-  - 7.0
-  - hhvm
+    - 5.5
+    - 5.6
+    - 7.0
+    - hhvm
 
 env:
-  global:
-    - TEST_COMMAND="composer test"
-  matrix:
-    - SYMFONY_VERSION=3.0.*
-    - SYMFONY_VERSION=2.8.*
-    - SYMFONY_VERSION=2.7.*
+    global:
+        - TEST_COMMAND="composer test"
+    matrix:
+        - SYMFONY_VERSION=3.0.*
+        - SYMFONY_VERSION=2.8.*
+        - SYMFONY_VERSION=2.7.*
+
+branches:
+    except:
+        - /^analysis-.*$/
 
 matrix:
-  fast_finish: true
-  allow_failures:
-    - php: hhvm
-    - env: SYMFONY_VERSION=3.0.*
-    - php: 5.5
-      env: COMPOSER_FLAGS="--prefer-stable --prefer-lowest" && COVERAGE=true && TEST_COMMAND="composer test-ci" && SYMFONY_VERSION=2.7.*
+    fast_finish: true
+    allow_failures:
+        - php: hhvm
+        - env: SYMFONY_VERSION=3.0.*
+        - php: 5.5
+          env: COMPOSER_FLAGS="--prefer-stable --prefer-lowest" COVERAGE=true TEST_COMMAND="composer test-ci" SYMFONY_VERSION=2.7.*
 
 before_install:
-  - travis_retry composer self-update
-  - wget https://github.com/puli/cli/releases/download/1.0.0-beta9/puli.phar && chmod +x puli.phar
+    - travis_retry composer self-update
+    - wget https://github.com/puli/cli/releases/download/1.0.0-beta9/puli.phar && chmod +x puli.phar
 
 install:
-  - composer require symfony/symfony:${SYMFONY_VERSION} --no-update
-  - travis_retry composer update ${COMPOSER_FLAGS} --prefer-source --no-interaction
+    - composer require symfony/symfony:${SYMFONY_VERSION} --no-update
+    - travis_retry composer update ${COMPOSER_FLAGS} --prefer-source --no-interaction
 
 script:
-  - $TEST_COMMAND
+    - $TEST_COMMAND
 
 after_success:
-  - if [[ "$COVERAGE" = true ]]; then wget https://scrutinizer-ci.com/ocular.phar; fi
-  - if [[ "$COVERAGE" = true ]]; then php ocular.phar code-coverage:upload --format=php-clover build/coverage.xml; fi
+    - if [[ "$COVERAGE" = true ]]; then wget https://scrutinizer-ci.com/ocular.phar; fi
+    - if [[ "$COVERAGE" = true ]]; then php ocular.phar code-coverage:upload --format=php-clover build/coverage.xml; fi

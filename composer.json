@@ -3,7 +3,7 @@
     "description": "Symfony bundle to integrate the Httplug generic HTTP client into Symfony",
     "type": "symfony-bundle",
     "keywords": ["http", "discovery", "adapter", "message", "factory", "bundle", "httplug", "php-http"],
-    "homepage": "http://php-http.org",
+    "homepage": "http://httplug.io",
     "license": "MIT",
     "authors": [
         {
@@ -11,8 +11,6 @@
             "email": "mail@davidbu.ch"
         }
     ],
-    "minimum-stability": "dev",
-    "prefer-stable": true,
     "require": {
         "php": ">=5.5",
         "php-http/discovery": "^0.6.3",
@@ -43,5 +41,7 @@
         "branch-alias": {
             "dev-master": "1.0-dev"
         }
-    }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
 }

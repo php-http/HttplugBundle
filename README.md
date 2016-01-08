@@ -19,7 +19,7 @@ $ composer require php-http/httplug-bundle
 ```
 
 Enable the bundle in your kernel:
- 
+
 ``` php
 <?php
 // app/AppKernel.php
@@ -37,12 +37,12 @@ public function registerBundles()
 
 The usage documentation is split into two parts. First we explain how to configure the bundle in an application. The second part is for developing reusable Symfony bundles that depend on an HTTP client defined by the Httplug interface.
 
-For information how to write applications with the services provided by this bundle, have a look at the [Httplug documentation](http://docs.httplug.io).
+For information how to write applications with the services provided by this bundle, have a look at the [Httplug documentation](http://docs.php-http.org).
+
 
 ### Use in Applications
 
 #### Custom services
-
 
 | Service id | Description |
 | ---------- | ----------- |
@@ -51,7 +51,7 @@ For information how to write applications with the services provided by this bun
 | httplug.stream_factory | Service* that provides the `Http\Message\StreamFactory`
 | httplug.client.[name] | This is your Httpclient that you have configured. With the configuration below the name would be `acme_client`.
 | httplug.client | This is the first client configured or a client named `default`.
-| httplug.plugin.content_length <br> httplug.plugin.decoder<br> httplug.plugin.error<br> httplug.plugin.logger<br> httplug.plugin.redirect<br> httplug.plugin.retry | These are build in plugins that lives in the `php-http/plugins` package. These servcies are not public and may only be used when configure HttpClients or services. 
+| httplug.plugin.content_length <br> httplug.plugin.decoder<br> httplug.plugin.error<br> httplug.plugin.logger<br> httplug.plugin.redirect<br> httplug.plugin.retry | These are build in plugins that lives in the `php-http/plugins` package. These servcies are not public and may only be used when configure HttpClients or services.
 
 \* *These services are always an alias to another service. You can specify your own service or leave the default, which is the same name with `.default` appended. The default services in turn use the service discovery mechanism to provide the best available implementation. You can specify a class for each of the default services to use instead of discovery, as long as those classes can be instantiated without arguments.*
 
@@ -59,10 +59,10 @@ If you need a more custom setup, define the services in your application configu
 
 ```yaml
 httplug:
-  clients: 
+  clients:
       acme_client: # This is the name of the client
         factory: 'httplug.factory.guzzle6'
-        
+
   main_alias:
     client: httplug.client.default
     message_factory: httplug.message_factory.default
@@ -71,33 +71,34 @@ httplug:
   classes:
     # uses discovery if not specified
     client: ~
-    message_factory: ~ 
+    message_factory: ~
     uri_factory: ~
     stream_factory: ~
 ```
 
+
 #### Configure your client
 
-You can configure your clients with some good default options. The clients are later registered as services. 
+You can configure your clients with some good default options. The clients are later registered as services.
 
 ```yaml
 httplug:
-  clients: 
-    my_guzzle5: 
+  clients:
+    my_guzzle5:
       factory: 'httplug.factory.guzzle5'
       config:
-        # These options are given to Guzzle without validation. 
+        # These options are given to Guzzle without validation.
         defaults:
           base_uri: 'http://google.se/'
           verify_ssl: false
           timeout: 4
           headers:
             Content-Type: 'application/json'
-    acme: 
+    acme:
       factory: 'httplug.factory.guzzle6'
       config:
         base_uri: 'http://google.se/'
-       
+
 ```
 
 ```php
@@ -106,21 +107,22 @@ $httpClient = $this->container->get('httplug.client.my_guzzle5');
 $httpClient = $this->container->get('httplug.client.acme');
 ```
 
+
 #### Plugins
 
-You can configure the clients with plugins. 
+You can configure the clients with plugins.
 
 ```yaml
 // services.yml
 acme_plugin:
-  class: Acme\Plugin\MyCustonPlugin 
+  class: Acme\Plugin\MyCustonPlugin
   arguments: ["%api_key%"]
 ```
 ```yaml
 // config.yml
 httpug:
-  clients: 
-    acme: 
+  clients:
+    acme:
       factory: 'httplug.factory.guzzle6'
       plugins: ['acme_plugin' , 'httplug.plugin.logger']
       config:
@@ -134,6 +136,7 @@ Rather than code against specific HTTP clients, you want to use the Httplug `Cli
 
 The only steps they need is `require` one of the adapter implementations in their projects `composer.json` and instantiating the HttplugBundle in their kernel.
 
+
 ## Testing
 
 ``` bash
@@ -143,7 +146,7 @@ $ composer test
 
 ## Contributing
 
-Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
+Please see our [contributing guide](http://docs.php-http.org/en/latest/development/contributing.html).
 
 
 ## Security
