@@ -43,19 +43,26 @@ For information how to write applications with the services provided by this bun
 
 #### Custom services
 
-This bundle provides 3 services: 
 
-* `httplug.client` a service that provides the `Http\Client\HttpClient`
-* `httplug.message_factory` a service that provides the `Http\Message\MessageFactory`
-* `httplug.uri_factory` a service that provides the `Http\Message\UriFactory`
-* `httplug.stream_factory` a service that provides the `Http\Message\StreamFactory`
+| Service id | Description |
+| ---------- | ----------- |
+| httplug.message_factory | Service* that provides the `Http\Message\MessageFactory`
+| httplug.uri_factory | Service* that provides the `Http\Message\UriFactory`
+| httplug.stream_factory | Service* that provides the `Http\Message\StreamFactory`
+| httplug.client.[name] | This is your Httpclient that you have configured. With the configuration below the name would be `acme_client`.
+| httplug.client | This is the first client configured or a client named `default`.
+| httplug.plugin.content_length <br> httplug.plugin.decoder<br> httplug.plugin.error<br> httplug.plugin.logger<br> httplug.plugin.redirect<br> httplug.plugin.retry | These are build in plugins that lives in the `php-http/plugins` package. These servcies are not public and may only be used when configure HttpClients or services. 
 
-These services are always an alias to another service. You can specify your own service or leave the default, which is the same name with `.default` appended. The default services in turn use the service discovery mechanism to provide the best available implementation. You can specify a class for each of the default services to use instead of discovery, as long as those classes can be instantiated without arguments.
+\* *These services are always an alias to another service. You can specify your own service or leave the default, which is the same name with `.default` appended. The default services in turn use the service discovery mechanism to provide the best available implementation. You can specify a class for each of the default services to use instead of discovery, as long as those classes can be instantiated without arguments.*
 
 If you need a more custom setup, define the services in your application configuration and specify your service in the `main_alias` section. For example, to add authentication headers, you could define a service that decorates the service `httplug.client.default` with a plugin that injects the authentication headers into the request and configure `httplug.main_alias.client` to the name of your service.
 
 ```yaml
 httplug:
+  clients: 
+      acme_client: # This is the name of the client
+        factory: 'httplug.factory.guzzle6'
+        
   main_alias:
     client: httplug.client.default
     message_factory: httplug.message_factory.default
@@ -80,8 +87,8 @@ httplug:
       factory: 'httplug.factory.guzzle5'
       config:
         # These options are given to Guzzle without validation. 
-        base_url: 'http://google.se/'
         defaults:
+          base_uri: 'http://google.se/'
           verify_ssl: false
           timeout: 4
           headers:
@@ -89,7 +96,7 @@ httplug:
     acme: 
       factory: 'httplug.factory.guzzle6'
       config:
-        base_url: 'http://google.se/'
+        base_uri: 'http://google.se/'
        
 ```
 
@@ -98,6 +105,28 @@ httplug:
 $httpClient = $this->container->get('httplug.client.my_guzzle5');
 $httpClient = $this->container->get('httplug.client.acme');
 ```
+
+#### Plugins
+
+You can configure the clients with plugins. 
+
+```yaml
+// services.yml
+acme_plugin:
+  class: Acme\Plugin\MyCustonPlugin 
+  arguments: ["%api_key%"]
+```
+```yaml
+// config.yml
+httpug:
+  clients: 
+    acme: 
+      factory: 'httplug.factory.guzzle6'
+      plugins: ['acme_plugin' , 'httplug.plugin.logger']
+      config:
+        base_uri: 'http://google.se/'
+```
+
 
 ### Use for Reusable Bundles
 

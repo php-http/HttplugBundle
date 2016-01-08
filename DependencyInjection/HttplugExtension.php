@@ -25,6 +25,7 @@ class HttplugExtension extends Extension
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
 
         $loader->load('services.xml');
+        $loader->load('plugins.xml');
         $loader->load('discovery.xml');
         foreach ($config['classes'] as $service => $class) {
             if (!empty($class)) {
@@ -36,8 +37,19 @@ class HttplugExtension extends Extension
         foreach ($config['main_alias'] as $type => $id) {
             $container->setAlias(sprintf('httplug.%s', $type), $id);
         }
+        $this->configureClients($container, $config);
 
-        // Configure client services
+
+    }
+
+    /**
+     * Configure client services
+     *
+     * @param ContainerBuilder $container
+     * @param array $config
+     */
+    protected function configureClients(ContainerBuilder $container, array $config)
+    {
         $first = isset($config['clients']['default']) ? 'default' : null;
         foreach ($config['clients'] as $name => $arguments) {
             if ($first === null) {
@@ -45,10 +57,22 @@ class HttplugExtension extends Extension
             }
 
             $def = $container->register('httplug.client.'.$name, DummyClient::class);
-            $def->setFactory([new Reference($arguments['factory']), 'createClient'])
-                ->addArgument($arguments['config']);
+
+            if (empty($arguments['plugins'])) {
+                $def->setFactory([new Reference($arguments['factory']), 'createClient'])
+                    ->addArgument($arguments['config']);
+            } else {
+                $def->setFactory('Http\HttplugBundle\ClientFactory\PluginClientFactory::createPluginClient')
+                    ->addArgument(array_map(function($id) {
+                        return new Reference($id);
+                    }, $arguments['plugins']))
+                    ->addArgument(new Reference($arguments['factory']))
+                    ->addArgument($arguments['config']);
+            }
+
         }
 
+        // Alias the first client to httplug.client.default
         if ($first !== null) {
             $container->setAlias('httplug.client.default', 'httplug.client.'.$first);
         }
