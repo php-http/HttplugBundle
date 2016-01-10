@@ -38,15 +38,13 @@ class HttplugExtension extends Extension
             $container->setAlias(sprintf('httplug.%s', $type), $id);
         }
         $this->configureClients($container, $config);
-
-
     }
 
     /**
-     * Configure client services
+     * Configure client services.
      *
      * @param ContainerBuilder $container
-     * @param array $config
+     * @param array            $config
      */
     protected function configureClients(ContainerBuilder $container, array $config)
     {
@@ -63,13 +61,12 @@ class HttplugExtension extends Extension
                     ->addArgument($arguments['config']);
             } else {
                 $def->setFactory('Http\HttplugBundle\ClientFactory\PluginClientFactory::createPluginClient')
-                    ->addArgument(array_map(function($id) {
+                    ->addArgument(array_map(function ($id) {
                         return new Reference($id);
                     }, $arguments['plugins']))
                     ->addArgument(new Reference($arguments['factory']))
                     ->addArgument($arguments['config']);
             }
-
         }
 
         // Alias the first client to httplug.client.default

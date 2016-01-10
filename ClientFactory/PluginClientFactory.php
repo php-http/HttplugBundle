@@ -12,13 +12,13 @@ use Http\Client\Plugin\PluginClient;
 class PluginClientFactory
 {
     /**
-     * @param array $plugins
+     * @param array                  $plugins
      * @param ClientFactoryInterface $factory
-     * @param array $config
+     * @param array                  $config
      *
      * @return PluginClient
      */
-    static public function createPluginClient(array $plugins, ClientFactoryInterface $factory, array $config)
+    public static function createPluginClient(array $plugins, ClientFactoryInterface $factory, array $config)
     {
         return new PluginClient($factory->createClient($config), $plugins);
     }

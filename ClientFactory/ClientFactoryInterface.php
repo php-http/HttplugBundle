@@ -8,11 +8,11 @@ namespace Http\HttplugBundle\ClientFactory;
 interface ClientFactoryInterface
 {
     /**
-     * Input an array of configuration to be able to create a HttpClient
+     * Input an array of configuration to be able to create a HttpClient.
      *
      * @param array $config
      *
      * @return \Http\Client\HttpClient
      */
-    public function createClient(array $config = array());
+    public function createClient(array $config = []);
 }

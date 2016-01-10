@@ -2,11 +2,7 @@ preset: symfony
 
 finder:
     exclude:
-        - "spec"
-        - "Tests"
         - "Resources"
-    path:
-        - "./"
 
 enabled:
     - short_array_syntax

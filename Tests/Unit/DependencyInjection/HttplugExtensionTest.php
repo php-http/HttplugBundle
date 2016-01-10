@@ -12,9 +12,9 @@ class HttplugExtensionTest extends AbstractExtensionTestCase
 {
     protected function getContainerExtensions()
     {
-        return array(
+        return [
             new HttplugExtension(),
-        );
+        ];
     }
 
     public function testConfigLoadDefault()
@@ -33,11 +33,11 @@ class HttplugExtensionTest extends AbstractExtensionTestCase
 
     public function testConfigLoadClass()
     {
-        $this->load(array(
-            'classes' => array(
-                'client' => 'Http\Adapter\Guzzle6\Client'
-            ),
-        ));
+        $this->load([
+            'classes' => [
+                'client' => 'Http\Adapter\Guzzle6\Client',
+            ],
+        ]);
 
         foreach (['client', 'message_factory', 'uri_factory', 'stream_factory'] as $type) {
             $this->assertContainerBuilderHasAlias("httplug.$type", "httplug.$type.default");
@@ -51,14 +51,14 @@ class HttplugExtensionTest extends AbstractExtensionTestCase
 
     public function testConfigLoadService()
     {
-        $this->load(array(
-            'main_alias' => array(
+        $this->load([
+            'main_alias' => [
                 'client' => 'my_client_service',
                 'message_factory' => 'my_message_factory_service',
                 'uri_factory' => 'my_uri_factory_service',
                 'stream_factory' => 'my_stream_factory_service',
-            ),
-        ));
+            ],
+        ]);
 
         foreach (['client', 'message_factory', 'uri_factory', 'stream_factory'] as $type) {
             $this->assertContainerBuilderHasAlias("httplug.$type", "my_{$type}_service");
