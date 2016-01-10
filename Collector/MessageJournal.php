@@ -37,7 +37,7 @@ class MessageJournal extends DataCollector implements Journal
     public function addSuccess(RequestInterface $request, ResponseInterface $response)
     {
         $this->data['success'][] = [
-            'request'  => $this->formatter->formatRequest($request),
+            'request' => $this->formatter->formatRequest($request),
             'response' => $this->formatter->formatResponse($response),
         ];
     }
@@ -56,7 +56,7 @@ class MessageJournal extends DataCollector implements Journal
         }
 
         $this->data['failure'][] = [
-            'request'  => $this->formatter->formatRequest($request),
+            'request' => $this->formatter->formatRequest($request),
             'response' => $formattedResponse,
         ];
     }

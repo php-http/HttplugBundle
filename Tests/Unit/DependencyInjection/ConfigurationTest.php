@@ -38,7 +38,7 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
             ],
             'clients' => [],
             'toolbar' => [
-                'enabled'   => 'auto',
+                'enabled' => 'auto',
                 'formatter' => null,
             ],
         ];
@@ -73,7 +73,7 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
             ],
             'clients' => [],
             'toolbar' => [
-                'enabled'   => 'auto',
+                'enabled' => 'auto',
                 'formatter' => null,
             ],
         ];
