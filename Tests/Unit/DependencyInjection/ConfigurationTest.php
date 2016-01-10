@@ -37,6 +37,10 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
                 'stream_factory' => null,
             ],
             'clients' => [],
+            'toolbar' => [
+                'enabled' => 'auto',
+                'formatter' => null,
+            ],
         ];
 
         $formats = array_map(function ($path) {
@@ -68,6 +72,10 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
                 'stream_factory' => 'Http\Message\StreamFactory\GuzzleStreamFactory',
             ],
             'clients' => [],
+            'toolbar' => [
+                'enabled' => 'auto',
+                'formatter' => null,
+            ],
         ];
 
         $formats = array_map(function ($path) {

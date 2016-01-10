@@ -5,8 +5,7 @@
 
     <services>
         <service id="httplug.plugin.content_length" class="Http\Client\Plugin\ContentLengthPlugin" public="false" />
-        <service id="httplug.plugin.decoder" class="Http\Client\Plugin\DecoderPlugin" public="false">
-        </service>
+        <service id="httplug.plugin.decoder" class="Http\Client\Plugin\DecoderPlugin" public="false" />
         <service id="httplug.plugin.error" class="Http\Client\Plugin\ErrorPlugin" public="false" />
         <service id="httplug.plugin.logger" class="Http\Client\Plugin\LoggerPlugin" public="false">
             <argument type="service" id="logger"/>

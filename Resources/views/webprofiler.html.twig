@@ -1,0 +1,75 @@
+{% extends '@WebProfiler/Profiler/layout.html.twig' %}
+
+{% import _self as macro %}
+
+{% block toolbar %}
+    {% if collector.totalRequests > 0 %}
+        {% set icon %}
+            {{ include('@WebProfiler/Icon/ajax.svg') }}
+            <span class="sf-toolbar-status">{{ collector.totalRequests }}</span>
+        {% endset %}
+
+        {% set text %}
+            <div class="sf-toolbar-info-piece">
+                <b>Successful requests</b>
+                <span>{{ collector.sucessfulRequests|length }}</span>
+            </div>
+            <div class="sf-toolbar-info-piece">
+                <b>Faild requests</b>
+                <span>{{ collector.failedRequests|length }}</span>
+            </div>
+
+        {% endset %}
+        {% include 'WebProfilerBundle:Profiler:toolbar_item.html.twig' with { 'link': profiler_url } %}
+    {% endif %}
+{% endblock %}
+
+{% block head %}
+    {# Optional. Here you can link to or define your own CSS and JS contents. #}
+    {{ parent() }}
+{% endblock %}
+
+{% block menu %}
+    {# This left-hand menu appears when using the full-screen profiler. #}
+    <span class="label {{ collector.totalRequests == 0 ? 'disabled' }}">
+        <span class="icon">{{ include('@WebProfiler/Icon/ajax.svg') }}</span>
+        <strong>Httplug</strong>
+    </span>
+{% endblock %}
+
+{% block panel %}
+    <h2>HTTPlug</h2>
+    {% if (collector.failedRequests|length > 0) %}
+        <h3>Failed requests</h3>
+        {{ macro.printMessages(collector.failedRequests) }}
+    {% endif %}
+
+    {% if (collector.sucessfulRequests|length > 0) %}
+        <h3>Successful requests</h3>
+        {{ macro.printMessages(collector.sucessfulRequests) }}
+    {% endif %}
+
+    {% if collector.totalRequests == 0 %}
+
+        <div class="empty">
+            <p>No request were sent.</p>
+        </div>
+    {% endif %}
+
+{% endblock %}
+
+{% macro printMessages(messages) %}
+    <table>
+        <tr>
+            <th>Request</th>
+            <th>Response</th>
+        </tr>
+
+        {% for message in messages %}
+            <tr>
+                <td>{{ message['request'] }}</td>
+                <td>{{ message['response'] }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+{% endmacro %}

@@ -34,8 +34,7 @@ class Configuration implements ConfigurationInterface
                     return !empty($v['classes']['client'])
                         || !empty($v['classes']['message_factory'])
                         || !empty($v['classes']['uri_factory'])
-                        || !empty($v['classes']['stream_factory'])
-                    ;
+                        || !empty($v['classes']['stream_factory']);
                 })
                 ->then(function ($v) {
                     foreach ($v['classes'] as $key => $class) {
@@ -72,8 +71,19 @@ class Configuration implements ConfigurationInterface
                         ->scalarNode('stream_factory')->defaultNull()->end()
                     ->end()
                 ->end()
-            ->end()
-        ;
+                ->arrayNode('toolbar')
+                    ->addDefaultsIfNotSet()
+                    ->info('Extend the debug profiler with inforation about requests.')
+                    ->children()
+                        ->enumNode('enabled')
+                            ->info('If "auto" (default), the toolbar is activated when kernel.debug is true. You can force the toolbar on and off by changing this option.')
+                            ->values([true, false, 'auto'])
+                            ->defaultValue('auto')
+                        ->end()
+                        ->scalarNode('formatter')->defaultNull()->end()
+                    ->end()
+                ->end()
+            ->end();
 
         return $treeBuilder;
     }
