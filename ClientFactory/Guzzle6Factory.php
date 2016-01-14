@@ -10,6 +10,9 @@ use Http\Adapter\Guzzle6\Client as Adapter;
  */
 class Guzzle6Factory implements ClientFactoryInterface
 {
+    /**
+     * {@inheritdoc}
+     */
     public function createClient(array $config = [])
     {
         if (!class_exists('Http\Adapter\Guzzle6\Client')) {
