@@ -51,7 +51,7 @@ For information how to write applications with the services provided by this bun
 | httplug.stream_factory | Service* that provides the `Http\Message\StreamFactory`
 | httplug.client.[name] | This is your Httpclient that you have configured. With the configuration below the name would be `acme_client`.
 | httplug.client | This is the first client configured or a client named `default`.
-| httplug.plugin.content_length <br> httplug.plugin.decoder<br> httplug.plugin.error<br> httplug.plugin.logger<br> httplug.plugin.redirect<br> httplug.plugin.retry | These are built in plugins that live in the `php-http/plugins` package. These servcies are not public and may only be used when configure HttpClients or services. 
+| httplug.plugin.content_length <br> httplug.plugin.decoder<br> httplug.plugin.error<br> httplug.plugin.logger<br> httplug.plugin.redirect<br> httplug.plugin.retry | These are built in plugins that live in the `php-http/plugins` package. These servcies are not public and may only be used when configure HttpClients or services.
 
 \* *These services are always an alias to another service. You can specify your own service or leave the default, which is the same name with `.default` appended. The default services in turn use the service discovery mechanism to provide the best available implementation. You can specify a class for each of the default services to use instead of discovery, as long as those classes can be instantiated without arguments.*
 
@@ -60,21 +60,21 @@ If you need a more custom setup, define the services in your application configu
 
 ```yaml
 httplug:
-  clients:
-      acme_client: # This is the name of the client
+    clients:
+        acme_client: # This is the name of the client
         factory: 'httplug.factory.guzzle6'
 
-  main_alias:
-    client: httplug.client.default
-    message_factory: httplug.message_factory.default
-    uri_factory: httplug.uri_factory.default
-    stream_factory: httplug.stream_factory.default
-  classes:
-    # uses discovery if not specified
-    client: ~
-    message_factory: ~
-    uri_factory: ~
-    stream_factory: ~
+    main_alias:
+        client: httplug.client.default
+        message_factory: httplug.message_factory.default
+        uri_factory: httplug.uri_factory.default
+        stream_factory: httplug.stream_factory.default
+    classes:
+        # uses discovery if not specified
+        client: ~
+        message_factory: ~
+        uri_factory: ~
+        stream_factory: ~
 ```
 
 
@@ -84,21 +84,21 @@ You can configure your clients with some good default options. The clients are l
 
 ```yaml
 httplug:
-  clients:
-    my_guzzle5:
-      factory: 'httplug.factory.guzzle5'
-      config:
-        # These options are given to Guzzle without validation.
-        defaults:
-          base_uri: 'http://google.se/'
-          verify_ssl: false
-          timeout: 4
-          headers:
-            Content-Type: 'application/json'
-    acme:
-      factory: 'httplug.factory.guzzle6'
-      config:
-        base_uri: 'http://google.se/'
+    clients:
+        my_guzzle5:
+            factory: 'httplug.factory.guzzle5'
+            config:
+                # These options are given to Guzzle without validation.
+                defaults:
+                    base_uri: 'http://google.se/'
+                    verify_ssl: false
+                    timeout: 4
+                    headers:
+                        Content-Type: 'application/json'
+        acme:
+            factory: 'httplug.factory.guzzle6'
+            config:
+                base_uri: 'http://google.se/'
 
 ```
 
@@ -116,18 +116,18 @@ You can configure the clients with plugins.
 ```yaml
 // services.yml
 acme_plugin:
-  class: Acme\Plugin\MyCustonPlugin
-  arguments: ["%api_key%"]
+      class: Acme\Plugin\MyCustonPlugin
+      arguments: ["%api_key%"]
 ```
 ```yaml
 // config.yml
 httpug:
-  clients:
-    acme:
-      factory: 'httplug.factory.guzzle6'
-      plugins: ['acme_plugin' , 'httplug.plugin.logger']
-      config:
-        base_uri: 'http://google.se/'
+    clients:
+        acme:
+            factory: 'httplug.factory.guzzle6'
+            plugins: ['acme_plugin' , 'httplug.plugin.logger']
+            config:
+                base_uri: 'http://google.se/'
 ```
 
 
