@@ -104,7 +104,7 @@ class Configuration implements ConfigurationInterface
                         ->info('A list of service ids of plugins. The order is important.')
                         ->prototype('scalar')->end()
                     ->end()
-                    ->variableNode('config')->end()
+                    ->variableNode('config')->defaultValue([])->end()
                 ->end()
             ->end();
     }
