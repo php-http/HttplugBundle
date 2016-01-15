@@ -2,6 +2,7 @@
 
 namespace Http\HttplugBundle\DependencyInjection;
 
+use Http\Client\Plugin\PluginClient;
 use Http\HttplugBundle\ClientFactory\DummyClient;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -88,6 +89,11 @@ class HttplugExtension extends Extension
         // Alias the first client to httplug.client.default
         if ($first !== null) {
             $container->setAlias('httplug.client.default', 'httplug.client.'.$first);
+        } elseif (isset($config['_inject_collector_plugin'])) {
+            // No client was configured. Make sure to inject history plugin to the auto discovery client.
+            $container->register('httplug.client', PluginClient::class)
+                ->addArgument(new Reference('httplug.client.default'))
+                ->addArgument([new Reference('httplug.collector.history_plugin')]);
         }
     }
 }
