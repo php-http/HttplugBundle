@@ -13,7 +13,7 @@
     ],
     "require": {
         "php": ">=5.5",
-        "php-http/discovery": "^0.6.3",
+        "php-http/discovery": "^0.7",
         "php-http/client-implementation": "^1.0",
         "php-http/message-factory": "^1.0",
         "php-http/plugins": "^0.2.0",
