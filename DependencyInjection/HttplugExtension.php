@@ -6,12 +6,14 @@ use Http\Client\Plugin\PluginClient;
 use Http\HttplugBundle\ClientFactory\DummyClient;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 /**
  * @author David Buchmann <mail@davidbu.ch>
+ * @author Tobias Nyholm <tobias.nyholm@gmail.com>
  */
 class HttplugExtension extends Extension
 {
@@ -50,6 +52,7 @@ class HttplugExtension extends Extension
         foreach ($config['main_alias'] as $type => $id) {
             $container->setAlias(sprintf('httplug.%s', $type), $id);
         }
+        $this->configurePlugins($container, $config['plugins']);
         $this->configureClients($container, $config);
     }
 
@@ -59,7 +62,7 @@ class HttplugExtension extends Extension
      * @param ContainerBuilder $container
      * @param array            $config
      */
-    protected function configureClients(ContainerBuilder $container, array $config)
+    private function configureClients(ContainerBuilder $container, array $config)
     {
         $first = isset($config['clients']['default']) ? 'default' : null;
         foreach ($config['clients'] as $name => $arguments) {
@@ -94,6 +97,69 @@ class HttplugExtension extends Extension
             $container->register('httplug.client', PluginClient::class)
                 ->addArgument(new Reference('httplug.client.default'))
                 ->addArgument([new Reference('httplug.collector.history_plugin')]);
+        }
+    }
+
+    /**
+     * @param ContainerBuilder $container
+     * @param array            $config
+     */
+    private function configurePlugins(ContainerBuilder $container, array $config)
+    {
+        foreach ($config as $name => $pluginConfig) {
+            $pluginId = 'httplug.plugin.'.$name;
+            if ($pluginConfig['enabled']) {
+                $def = $container->getDefinition($pluginId);
+                $this->configurePluginByName($name, $def, $pluginConfig);
+            } else {
+                $container->removeDefinition($pluginId);
+            }
+        }
+    }
+
+    /**
+     * @param string     $name
+     * @param Definition $definition
+     * @param array      $config
+     */
+    private function configurePluginByName($name, Definition $definition, array $config)
+    {
+        switch ($name) {
+            case 'authentication':
+                $definition->replaceArgument(0, new Reference($config['authentication']));
+                break;
+            case 'cache':
+                $definition
+                    ->replaceArgument(0, new Reference($config['cache_pool']))
+                    ->replaceArgument(1, new Reference($config['stream_factory']))
+                    ->replaceArgument(2, $config['config']);
+                break;
+            case 'cookie':
+                $definition->replaceArgument(0, new Reference($config['cookie_jar']));
+                break;
+            case 'decoder':
+                $definition->addArgument($config['use_content_encoding']);
+                break;
+            case 'history':
+                $definition->replaceArgument(0, new Reference($config['journal']));
+                break;
+            case 'logger':
+                $definition->replaceArgument(0, new Reference($config['logger']));
+                if (!empty($config['formatter'])) {
+                    $definition->replaceArgument(1, new Reference($config['formatter']));
+                }
+                break;
+            case 'redirect':
+                $definition
+                    ->addArgument($config['preserve_header'])
+                    ->addArgument($config['use_default_for_multiple']);
+                break;
+            case 'retry':
+                $definition->addArgument($config['retry']);
+                break;
+            case 'stopwatch':
+                $definition->replaceArgument(0, new Reference($config['stopwatch']));
+                break;
         }
     }
 }

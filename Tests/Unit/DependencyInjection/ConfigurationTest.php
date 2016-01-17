@@ -41,6 +41,47 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
                 'enabled' => 'auto',
                 'formatter' => null,
             ],
+            'plugins' => [
+                'authentication' => [
+                    'enabled' => false,
+                ],
+                'cache' => [
+                    'enabled' => false,
+                    'stream_factory' => 'httplug.stream_factory',
+                    'config' => [
+                        'default_ttl' => null,
+                        'respect_cache_headers' => true,
+                    ],
+                ],
+                'cookie' => [
+                    'enabled' => false,
+                ],
+                'decoder' => [
+                    'enabled' => true,
+                    'use_content_encoding' => true,
+                ],
+                'history' => [
+                    'enabled' => false,
+                ],
+                'logger' => [
+                    'enabled' => true,
+                    'logger' => 'logger',
+                    'formatter' => null,
+                ],
+                'redirect' => [
+                    'enabled' => true,
+                    'preserve_header' => true,
+                    'use_default_for_multiple' => true,
+                ],
+                'retry' => [
+                    'enabled' => true,
+                    'retry' => 1,
+                ],
+                'stopwatch' => [
+                    'enabled' => true,
+                    'stopwatch' => 'debug.stopwatch',
+                ],
+            ],
         ];
 
         $formats = array_map(function ($path) {
@@ -75,6 +116,47 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
             'toolbar' => [
                 'enabled' => 'auto',
                 'formatter' => null,
+            ],
+            'plugins' => [
+                'authentication' => [
+                    'enabled' => false,
+                ],
+                'cache' => [
+                    'enabled' => false,
+                    'stream_factory' => 'httplug.stream_factory',
+                    'config' => [
+                        'default_ttl' => null,
+                        'respect_cache_headers' => true,
+                    ],
+                ],
+                'cookie' => [
+                    'enabled' => false,
+                ],
+                'decoder' => [
+                    'enabled' => true,
+                    'use_content_encoding' => true,
+                ],
+                'history' => [
+                    'enabled' => false,
+                ],
+                'logger' => [
+                    'enabled' => true,
+                    'logger' => 'logger',
+                    'formatter' => null,
+                ],
+                'redirect' => [
+                    'enabled' => true,
+                    'preserve_header' => true,
+                    'use_default_for_multiple' => true,
+                ],
+                'retry' => [
+                    'enabled' => true,
+                    'retry' => 1,
+                ],
+                'stopwatch' => [
+                    'enabled' => true,
+                    'stopwatch' => 'debug.stopwatch',
+                ],
             ],
         ];
 
