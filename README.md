@@ -51,7 +51,8 @@ For information how to write applications with the services provided by this bun
 | httplug.stream_factory | Service* that provides the `Http\Message\StreamFactory`
 | httplug.client.[name] | This is your Httpclient that you have configured. With the configuration below the name would be `acme_client`.
 | httplug.client | This is the first client configured or a client named `default`.
-| httplug.plugin.content_length <br> httplug.plugin.decoder<br> httplug.plugin.error<br> httplug.plugin.logger<br> httplug.plugin.redirect<br> httplug.plugin.retry | These are built in plugins that live in the `php-http/plugins` package. These servcies are not public and may only be used when configure HttpClients or services.
+| httplug.plugin.content_length <br> httplug.plugin.decoder<br> httplug.plugin.error<br> httplug.plugin.logger<br> httplug.plugin.redirect<br> httplug.plugin.retry<br> httplug.plugin.stopwatch | These are plugins that are enabled by default. These services are not public and may only be used when configure HttpClients or other services.
+| httplug.plugin.authentication <br> httplug.plugin.cache<br> httplug.plugin.cookie<br> httplug.plugin.history | These are plugins that are disabled by default. They need to be configured before they can be used. These services are not public and may only be used when configure HttpClients or other services.
 
 \* *These services are always an alias to another service. You can specify your own service or leave the default, which is the same name with `.default` appended. The default services in turn use the service discovery mechanism to provide the best available implementation. You can specify a class for each of the default services to use instead of discovery, as long as those classes can be instantiated without arguments.*
 
@@ -122,10 +123,13 @@ acme_plugin:
 ```yaml
 // config.yml
 httpug:
+    plugins:
+        cache:
+            cache_pool: 'my_cache_pool'
     clients:
         acme:
             factory: 'httplug.factory.guzzle6'
-            plugins: ['acme_plugin' , 'httplug.plugin.logger']
+            plugins: ['acme_plugin', 'httplug.plugin.cache', ''httplug.plugin.retry']
             config:
                 base_uri: 'http://google.se/'
 ```

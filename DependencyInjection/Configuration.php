@@ -15,6 +15,7 @@ use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
  * sections are normalized, and merged.
  *
  * @author David Buchmann <mail@davidbu.ch>
+ * @author Tobias Nyholm <tobias.nyholm@gmail.com>
  */
 class Configuration implements ConfigurationInterface
 {
@@ -27,6 +28,7 @@ class Configuration implements ConfigurationInterface
         $rootNode = $treeBuilder->root('httplug');
 
         $this->configureClients($rootNode);
+        $this->configurePlugins($rootNode);
 
         $rootNode
             ->validate()
@@ -107,5 +109,130 @@ class Configuration implements ConfigurationInterface
                     ->variableNode('config')->defaultValue([])->end()
                 ->end()
             ->end();
+    }
+
+    /**
+     * @param ArrayNodeDefinition $root
+     */
+    protected function configurePlugins(ArrayNodeDefinition $root)
+    {
+        $root->children()
+            ->arrayNode('plugins')
+                ->addDefaultsIfNotSet()
+                ->children()
+
+                    ->arrayNode('authentication')
+                    ->canBeEnabled()
+                        ->children()
+                            ->scalarNode('authentication')
+                                ->info('This must be a service id to a service implementing Http\Message\Authentication')
+                                ->isRequired()
+                                ->cannotBeEmpty()
+                            ->end()
+                        ->end()
+                    ->end() // End authentication plugin
+
+                    ->arrayNode('cache')
+                    ->canBeEnabled()
+                    ->addDefaultsIfNotSet()
+                        ->children()
+                            ->scalarNode('cache_pool')
+                                ->info('This must be a service id to a service implementing Psr\Cache\CacheItemPoolInterface')
+                                ->isRequired()
+                                ->cannotBeEmpty()
+                            ->end()
+                            ->scalarNode('stream_factory')
+                                ->info('This must be a service id to a service implementing Http\Message\StreamFactory')
+                                ->defaultValue('httplug.stream_factory')
+                                ->cannotBeEmpty()
+                            ->end()
+                            ->arrayNode('config')
+                                ->addDefaultsIfNotSet()
+                                ->children()
+                                    ->scalarNode('default_ttl')->defaultNull()->end()
+                                    ->scalarNode('respect_cache_headers')->defaultTrue()->end()
+                                ->end()
+                            ->end()
+                        ->end()
+                    ->end() // End cache plugin
+
+                    ->arrayNode('cookie')
+                    ->canBeEnabled()
+                        ->children()
+                            ->scalarNode('cookie_jar')
+                                ->info('This must be a service id to a service implementing Http\Message\CookieJar')
+                                ->isRequired()
+                                ->cannotBeEmpty()
+                            ->end()
+                        ->end()
+                    ->end() // End cookie plugin
+
+                    ->arrayNode('decoder')
+                    ->canBeDisabled()
+                    ->addDefaultsIfNotSet()
+                        ->children()
+                            ->scalarNode('use_content_encoding')->defaultTrue()->end()
+                        ->end()
+                    ->end() // End decoder plugin
+
+                    ->arrayNode('history')
+                    ->canBeEnabled()
+                        ->children()
+                            ->scalarNode('journal')
+                                ->info('This must be a service id to a service implementing Http\Client\Plugin\Journal')
+                                ->isRequired()
+                                ->cannotBeEmpty()
+                            ->end()
+                        ->end()
+                    ->end() // End history plugin
+
+                    ->arrayNode('logger')
+                    ->canBeDisabled()
+                    ->addDefaultsIfNotSet()
+                        ->children()
+                            ->scalarNode('logger')
+                                ->info('This must be a service id to a service implementing Psr\Log\LoggerInterface')
+                                ->defaultValue('logger')
+                                ->cannotBeEmpty()
+                            ->end()
+                            ->scalarNode('formatter')
+                                ->info('This must be a service id to a service implementing Http\Message\Formatter')
+                                ->defaultNull()
+                            ->end()
+                        ->end()
+                    ->end() // End logger plugin
+
+                    ->arrayNode('redirect')
+                    ->canBeDisabled()
+                    ->addDefaultsIfNotSet()
+                        ->children()
+                            ->scalarNode('preserve_header')->defaultTrue()->end()
+                            ->scalarNode('use_default_for_multiple')->defaultTrue()->end()
+                        ->end()
+                    ->end() // End redirect plugin
+
+                    ->arrayNode('retry')
+                    ->canBeDisabled()
+                    ->addDefaultsIfNotSet()
+                        ->children()
+                            ->scalarNode('retry')->defaultValue(1)->end()
+                        ->end()
+                    ->end() // End retry plugin
+
+                    ->arrayNode('stopwatch')
+                    ->canBeDisabled()
+                    ->addDefaultsIfNotSet()
+                        ->children()
+                            ->scalarNode('stopwatch')
+                                ->info('This must be a service id to a service extending Symfony\Component\Stopwatch\Stopwatch')
+                                ->defaultValue('debug.stopwatch')
+                                ->cannotBeEmpty()
+                            ->end()
+                        ->end()
+                    ->end() // End stopwatch plugin
+
+                ->end()
+            ->end()
+        ->end();
     }
 }
