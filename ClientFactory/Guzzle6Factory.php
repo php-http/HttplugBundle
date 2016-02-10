@@ -8,7 +8,7 @@ use Http\Adapter\Guzzle6\Client as Adapter;
 /**
  * @author Tobias Nyholm <tobias.nyholm@gmail.com>
  */
-class Guzzle6Factory implements ClientFactoryInterface
+class Guzzle6Factory implements ClientFactory
 {
     /**
      * {@inheritdoc}
