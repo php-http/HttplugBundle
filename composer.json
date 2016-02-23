@@ -28,9 +28,6 @@
         "polishsymfonycommunity/symfony-mocker-container": "^1.0",
         "matthiasnoback/symfony-dependency-injection-test": "^0.7"
     },
-    "suggest": {
-        "puli/composer-plugin": "Used to set up Puli modules from composer packages"
-    },
     "autoload": {
         "psr-4": {
             "Http\\HttplugBundle\\": ""
