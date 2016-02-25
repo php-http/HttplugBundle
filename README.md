@@ -52,7 +52,7 @@ For information how to write applications with the services provided by this bun
 | httplug.client.[name] | This is your Httpclient that you have configured. With the configuration below the name would be `acme_client`.
 | httplug.client | This is the first client configured or a client named `default`.
 | httplug.plugin.content_length <br> httplug.plugin.decoder<br> httplug.plugin.error<br> httplug.plugin.logger<br> httplug.plugin.redirect<br> httplug.plugin.retry<br> httplug.plugin.stopwatch | These are plugins that are enabled by default. These services are not public and may only be used when configure HttpClients or other services.
-| httplug.plugin.authentication <br> httplug.plugin.cache<br> httplug.plugin.cookie<br> httplug.plugin.history | These are plugins that are disabled by default. They need to be configured before they can be used. These services are not public and may only be used when configure HttpClients or other services.
+| httplug.plugin.cache<br> httplug.plugin.cookie<br> httplug.plugin.history | These are plugins that are disabled by default. They need to be configured before they can be used. These services are not public and may only be used when configure HttpClients or other services.
 
 \* *These services are always an alias to another service. You can specify your own service or leave the default, which is the same name with `.default` appended. The default services in turn use the service discovery mechanism to provide the best available implementation. You can specify a class for each of the default services to use instead of discovery, as long as those classes can be instantiated without arguments.*
 
@@ -132,6 +132,34 @@ httpug:
             plugins: ['acme_plugin', 'httplug.plugin.cache', ''httplug.plugin.retry']
             config:
                 base_uri: 'http://google.se/'
+```
+
+#### Authentication
+
+```yaml
+// config.yml
+httpug:
+    plugins:
+        authentication:
+            my_basic:
+                type: 'basic'
+                username: 'my_username'
+                password: 'p4ssw0rd'
+            my_wsse:
+                type: 'wsse'
+                username: 'my_username'
+                password: 'p4ssw0rd'
+            my_brearer:
+                type: 'bearer'
+                token: 'authentication_token_hash'
+            my_service:
+                type: 'service'
+                service: 'my_authentication_service'
+
+    clients:
+        acme:
+            factory: 'httplug.factory.guzzle6'
+            plugins: ['httplug.plugin.authentication.my_wsse']
 ```
 
 
