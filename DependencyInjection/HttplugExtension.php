@@ -89,9 +89,12 @@ class HttplugExtension extends Extension
             }
         }
 
-        // Alias the first client to httplug.client.default
+        // If we have clients configured
         if ($first !== null) {
-            $container->setAlias('httplug.client.default', 'httplug.client.'.$first);
+            if ($first !== 'default') {
+                // Alias the first client to httplug.client.default
+                $container->setAlias('httplug.client.default', 'httplug.client.'.$first);
+            }
         } elseif (isset($config['_inject_collector_plugin'])) {
             // No client was configured. Make sure to inject history plugin to the auto discovery client.
             $container->register('httplug.client', PluginClient::class)
