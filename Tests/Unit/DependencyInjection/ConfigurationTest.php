@@ -42,9 +42,7 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
                 'formatter' => null,
             ],
             'plugins' => [
-                'authentication' => [
-                    'enabled' => false,
-                ],
+                'authentication' => [],
                 'cache' => [
                     'enabled' => false,
                     'stream_factory' => 'httplug.stream_factory',
@@ -118,9 +116,7 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
                 'formatter' => null,
             ],
             'plugins' => [
-                'authentication' => [
-                    'enabled' => false,
-                ],
+                'authentication' => [],
                 'cache' => [
                     'enabled' => false,
                     'stream_factory' => 'httplug.stream_factory',

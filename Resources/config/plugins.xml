@@ -4,9 +4,6 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
-        <service id="httplug.plugin.authentication" class="Http\Client\Plugin\AuthenticationPlugin" public="false">
-            <argument />
-        </service>
         <service id="httplug.plugin.cache" class="Http\Client\Plugin\CachePlugin" public="false">
             <argument />
             <argument />

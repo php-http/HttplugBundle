@@ -2,8 +2,12 @@
 
 namespace Http\HttplugBundle\DependencyInjection;
 
+use Http\Client\Plugin\AuthenticationPlugin;
 use Http\Client\Plugin\PluginClient;
 use Http\HttplugBundle\ClientFactory\DummyClient;
+use Http\Message\Authentication\BasicAuth;
+use Http\Message\Authentication\Bearer;
+use Http\Message\Authentication\Wsse;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
@@ -106,6 +110,11 @@ class HttplugExtension extends Extension
      */
     private function configurePlugins(ContainerBuilder $container, array $config)
     {
+        if (!empty($config['authentication'])) {
+            $this->configureAuthentication($container, $config['authentication']);
+        }
+        unset($config['authentication']);
+
         foreach ($config as $name => $pluginConfig) {
             $pluginId = 'httplug.plugin.'.$name;
             if ($pluginConfig['enabled']) {
@@ -125,9 +134,6 @@ class HttplugExtension extends Extension
     private function configurePluginByName($name, Definition $definition, array $config)
     {
         switch ($name) {
-            case 'authentication':
-                $definition->replaceArgument(0, new Reference($config['authentication']));
-                break;
             case 'cache':
                 $definition
                     ->replaceArgument(0, new Reference($config['cache_pool']))
@@ -160,6 +166,55 @@ class HttplugExtension extends Extension
             case 'stopwatch':
                 $definition->replaceArgument(0, new Reference($config['stopwatch']));
                 break;
+        }
+    }
+
+    /**
+     * @param ContainerBuilder $container
+     * @param Definition       $parent
+     * @param array            $config
+     */
+    private function configureAuthentication(ContainerBuilder $container, array $config)
+    {
+        foreach ($config as $name => $values) {
+            $authServiceKey = sprintf('httplug.plugin.authentication.%s.auth', $name);
+            if ($values['type'] === 'bearer') {
+                $this->validateAuthenticationConfiguration($values, 'bearer', $name, ['token']);
+                $container->register($authServiceKey, Bearer::class)
+                    ->addArgument($values['token']);
+            } elseif ($values['type'] === 'basic') {
+                $this->validateAuthenticationConfiguration($values, 'bearer', $name, ['username', 'password']);
+                $container->register($authServiceKey, BasicAuth::class)
+                    ->addArgument($values['username'])
+                    ->addArgument($values['password']);
+            } elseif ($values['type'] === 'wsse') {
+                $this->validateAuthenticationConfiguration($values, 'bearer', $name, ['username', 'password']);
+                $container->register($authServiceKey, Wsse::class)
+                    ->addArgument($values['username'])
+                    ->addArgument($values['password']);
+            } else {
+                throw new \LogicException(sprintf('Unknown authentication type: "%s"', $values['type']));
+            }
+
+            $container->register('httplug.plugin.authentication.'.$name, AuthenticationPlugin::class)
+                ->addArgument(new Reference($authServiceKey));
+        }
+    }
+
+    /**
+     * Throw a Logic error with a descriptive error if some configuration is missing.
+     *
+     * @param array  $config
+     * @param string $authType
+     * @param string $type
+     * @param array  $names
+     */
+    private function validateAuthenticationConfiguration(array $config, $type, $authType, array $names)
+    {
+        foreach ($names as $name) {
+            if (empty($config[$name])) {
+                throw new \LogicException(sprintf('When using %s ahtnetication you must configure a value for "httplug.plugins.authentication.%s.%s".', $type, $authType, $name));
+            }
         }
     }
 }
