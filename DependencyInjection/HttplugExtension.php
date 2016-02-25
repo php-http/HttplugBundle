@@ -178,43 +178,30 @@ class HttplugExtension extends Extension
     {
         foreach ($config as $name => $values) {
             $authServiceKey = sprintf('httplug.plugin.authentication.%s.auth', $name);
-            if ($values['type'] === 'bearer') {
-                $this->validateAuthenticationConfiguration($values, 'bearer', $name, ['token']);
-                $container->register($authServiceKey, Bearer::class)
-                    ->addArgument($values['token']);
-            } elseif ($values['type'] === 'basic') {
-                $this->validateAuthenticationConfiguration($values, 'bearer', $name, ['username', 'password']);
-                $container->register($authServiceKey, BasicAuth::class)
-                    ->addArgument($values['username'])
-                    ->addArgument($values['password']);
-            } elseif ($values['type'] === 'wsse') {
-                $this->validateAuthenticationConfiguration($values, 'bearer', $name, ['username', 'password']);
-                $container->register($authServiceKey, Wsse::class)
-                    ->addArgument($values['username'])
-                    ->addArgument($values['password']);
-            } else {
-                throw new \LogicException(sprintf('Unknown authentication type: "%s"', $values['type']));
+            switch ($values['type']) {
+                case 'bearer':
+                    $container->register($authServiceKey, Bearer::class)
+                        ->addArgument($values['token']);
+                    break;
+                case 'basic':
+                    $container->register($authServiceKey, BasicAuth::class)
+                        ->addArgument($values['username'])
+                        ->addArgument($values['password']);
+                    break;
+                case 'wsse':
+                    $container->register($authServiceKey, Wsse::class)
+                        ->addArgument($values['username'])
+                        ->addArgument($values['password']);
+                    break;
+                case 'service':
+                    $authServiceKey = $values['service'];
+                    break;
+                default:
+                    throw new \LogicException(sprintf('Unknown authentication type: "%s"', $values['type']));
             }
 
             $container->register('httplug.plugin.authentication.'.$name, AuthenticationPlugin::class)
                 ->addArgument(new Reference($authServiceKey));
-        }
-    }
-
-    /**
-     * Throw a Logic error with a descriptive error if some configuration is missing.
-     *
-     * @param array  $config
-     * @param string $authType
-     * @param string $type
-     * @param array  $names
-     */
-    private function validateAuthenticationConfiguration(array $config, $type, $authType, array $names)
-    {
-        foreach ($names as $name) {
-            if (empty($config[$name])) {
-                throw new \LogicException(sprintf('When using %s ahtnetication you must configure a value for "httplug.plugins.authentication.%s.%s".', $type, $authType, $name));
-            }
         }
     }
 }

@@ -143,15 +143,18 @@ httpug:
         authentication:
             my_basic:
                 type: 'basic'
-                username: 'foo'
-                password: 'bar'
+                username: 'my_username'
+                password: 'p4ssw0rd'
             my_wsse:
                 type: 'wsse'
-                username: 'foo'
-                password: 'bar'
+                username: 'my_username'
+                password: 'p4ssw0rd'
             my_brearer:
                 type: 'bearer'
-                token: 'foo'
+                token: 'authentication_token_hash'
+            my_service:
+                type: 'service'
+                service: 'my_authentication_service'
 
     clients:
         acme:

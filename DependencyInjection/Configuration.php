@@ -120,21 +120,7 @@ class Configuration implements ConfigurationInterface
             ->arrayNode('plugins')
                 ->addDefaultsIfNotSet()
                 ->children()
-                    ->arrayNode('authentication')
-                        ->useAttributeAsKey('name')
-                        ->prototype('array')
-                            ->children()
-                                ->enumNode('type')
-                                    ->values(['basic', 'bearer', 'wsse'])
-                                    ->isRequired()
-                                    ->cannotBeEmpty()
-                                ->end()
-                                ->scalarNode('username')->end()
-                                ->scalarNode('password')->end()
-                                ->scalarNode('token')->end()
-                            ->end()
-                        ->end()
-                    ->end() // End authentication plugin
+                    ->append($this->addAuthenticationPluiginNode())
 
                     ->arrayNode('cache')
                     ->canBeEnabled()
@@ -238,5 +224,63 @@ class Configuration implements ConfigurationInterface
                 ->end()
             ->end()
         ->end();
+    }
+
+    /**
+     * Add configuration for authentication plugin.
+     *
+     * @return ArrayNodeDefinition|\Symfony\Component\Config\Definition\Builder\NodeDefinition
+     */
+    private function addAuthenticationPluiginNode()
+    {
+        $builder = new TreeBuilder();
+        $node = $builder->root('authentication');
+        $node
+            ->useAttributeAsKey('name')
+            ->prototype('array')
+                ->validate()
+                    ->always()
+                    ->then(function ($config) {
+                        switch ($config['type']) {
+                            case 'basic':
+                                if (empty($config['username']) || empty($config['password'])) {
+                                    throw new InvalidConfigurationException('Authentication "basic" requires both "username" and "password".');
+                                }
+                                break;
+                            case 'bearer':
+                                if (empty($config['bearer'])) {
+                                    throw new InvalidConfigurationException('Authentication "bearer" requires a "token".');
+                                }
+                                break;
+                            case 'service':
+                                if (empty($config['service'])) {
+                                    throw new InvalidConfigurationException('Authentication "service" requires a "service".');
+                                }
+                                break;
+                            case 'wsse':
+                                if (empty($config['username']) || empty($config['password'])) {
+                                    throw new InvalidConfigurationException('Authentication "wsse" requires both "username" and "password".');
+                                }
+                                break;
+                        }
+
+                        return $config;
+                    })
+                ->end()
+                ->children()
+                    ->enumNode('type')
+                        ->values(['basic', 'bearer', 'wsse', 'service'])
+                        ->isRequired()
+                        ->cannotBeEmpty()
+                    ->end()
+                    ->scalarNode('username')->end()
+                    ->scalarNode('password')->end()
+                    ->scalarNode('token')->end()
+                    ->scalarNode('service')->end()
+                    ->end()
+                ->end()
+            ->end(); // End authentication plugin
+
+        return $node;
     }
 }
