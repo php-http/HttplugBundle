@@ -243,24 +243,16 @@ class Configuration implements ConfigurationInterface
                     ->then(function ($config) {
                         switch ($config['type']) {
                             case 'basic':
-                                if (empty($config['username']) || empty($config['password'])) {
-                                    throw new InvalidConfigurationException('Authentication "basic" requires both "username" and "password".');
-                                }
+                                Configuration::validateAuthenticationType(['username', 'password'], array_keys($config), 'basic');
                                 break;
                             case 'bearer':
-                                if (empty($config['token'])) {
-                                    throw new InvalidConfigurationException('Authentication "bearer" requires a "token".');
-                                }
+                                Configuration::validateAuthenticationType(['token'], array_keys($config), 'bearer');
                                 break;
                             case 'service':
-                                if (empty($config['service'])) {
-                                    throw new InvalidConfigurationException('Authentication "service" requires a "service".');
-                                }
+                                Configuration::validateAuthenticationType(['service'], array_keys($config), 'service');
                                 break;
                             case 'wsse':
-                                if (empty($config['username']) || empty($config['password'])) {
-                                    throw new InvalidConfigurationException('Authentication "wsse" requires both "username" and "password".');
-                                }
+                                Configuration::validateAuthenticationType(['username', 'password'], array_keys($config), 'wsse');
                                 break;
                         }
 
@@ -282,5 +274,20 @@ class Configuration implements ConfigurationInterface
             ->end(); // End authentication plugin
 
         return $node;
+    }
+    
+    public static function validateAuthenticationType($expected, $actual, $authName)
+    {
+        unset($actual['type']);
+        if ($expected == $actual) {
+            return;
+        }
+        
+        throw new InvalidConfigurationException(sprintf(
+            'Authentication "%s" requires %s but got %s', 
+            $authName, 
+            implode(', ', $expected),
+            implode(', ', $actual)
+        ));
     }
 }
