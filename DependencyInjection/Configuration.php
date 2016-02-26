@@ -248,7 +248,7 @@ class Configuration implements ConfigurationInterface
                                 }
                                 break;
                             case 'bearer':
-                                if (empty($config['bearer'])) {
+                                if (empty($config['token'])) {
                                     throw new InvalidConfigurationException('Authentication "bearer" requires a "token".');
                                 }
                                 break;
