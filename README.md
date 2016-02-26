@@ -78,6 +78,18 @@ httplug:
         stream_factory: ~
 ```
 
+#### Configuration without auto discovery
+
+By default we use Puli to auto discover factories. If you do not want to use auto discovery you could use the following configuration (Guzzle):
+
+```yaml
+httplug:
+    classes:
+        client: Http\Adapter\Guzzle6\Client
+        message_factory: Http\Message\MessageFactory\GuzzleMessageFactory
+        uri_factory: Http\Message\UriFactory\GuzzleUriFactory
+        stream_factory: Http\Message\StreamFactory\GuzzleStreamFactory
+```
 
 #### Configure your client
 
