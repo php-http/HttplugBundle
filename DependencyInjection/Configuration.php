@@ -275,17 +275,17 @@ class Configuration implements ConfigurationInterface
 
         return $node;
     }
-    
+
     public static function validateAuthenticationType($expected, $actual, $authName)
     {
         unset($actual['type']);
         if ($expected == $actual) {
             return;
         }
-        
+
         throw new InvalidConfigurationException(sprintf(
-            'Authentication "%s" requires %s but got %s', 
-            $authName, 
+            'Authentication "%s" requires %s but got %s',
+            $authName,
             implode(', ', $expected),
             implode(', ', $actual)
         ));
