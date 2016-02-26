@@ -14,6 +14,25 @@
             <uri-factory>Http\Message\UriFactory\GuzzleUriFactory</uri-factory>
             <stream-factory>Http\Message\StreamFactory\GuzzleStreamFactory</stream-factory>
         </classes>
+        <toolbar enabled="true" formatter="my_toolbar_formatter"/>
+        <plugins>
+            <authentication>
+                <my_basic type="basic" username="foo" password="bar"/>
+                <my_wsse type="wsse" username="foo" password="bar"/>
+                <my_bearer type="bearer" token="foo"/>
+                <my_service type="service" service="my_auth_service"/>
+            </authentication>
+            <cache cache-pool="my_cache_pool" stream-factory="my_other_stream_factory">
+                <config default-ttl="42" respect-cache-headers="false"/>
+            </cache>
+            <cookie cookie-jar="my_cookie_jar"/>
+            <decoder enabled="false"/>
+            <history journal="my_journal"/>
+            <logger enabled="false"/>
+            <redirect enabled="false"/>
+            <retry enabled="false"/>
+            <stopwatch enabled="false"/>
+        </plugins>
     </config>
 
 </container>
