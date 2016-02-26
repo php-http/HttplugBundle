@@ -1,11 +1,11 @@
 # HttplugBundle
 
-[![Latest Version](https://img.shields.io/github/release/php-http/HttplugBundle.svg?style=flat-square)](https://github.com/php-http/HttplugBundle/releases)
+[![Latest Stable Version](https://poser.pugx.org/cache/taggable-cache/v/stable)](https://packagist.org/packages/cache/taggable-cache)
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE)
-[![Build Status](https://img.shields.io/travis/php-http/HttplugBundle.svg?style=flat-square)](https://travis-ci.org/php-http/HttplugBundle)
-[![Code Coverage](https://img.shields.io/scrutinizer/coverage/g/php-http/httplug-bundle.svg?style=flat-square)](https://scrutinizer-ci.com/g/php-http/HttplugBundle)
-[![Quality Score](https://img.shields.io/scrutinizer/g/php-http/httplug-bundle.svg?style=flat-square)](https://scrutinizer-ci.com/g/php-http/HttplugBundle)
-[![Total Downloads](https://img.shields.io/packagist/dt/php-http/httplug-bundle.svg?style=flat-square)](https://packagist.org/packages/php-http/HttplugBundle)
+[![Build Status](https://travis-ci.org/php-http/HttplugBundle.svg?branch=master)](https://travis-ci.org/php-http/HttplugBundle)
+[![Code Coverage](https://scrutinizer-ci.com/g/php-http/HttplugBundle/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/php-http/HttplugBundle/?branch=master)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/php-http/HttplugBundle/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/php-http/HttplugBundle/?branch=master)
+[![Total Downloads](https://poser.pugx.org/cache/taggable-cache/downloads)](https://packagist.org/packages/cache/taggable-cache)
 
 **Symfony integration for the [php-http Httplug](http://docs.httplug.io/) HTTP client**
 
