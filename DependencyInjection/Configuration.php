@@ -243,24 +243,16 @@ class Configuration implements ConfigurationInterface
                     ->then(function ($config) {
                         switch ($config['type']) {
                             case 'basic':
-                                if (empty($config['username']) || empty($config['password'])) {
-                                    throw new InvalidConfigurationException('Authentication "basic" requires both "username" and "password".');
-                                }
+                                $this->validateAuthenticationType(['username', 'password'], $config, 'basic');
                                 break;
                             case 'bearer':
-                                if (empty($config['token'])) {
-                                    throw new InvalidConfigurationException('Authentication "bearer" requires a "token".');
-                                }
+                                $this->validateAuthenticationType(['token'], $config, 'bearer');
                                 break;
                             case 'service':
-                                if (empty($config['service'])) {
-                                    throw new InvalidConfigurationException('Authentication "service" requires a "service".');
-                                }
+                                $this->validateAuthenticationType(['service'], $config, 'service');
                                 break;
                             case 'wsse':
-                                if (empty($config['username']) || empty($config['password'])) {
-                                    throw new InvalidConfigurationException('Authentication "wsse" requires both "username" and "password".');
-                                }
+                                $this->validateAuthenticationType(['username', 'password'], $config, 'wsse');
                                 break;
                         }
 
@@ -282,5 +274,33 @@ class Configuration implements ConfigurationInterface
             ->end(); // End authentication plugin
 
         return $node;
+    }
+
+    /**
+     * Validate that the configuration fragment has the specified keys and none other.
+     *
+     * @param array  $expected Fields that must exist
+     * @param array  $actual   Actual configuration hashmap
+     * @param string $authName Name of authentication method for error messages
+     *
+     * @throws InvalidConfigurationException If $actual does not have exactly the keys specified in $expected (plus 'type')
+     */
+    private function validateAuthenticationType(array $expected, array $actual, $authName)
+    {
+        unset($actual['type']);
+        $actual = array_keys($actual);
+        sort($actual);
+        sort($expected);
+
+        if ($expected === $actual) {
+            return;
+        }
+
+        throw new InvalidConfigurationException(sprintf(
+            'Authentication "%s" requires %s but got %s',
+            $authName,
+            implode(', ', $expected),
+            implode(', ', $actual)
+        ));
     }
 }
