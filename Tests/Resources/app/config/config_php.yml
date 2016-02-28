@@ -2,4 +2,5 @@ framework:
   secret: php-http
   test: ~
 
+# Use auto discovery
 httplug: ~
