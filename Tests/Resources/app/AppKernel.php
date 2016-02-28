@@ -21,7 +21,11 @@ class AppKernel extends Kernel
      */
     public function registerContainerConfiguration(LoaderInterface $loader)
     {
-        $loader->load(__DIR__.'/config/config.yml');
+        $runtime = 'php';
+        if (defined('HHVM_VERSION')) {
+            $runtime = 'hhvm';
+        }
+        $loader->load(__DIR__.'/config/config_'.$runtime.'.yml');
     }
 
     /**
