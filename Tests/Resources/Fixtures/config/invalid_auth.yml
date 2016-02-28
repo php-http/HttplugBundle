@@ -1,0 +1,8 @@
+httplug:
+    plugins:
+        authentication:
+            my_auth:
+                type: service
+                service: foobar
+                username: user
+                password: pass

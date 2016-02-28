@@ -42,9 +42,7 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
                 'formatter' => null,
             ],
             'plugins' => [
-                'authentication' => [
-                    'enabled' => false,
-                ],
+                'authentication' => [],
                 'cache' => [
                     'enabled' => false,
                     'stream_factory' => 'httplug.stream_factory',
@@ -114,47 +112,67 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
             ],
             'clients' => [],
             'toolbar' => [
-                'enabled' => 'auto',
-                'formatter' => null,
+                'enabled' => true,
+                'formatter' => 'my_toolbar_formatter',
             ],
             'plugins' => [
                 'authentication' => [
-                    'enabled' => false,
+                    'my_basic' => [
+                        'type' => 'basic',
+                        'username' => 'foo',
+                        'password' => 'bar',
+                    ],
+                    'my_wsse' => [
+                        'type' => 'wsse',
+                        'username' => 'foo',
+                        'password' => 'bar',
+                    ],
+                    'my_bearer' => [
+                        'type' => 'bearer',
+                        'token' => 'foo',
+                    ],
+                    'my_service' => [
+                        'type' => 'service',
+                        'service' => 'my_auth_service',
+                    ],
                 ],
                 'cache' => [
-                    'enabled' => false,
-                    'stream_factory' => 'httplug.stream_factory',
+                    'enabled' => true,
+                    'cache_pool' => 'my_cache_pool',
+                    'stream_factory' => 'my_other_stream_factory',
                     'config' => [
-                        'default_ttl' => null,
-                        'respect_cache_headers' => true,
+                        'default_ttl' => 42,
+                        'respect_cache_headers' => false,
                     ],
                 ],
                 'cookie' => [
-                    'enabled' => false,
+                    'enabled' => true,
+                    'cookie_jar' => 'my_cookie_jar',
                 ],
                 'decoder' => [
-                    'enabled' => true,
+                    'enabled' => false,
                     'use_content_encoding' => true,
                 ],
                 'history' => [
-                    'enabled' => false,
+                    'enabled' => true,
+                    'journal' => 'my_journal',
                 ],
                 'logger' => [
-                    'enabled' => true,
+                    'enabled' => false,
                     'logger' => 'logger',
                     'formatter' => null,
                 ],
                 'redirect' => [
-                    'enabled' => true,
+                    'enabled' => false,
                     'preserve_header' => true,
                     'use_default_for_multiple' => true,
                 ],
                 'retry' => [
-                    'enabled' => true,
+                    'enabled' => false,
                     'retry' => 1,
                 ],
                 'stopwatch' => [
-                    'enabled' => true,
+                    'enabled' => false,
                     'stopwatch' => 'debug.stopwatch',
                 ],
             ],
@@ -179,7 +197,17 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
      */
     public function testMissingClass()
     {
-        $file = __DIR__.'/../../Resources/Fixtures/config/invalid.yml';
+        $file = __DIR__.'/../../Resources/Fixtures/config/invalid_class.yml';
+        $this->assertProcessedConfigurationEquals([], [$file]);
+    }
+
+    /**
+     * @expectedException \Symfony\Component\Config\Definition\Exception\InvalidConfigurationException
+     * @expectedExceptionMessage password, service, username
+     */
+    public function testInvalidAuthentication()
+    {
+        $file = __DIR__.'/../../Resources/Fixtures/config/invalid_auth.yml';
         $this->assertProcessedConfigurationEquals([], [$file]);
     }
 }

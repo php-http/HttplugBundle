@@ -120,17 +120,7 @@ class Configuration implements ConfigurationInterface
             ->arrayNode('plugins')
                 ->addDefaultsIfNotSet()
                 ->children()
-
-                    ->arrayNode('authentication')
-                    ->canBeEnabled()
-                        ->children()
-                            ->scalarNode('authentication')
-                                ->info('This must be a service id to a service implementing Http\Message\Authentication')
-                                ->isRequired()
-                                ->cannotBeEmpty()
-                            ->end()
-                        ->end()
-                    ->end() // End authentication plugin
+                    ->append($this->addAuthenticationPluiginNode())
 
                     ->arrayNode('cache')
                     ->canBeEnabled()
@@ -234,5 +224,83 @@ class Configuration implements ConfigurationInterface
                 ->end()
             ->end()
         ->end();
+    }
+
+    /**
+     * Add configuration for authentication plugin.
+     *
+     * @return ArrayNodeDefinition|\Symfony\Component\Config\Definition\Builder\NodeDefinition
+     */
+    private function addAuthenticationPluiginNode()
+    {
+        $builder = new TreeBuilder();
+        $node = $builder->root('authentication');
+        $node
+            ->useAttributeAsKey('name')
+            ->prototype('array')
+                ->validate()
+                    ->always()
+                    ->then(function ($config) {
+                        switch ($config['type']) {
+                            case 'basic':
+                                $this->validateAuthenticationType(['username', 'password'], $config, 'basic');
+                                break;
+                            case 'bearer':
+                                $this->validateAuthenticationType(['token'], $config, 'bearer');
+                                break;
+                            case 'service':
+                                $this->validateAuthenticationType(['service'], $config, 'service');
+                                break;
+                            case 'wsse':
+                                $this->validateAuthenticationType(['username', 'password'], $config, 'wsse');
+                                break;
+                        }
+
+                        return $config;
+                    })
+                ->end()
+                ->children()
+                    ->enumNode('type')
+                        ->values(['basic', 'bearer', 'wsse', 'service'])
+                        ->isRequired()
+                        ->cannotBeEmpty()
+                    ->end()
+                    ->scalarNode('username')->end()
+                    ->scalarNode('password')->end()
+                    ->scalarNode('token')->end()
+                    ->scalarNode('service')->end()
+                    ->end()
+                ->end()
+            ->end(); // End authentication plugin
+
+        return $node;
+    }
+
+    /**
+     * Validate that the configuration fragment has the specified keys and none other.
+     *
+     * @param array  $expected Fields that must exist
+     * @param array  $actual   Actual configuration hashmap
+     * @param string $authName Name of authentication method for error messages
+     *
+     * @throws InvalidConfigurationException If $actual does not have exactly the keys specified in $expected (plus 'type')
+     */
+    private function validateAuthenticationType(array $expected, array $actual, $authName)
+    {
+        unset($actual['type']);
+        $actual = array_keys($actual);
+        sort($actual);
+        sort($expected);
+
+        if ($expected === $actual) {
+            return;
+        }
+
+        throw new InvalidConfigurationException(sprintf(
+            'Authentication "%s" requires %s but got %s',
+            $authName,
+            implode(', ', $expected),
+            implode(', ', $actual)
+        ));
     }
 }
