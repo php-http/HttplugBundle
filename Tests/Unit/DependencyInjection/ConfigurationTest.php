@@ -127,13 +127,13 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
                         'username' => 'foo',
                         'password' => 'bar',
                     ],
-                    'my_brearer' => [
+                    'my_bearer' => [
                         'type' => 'bearer',
                         'token' => 'foo',
                     ],
                     'my_service' => [
                         'type' => 'service',
-                        'service' => 'my_auth_serivce',
+                        'service' => 'my_auth_service',
                     ],
                 ],
                 'cache' => [

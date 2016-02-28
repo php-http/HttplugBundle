@@ -29,16 +29,17 @@ $container->loadFromExtension('httplug', [
                 'username' => 'foo',
                 'password' => 'bar',
             ],
-            'my_brearer' => [
+            'my_bearer' => [
                 'type' => 'bearer',
                 'token' => 'foo',
             ],
             'my_service' => [
                 'type' => 'service',
-                'service' => 'my_auth_serivce',
+                'service' => 'my_auth_service',
             ],
         ],
         'cache' => [
+            'cache_pool' => 'my_cache_pool',
             'stream_factory' => 'my_other_stream_factory',
             'config' => [
                 'default_ttl' => 42,
