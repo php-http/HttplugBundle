@@ -9,22 +9,22 @@
         </service>
 
         <service id="httplug.client.default" class="Http\Client\HttpClient">
-            <factory service="httplug.factory" method="createClassOfType" />
+            <factory service="httplug.factory" method="find" />
             <argument>Http\Client\HttpClient</argument>
         </service>
 
         <service id="httplug.message_factory.default" class="Http\Message\MessageFactory">
-            <factory service="httplug.factory" method="createClassOfType" />
+            <factory service="httplug.factory" method="find" />
             <argument>Http\Message\MessageFactory</argument>
         </service>
 
         <service id="httplug.uri_factory.default" class="Http\Message\UriFactory">
-            <factory service="httplug.factory" method="createClassOfType" />
+            <factory service="httplug.factory" method="find" />
             <argument>Http\Message\UriFactory</argument>
         </service>
 
         <service id="httplug.stream_factory.default" class="Http\Message\StreamFactory">
-            <factory service="httplug.factory" method="createClassOfType" />
+            <factory service="httplug.factory" method="find" />
             <argument>Http\Message\StreamFactory</argument>
         </service>
     </services>
