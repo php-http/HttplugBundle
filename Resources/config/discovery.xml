@@ -4,21 +4,28 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
-        <service id="httplug.client.default"
-             class="Http\Client\HttpClient">
-            <factory class="Http\Discovery\HttpClientDiscovery" method="find"/>
+        <service id="httplug.factory" class="Http\HttplugBundle\Util\HttplugFactory" public="false">
+            <argument type="service" id="puli.discovery" />
         </service>
-        <service id="httplug.message_factory.default"
-             class="Http\Message\MessageFactory">
-            <factory class="Http\Discovery\MessageFactoryDiscovery" method="find"/>
+
+        <service id="httplug.client.default" class="Http\Client\HttpClient">
+            <factory service="httplug.factory" method="createClassOfType" />
+            <argument>Http\Client\HttpClient</argument>
         </service>
-        <service id="httplug.uri_factory.default"
-             class="Http\Message\UriFactory">
-            <factory class="Http\Discovery\UriFactoryDiscovery" method="find"/>
+
+        <service id="httplug.message_factory.default" class="Http\Message\MessageFactory">
+            <factory service="httplug.factory" method="createClassOfType" />
+            <argument>Http\Message\MessageFactory</argument>
         </service>
-        <service id="httplug.stream_factory.default"
-             class="Http\Message\StreamFactory">
-            <factory class="Http\Discovery\StreamFactoryDiscovery" method="find"/>
+
+        <service id="httplug.uri_factory.default" class="Http\Message\UriFactory">
+            <factory service="httplug.factory" method="createClassOfType" />
+            <argument>Http\Message\UriFactory</argument>
+        </service>
+
+        <service id="httplug.stream_factory.default" class="Http\Message\StreamFactory">
+            <factory service="httplug.factory" method="createClassOfType" />
+            <argument>Http\Message\StreamFactory</argument>
         </service>
 
     </services>

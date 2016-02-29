@@ -13,7 +13,6 @@
     ],
     "require": {
         "php": ">=5.5",
-        "php-http/discovery": "^0.8",
         "php-http/client-implementation": "^1.0",
         "php-http/message-factory": "^1.0.2",
         "php-http/plugins": "^1.0",
@@ -26,7 +25,11 @@
         "puli/composer-plugin": "1.0.0-beta9",
         "symfony/symfony": "^2.7|^3.0",
         "polishsymfonycommunity/symfony-mocker-container": "^1.0",
-        "matthiasnoback/symfony-dependency-injection-test": "^0.7"
+        "matthiasnoback/symfony-dependency-injection-test": "^0.7",
+        "puli/symfony-bundle": "^1.0@beta"
+    },
+    "suggest": {
+        "puli/symfony-bundle": "Used for automatic service discovery"
     },
     "autoload": {
         "psr-4": {
