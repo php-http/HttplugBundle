@@ -33,7 +33,6 @@ class HttplugExtension extends Extension
 
         $loader->load('services.xml');
         $loader->load('plugins.xml');
-        $loader->load('discovery.xml');
 
         $enabled = is_bool($config['toolbar']['enabled']) ? $config['toolbar']['enabled'] : $container->hasParameter('kernel.debug') && $container->getParameter('kernel.debug');
         if ($enabled) {
@@ -46,21 +45,10 @@ class HttplugExtension extends Extension
             }
         }
 
-        $useDiscovery = false;
-
         foreach ($config['classes'] as $service => $class) {
             if (!empty($class)) {
-                $container->removeDefinition(sprintf('httplug.%s.default', $service));
                 $container->register(sprintf('httplug.%s.default', $service), $class);
-            } else {
-                // we have to use discovery to find this class
-                $useDiscovery = true;
             }
-        }
-
-        if ($useDiscovery) {
-            $this->verifyPuliInstalled($container);
-            $loader->load('puli.xml');
         }
 
         foreach ($config['main_alias'] as $type => $id) {
@@ -215,22 +203,6 @@ class HttplugExtension extends Extension
 
             $container->register('httplug.plugin.authentication.'.$name, AuthenticationPlugin::class)
                 ->addArgument(new Reference($authServiceKey));
-        }
-    }
-
-    /**
-     * Verifies that Puli bundle is installed.
-     *
-     * @param ContainerBuilder $container
-     *
-     * @throws \Exception
-     */
-    private function verifyPuliInstalled(ContainerBuilder $container)
-    {
-        if (false === $container->has('puli.discovery')) {
-            throw new \Exception(
-                'You need to install puli/symfony-bundle or add configuration at httplug.classes in order to use this bundle. Refer to http://some.doc'
-            );
         }
     }
 }
