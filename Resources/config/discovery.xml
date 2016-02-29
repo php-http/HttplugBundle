@@ -27,6 +27,5 @@
             <factory service="httplug.factory" method="createClassOfType" />
             <argument>Http\Message\StreamFactory</argument>
         </service>
-
     </services>
 </container>

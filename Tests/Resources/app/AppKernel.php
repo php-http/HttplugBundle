@@ -12,6 +12,7 @@ class AppKernel extends Kernel
     {
         return [
             new \Symfony\Bundle\FrameworkBundle\FrameworkBundle(),
+            new \Puli\SymfonyBundle\PuliBundle(),
             new \Http\HttplugBundle\HttplugBundle(),
         ];
     }

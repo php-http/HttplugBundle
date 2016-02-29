@@ -47,6 +47,7 @@ class HttplugExtension extends Extension
         }
 
         $useDiscovery = false;
+
         foreach ($config['classes'] as $service => $class) {
             if (!empty($class)) {
                 $container->removeDefinition(sprintf('httplug.%s.default', $service));
@@ -58,13 +59,14 @@ class HttplugExtension extends Extension
         }
 
         if ($useDiscovery) {
-            $this->verifyDiscoveryInstalled($container);
+            $this->verifyPuliInstalled($container);
+            $loader->load('puli.xml');
         }
-
 
         foreach ($config['main_alias'] as $type => $id) {
             $container->setAlias(sprintf('httplug.%s', $type), $id);
         }
+
         $this->configurePlugins($container, $config['plugins']);
         $this->configureClients($container, $config);
     }
@@ -183,7 +185,6 @@ class HttplugExtension extends Extension
 
     /**
      * @param ContainerBuilder $container
-     * @param Definition       $parent
      * @param array            $config
      */
     private function configureAuthentication(ContainerBuilder $container, array $config)
@@ -218,23 +219,18 @@ class HttplugExtension extends Extension
     }
 
     /**
-     * Verify that Puli is installed
+     * Verifies that Puli bundle is installed.
      *
      * @param ContainerBuilder $container
+     *
      * @throws \Exception
      */
-    private function verifyDiscoveryInstalled(ContainerBuilder $container)
+    private function verifyPuliInstalled(ContainerBuilder $container)
     {
-        $enabledBundles = $container->getParameter('kernel.bundles');
-        if (!isset($enabledBundles['PuliSymfonyBundle'])) {
+        if (false === $container->has('puli.discovery')) {
             throw new \Exception(
                 'You need to install puli/symfony-bundle or add configuration at httplug.classes in order to use this bundle. Refer to http://some.doc'
             );
-        }
-
-        // .... OR
-        if (defined('PULI_FACTORY')) {
-            // Throw exception
         }
     }
 }

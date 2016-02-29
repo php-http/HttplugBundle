@@ -4,6 +4,7 @@ namespace Http\HttplugBundle\Tests\Unit\DependencyInjection;
 
 use Http\HttplugBundle\DependencyInjection\HttplugExtension;
 use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractExtensionTestCase;
+use Symfony\Component\DependencyInjection\Definition;
 
 /**
  * @author David Buchmann <mail@davidbu.ch>
@@ -19,6 +20,8 @@ class HttplugExtensionTest extends AbstractExtensionTestCase
 
     public function testConfigLoadDefault()
     {
+        $this->setDefinition('puli.discovery', new Definition('Puli\Discovery\Api\Discovery'));
+
         $this->load();
 
         foreach (['client', 'message_factory', 'uri_factory', 'stream_factory'] as $type) {
@@ -33,6 +36,8 @@ class HttplugExtensionTest extends AbstractExtensionTestCase
 
     public function testConfigLoadClass()
     {
+        $this->setDefinition('puli.discovery', new Definition('Puli\Discovery\Api\Discovery'));
+
         $this->load([
             'classes' => [
                 'client' => 'Http\Adapter\Guzzle6\Client',
@@ -51,6 +56,8 @@ class HttplugExtensionTest extends AbstractExtensionTestCase
 
     public function testConfigLoadService()
     {
+        $this->setDefinition('puli.discovery', new Definition('Puli\Discovery\Api\Discovery'));
+
         $this->load([
             'main_alias' => [
                 'client' => 'my_client_service',
