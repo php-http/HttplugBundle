@@ -53,6 +53,5 @@ final class DiscoveryPassTest extends AbstractCompilerPassTestCase
      */
     public function compilation_should_not_fail_with_empty_container()
     {
-
     }
 }
