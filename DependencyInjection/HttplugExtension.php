@@ -33,7 +33,6 @@ class HttplugExtension extends Extension
 
         $loader->load('services.xml');
         $loader->load('plugins.xml');
-        $loader->load('discovery.xml');
 
         $enabled = is_bool($config['toolbar']['enabled']) ? $config['toolbar']['enabled'] : $container->hasParameter('kernel.debug') && $container->getParameter('kernel.debug');
         if ($enabled) {
@@ -48,7 +47,6 @@ class HttplugExtension extends Extension
 
         foreach ($config['classes'] as $service => $class) {
             if (!empty($class)) {
-                $container->removeDefinition(sprintf('httplug.%s.default', $service));
                 $container->register(sprintf('httplug.%s.default', $service), $class);
             }
         }
@@ -56,6 +54,7 @@ class HttplugExtension extends Extension
         foreach ($config['main_alias'] as $type => $id) {
             $container->setAlias(sprintf('httplug.%s', $type), $id);
         }
+
         $this->configurePlugins($container, $config['plugins']);
         $this->configureClients($container, $config);
     }
@@ -174,7 +173,6 @@ class HttplugExtension extends Extension
 
     /**
      * @param ContainerBuilder $container
-     * @param Definition       $parent
      * @param array            $config
      */
     private function configureAuthentication(ContainerBuilder $container, array $config)

@@ -10,10 +10,16 @@ class AppKernel extends Kernel
      */
     public function registerBundles()
     {
-        return [
+        $bundles =  [
             new \Symfony\Bundle\FrameworkBundle\FrameworkBundle(),
             new \Http\HttplugBundle\HttplugBundle(),
         ];
+
+        if (false === defined('HHVM_VERSION')) {
+            $bundles[] = new \Puli\SymfonyBundle\PuliBundle();
+        }
+
+        return $bundles;
     }
 
     /**

@@ -5,3 +5,4 @@ composer.lock
 phpspec.yml
 phpunit.xml
 puli.json
+puli.phar
