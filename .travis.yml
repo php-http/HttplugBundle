@@ -34,6 +34,7 @@ before_install:
     - travis_retry composer self-update
 
 install:
+    - wget https://github.com/puli/cli/releases/download/1.0.0-beta10/puli.phar && chmod +x puli.phar
     - composer require symfony/symfony:${SYMFONY_VERSION} --no-update
     - travis_retry composer update ${COMPOSER_FLAGS} --prefer-source --no-interaction
 

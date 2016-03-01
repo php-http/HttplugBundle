@@ -24,11 +24,6 @@ class HttplugExtensionTest extends AbstractExtensionTestCase
         foreach (['client', 'message_factory', 'uri_factory', 'stream_factory'] as $type) {
             $this->assertContainerBuilderHasAlias("httplug.$type", "httplug.$type.default");
         }
-
-        $this->assertContainerBuilderHasService('httplug.client.default', 'Http\Client\HttpClient');
-        $this->assertContainerBuilderHasService('httplug.message_factory.default', 'Http\Message\MessageFactory');
-        $this->assertContainerBuilderHasService('httplug.uri_factory.default', 'Http\Message\UriFactory');
-        $this->assertContainerBuilderHasService('httplug.stream_factory.default', 'Http\Message\StreamFactory');
     }
 
     public function testConfigLoadClass()
@@ -39,14 +34,7 @@ class HttplugExtensionTest extends AbstractExtensionTestCase
             ],
         ]);
 
-        foreach (['client', 'message_factory', 'uri_factory', 'stream_factory'] as $type) {
-            $this->assertContainerBuilderHasAlias("httplug.$type", "httplug.$type.default");
-        }
-
         $this->assertContainerBuilderHasService('httplug.client.default', 'Http\Adapter\Guzzle6\Client');
-        $this->assertContainerBuilderHasService('httplug.message_factory.default', 'Http\Message\MessageFactory');
-        $this->assertContainerBuilderHasService('httplug.uri_factory.default', 'Http\Message\UriFactory');
-        $this->assertContainerBuilderHasService('httplug.stream_factory.default', 'Http\Message\StreamFactory');
     }
 
     public function testConfigLoadService()
@@ -63,10 +51,5 @@ class HttplugExtensionTest extends AbstractExtensionTestCase
         foreach (['client', 'message_factory', 'uri_factory', 'stream_factory'] as $type) {
             $this->assertContainerBuilderHasAlias("httplug.$type", "my_{$type}_service");
         }
-
-        $this->assertContainerBuilderHasService('httplug.client.default', 'Http\Client\HttpClient');
-        $this->assertContainerBuilderHasService('httplug.message_factory.default', 'Http\Message\MessageFactory');
-        $this->assertContainerBuilderHasService('httplug.uri_factory.default', 'Http\Message\UriFactory');
-        $this->assertContainerBuilderHasService('httplug.stream_factory.default', 'Http\Message\StreamFactory');
     }
 }
