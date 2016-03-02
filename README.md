@@ -35,7 +35,7 @@ public function registerBundles()
 
 ## Documentation
 
-Please see the [official documentation](http://docs.php-http/en/latest/integrations/index.html).
+Please see the [official documentation](http://docs.php-http.org/en/latest/integrations/symfony-bundle.html).
 
 
 ## Testing
