@@ -71,7 +71,7 @@ final class DiscoveryPass implements CompilerPassInterface
     {
         if (false === $container->has('puli.discovery')) {
             throw new RuntimeException(
-                'You need to install puli/symfony-bundle or add configuration at httplug.classes in order to use this bundle. Refer to http://docs.php-http/en/latest/integrations/index.html'
+                'You need to install puli/symfony-bundle or add configuration at httplug.classes in order to use this bundle. Refer to http://docs.php-http.org/en/latest/integrations/symfony-bundle.html#discovery-of-factory-classes'
             );
         }
 
