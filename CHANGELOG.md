@@ -1,6 +1,6 @@
 # Change Log
 
-## 1.0.0 - 2016-03-03
+## 1.0.0 - 2016-03-04
 
 ### Added
 
@@ -14,6 +14,7 @@
 ### Removed
 
 - Dependency on `php-http/discovery`. You must now install `puli/symfony-bundle` to use auto discovery.
+
 
 ## 0.2.0 - 2016-02-23
 
