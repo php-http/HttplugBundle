@@ -62,7 +62,7 @@ class MessageJournal extends DataCollector implements Journal
     }
 
     /**
-     * Get the successful request-resonse pairs.
+     * Returns the successful request-resonse pairs.
      *
      * @return array
      */
@@ -72,7 +72,7 @@ class MessageJournal extends DataCollector implements Journal
     }
 
     /**
-     * Get the failed request-resonse pairs.
+     * Returns the failed request-resonse pairs.
      *
      * @return array
      */
@@ -82,7 +82,7 @@ class MessageJournal extends DataCollector implements Journal
     }
 
     /**
-     * Get the total number of request made.
+     * Returns the total number of request made.
      *
      * @return int
      */
@@ -96,7 +96,7 @@ class MessageJournal extends DataCollector implements Journal
      */
     public function collect(Request $request, Response $response, \Exception $exception = null)
     {
-        // We do not need to collect any data form the Symfony Request and Response
+        // We do not need to collect any data from the Symfony Request and Response
     }
 
     /**
