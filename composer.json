@@ -9,6 +9,10 @@
         {
             "name": "David Buchmann",
             "email": "mail@davidbu.ch"
+        },
+        {
+            "name": "Tobias Nyholm",
+            "email": "tobias.nyholm@gmail.com"
         }
     ],
     "require": {
@@ -25,11 +29,14 @@
         "php-http/guzzle6-adapter": "^1.0",
         "php-http/react-adapter": "^0.1",
         "php-http/message": "^1.0",
-        "puli/composer-plugin": "1.0.0-beta9",
         "symfony/symfony": "^2.7|^3.0",
         "polishsymfonycommunity/symfony-mocker-container": "^1.0",
         "matthiasnoback/symfony-dependency-injection-test": "^0.7",
-        "puli/symfony-bundle": "^1.0@beta,>1.0.0-beta7"
+        "puli/symfony-bundle": "^1.0@beta"
+    },
+    "conflict": {
+        "puli/composer-plugin": "<1.0.0-beta9",
+        "puli/symfony-bundle": "<=1.0.0-beta7"
     },
     "suggest": {
         "puli/symfony-bundle": "Used for automatic service discovery"
