@@ -2,6 +2,7 @@
 
 namespace Http\HttplugBundle\ClientFactory;
 
+use Http\Client\Plugin\Plugin;
 use Http\Client\Plugin\PluginClient;
 
 /**
@@ -9,10 +10,10 @@ use Http\Client\Plugin\PluginClient;
  *
  * @author Tobias Nyholm <tobias.nyholm@gmail.com>
  */
-class PluginClientFactory
+final class PluginClientFactory
 {
     /**
-     * @param array         $plugins
+     * @param Plugin[]      $plugins
      * @param ClientFactory $factory
      * @param array         $config
      *

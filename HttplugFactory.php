@@ -37,7 +37,6 @@ final class HttplugFactory
     {
         $class = $this->findOneByType($type);
 
-        // TODO: use doctrine instantiator?
         return new $class();
     }
 
@@ -74,7 +73,7 @@ final class HttplugFactory
     }
 
     /**
-     * Evaulates conditions to boolean.
+     * Evaluates conditions to boolean.
      *
      * @param mixed $condition
      *
