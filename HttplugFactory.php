@@ -79,8 +79,6 @@ final class HttplugFactory
      * @param mixed $condition
      *
      * @return bool
-     *
-     * TODO: review this method
      */
     protected function evaluateCondition($condition)
     {
@@ -95,8 +93,8 @@ final class HttplugFactory
             $evaluatedCondition = true;
 
             // Immediately stop execution if the condition is false
-            for ($i = 0; $i < count($condition) && false !== $evaluatedCondition; ++$i) {
-                $evaluatedCondition &= $this->evaluateCondition($condition[$i]);
+            while (count($condition) > 0 && $evaluatedCondition) {
+                $evaluatedCondition = $this->evaluateCondition(array_shift($condition));
             }
 
             return $evaluatedCondition;
