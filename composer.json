@@ -1,6 +1,6 @@
 {
     "name": "php-http/httplug-bundle",
-    "description": "Symfony bundle to integrate the Httplug generic HTTP client into Symfony",
+    "description": "Symfony integration for HTTPlug",
     "type": "symfony-bundle",
     "keywords": ["http", "discovery", "adapter", "message", "factory", "bundle", "httplug", "php-http"],
     "homepage": "http://httplug.io",
