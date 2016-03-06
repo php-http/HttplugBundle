@@ -6,6 +6,9 @@
     <services>
 
         <!-- ClientFactories -->
+        <service id="httplug.factory.buzz" class="Http\HttplugBundle\ClientFactory\BuzzFactory" public="false">
+            <argument type="service" id="httplug.message_factory"/>
+        </service>
         <service id="httplug.factory.curl" class="Http\HttplugBundle\ClientFactory\CurlFactory" public="false">
             <argument type="service" id="httplug.message_factory"/>
             <argument type="service" id="httplug.stream_factory"/>

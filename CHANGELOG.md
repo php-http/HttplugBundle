@@ -1,5 +1,12 @@
 # Change Log
 
+## UNRELEASED
+
+### Added
+
+- Client factories for Buzz.
+
+
 ## 1.0.0 - 2016-03-04
 
 ### Added
