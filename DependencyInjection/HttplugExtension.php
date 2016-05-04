@@ -2,8 +2,11 @@
 
 namespace Http\HttplugBundle\DependencyInjection;
 
-use Http\Client\Plugin\AuthenticationPlugin;
-use Http\Client\Plugin\PluginClient;
+use Http\Client\Common\Plugin\AuthenticationPlugin;
+use Http\Client\Common\Plugin\CachePlugin;
+use Http\Client\Common\Plugin\LoggerPlugin;
+use Http\Client\Common\Plugin\StopwatchPlugin;
+use Http\Client\Common\PluginClient;
 use Http\HttplugBundle\ClientFactory\DummyClient;
 use Http\Message\Authentication\BasicAuth;
 use Http\Message\Authentication\Bearer;
@@ -119,6 +122,7 @@ class HttplugExtension extends Extension
 
         foreach ($config as $name => $pluginConfig) {
             $pluginId = 'httplug.plugin.'.$name;
+
             if ($pluginConfig['enabled']) {
                 $def = $container->getDefinition($pluginId);
                 $this->configurePluginByName($name, $def, $pluginConfig);
@@ -137,6 +141,10 @@ class HttplugExtension extends Extension
     {
         switch ($name) {
             case 'cache':
+                // To preserve BC, we check the existence of the new plugin class and use it if available
+                if (class_exists(CachePlugin::class)) {
+                    $definition->setClass(CachePlugin::class);
+                }
                 $definition
                     ->replaceArgument(0, new Reference($config['cache_pool']))
                     ->replaceArgument(1, new Reference($config['stream_factory']))
@@ -152,6 +160,10 @@ class HttplugExtension extends Extension
                 $definition->replaceArgument(0, new Reference($config['journal']));
                 break;
             case 'logger':
+                // To preserve BC, we check the existence of the new plugin class and use it if available
+                if (class_exists(LoggerPlugin::class)) {
+                    $definition->setClass(LoggerPlugin::class);
+                }
                 $definition->replaceArgument(0, new Reference($config['logger']));
                 if (!empty($config['formatter'])) {
                     $definition->replaceArgument(1, new Reference($config['formatter']));
@@ -166,6 +178,10 @@ class HttplugExtension extends Extension
                 $definition->addArgument($config['retry']);
                 break;
             case 'stopwatch':
+                // To preserve BC, we check the existence of the new plugin class and use it if available
+                if (class_exists(StopwatchPlugin::class)) {
+                    $definition->setClass(StopwatchPlugin::class);
+                }
                 $definition->replaceArgument(0, new Reference($config['stopwatch']));
                 break;
         }

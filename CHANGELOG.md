@@ -11,6 +11,8 @@
 - Guzzle 6 client is now created according to the Httplug specifications with automated minimal behaviour.
   Make sure you configure the Httplug plugins as needed,
   for example if you want to get exceptions for failure HTTP status codes.
+- **[BC] PluginClientFactory returns an instance of `Http\Client\Common\PluginClient`** (see [php-http/client-common#14](https://github.com/php-http/client-common/pull/14))
+- Plugins are loaded from their new packages, fall back to `php-http/plugins` if necessary
 
 
 ### Fixed

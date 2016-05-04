@@ -9,21 +9,21 @@
             <argument />
             <argument />
         </service>
-        <service id="httplug.plugin.content_length" class="Http\Client\Plugin\ContentLengthPlugin" public="false" />
-        <service id="httplug.plugin.cookie" class="Http\Client\Plugin\CookiePlugin" public="false">
+        <service id="httplug.plugin.content_length" class="Http\Client\Common\Plugin\ContentLengthPlugin" public="false" />
+        <service id="httplug.plugin.cookie" class="Http\Client\Common\Plugin\CookiePlugin" public="false">
             <argument />
         </service>
-        <service id="httplug.plugin.decoder" class="Http\Client\Plugin\DecoderPlugin" public="false" />
-        <service id="httplug.plugin.error" class="Http\Client\Plugin\ErrorPlugin" public="false" />
-        <service id="httplug.plugin.history" class="Http\Client\Plugin\HistoryPlugin" public="false">
+        <service id="httplug.plugin.decoder" class="Http\Client\Common\Plugin\DecoderPlugin" public="false" />
+        <service id="httplug.plugin.error" class="Http\Client\Common\Plugin\ErrorPlugin" public="false" />
+        <service id="httplug.plugin.history" class="Http\Client\Common\Plugin\HistoryPlugin" public="false">
             <argument />
         </service>
         <service id="httplug.plugin.logger" class="Http\Client\Plugin\LoggerPlugin" public="false">
             <argument />
             <argument>null</argument>
         </service>
-        <service id="httplug.plugin.redirect" class="Http\Client\Plugin\RedirectPlugin" public="false" />
-        <service id="httplug.plugin.retry" class="Http\Client\Plugin\RetryPlugin" public="false" />
+        <service id="httplug.plugin.redirect" class="Http\Client\Common\Plugin\RedirectPlugin" public="false" />
+        <service id="httplug.plugin.retry" class="Http\Client\Common\Plugin\RetryPlugin" public="false" />
         <service id="httplug.plugin.stopwatch" class="Http\Client\Plugin\StopwatchPlugin" public="false">
             <argument />
         </service>
