@@ -10,7 +10,7 @@
             <argument>null</argument>
         </service>
 
-        <service id="httplug.collector.history_plugin" class="Http\Client\Plugin\HistoryPlugin" public="false">
+        <service id="httplug.collector.history_plugin" class="Http\Client\Common\Plugin\HistoryPlugin" public="false">
             <argument type="service" id="httplug.collector.message_journal"/>
         </service>
     </services>

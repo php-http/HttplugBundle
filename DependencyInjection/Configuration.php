@@ -177,9 +177,25 @@ class Configuration implements ConfigurationInterface
                     ->end() // End history plugin
 
                     ->arrayNode('logger')
-                    ->canBeDisabled()
                     ->addDefaultsIfNotSet()
                         ->children()
+                            ->enumNode('enabled')
+                                ->beforeNormalization()
+                                    ->ifString()
+                                    ->then(function ($v) {
+                                        switch ($v) {
+                                            case 'true':
+                                                return true;
+                                            case 'false':
+                                                return false;
+                                            default:
+                                                return $v;
+                                        }
+                                    })
+                                ->end()
+                                ->values(array(true, false, 'auto'))
+                                ->defaultValue('auto')
+                            ->end()
                             ->scalarNode('logger')
                                 ->info('This must be a service id to a service implementing Psr\Log\LoggerInterface')
                                 ->defaultValue('logger')

@@ -3,7 +3,7 @@
 namespace Http\HttplugBundle\Collector;
 
 use Http\Client\Exception;
-use Http\Client\Plugin\Journal;
+use Http\Client\Common\Plugin\Journal;
 use Http\Message\Formatter;
 use Http\Message\Formatter\SimpleFormatter;
 use Psr\Http\Message\RequestInterface;

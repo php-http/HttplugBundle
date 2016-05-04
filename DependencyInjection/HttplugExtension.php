@@ -2,8 +2,8 @@
 
 namespace Http\HttplugBundle\DependencyInjection;
 
-use Http\Client\Plugin\AuthenticationPlugin;
-use Http\Client\Plugin\PluginClient;
+use Http\Client\Common\Plugin\AuthenticationPlugin;
+use Http\Client\Common\PluginClient;
 use Http\HttplugBundle\ClientFactory\DummyClient;
 use Http\Message\Authentication\BasicAuth;
 use Http\Message\Authentication\Bearer;
@@ -119,6 +119,11 @@ class HttplugExtension extends Extension
 
         foreach ($config as $name => $pluginConfig) {
             $pluginId = 'httplug.plugin.'.$name;
+
+            if ('auto' === $pluginConfig['enabled']) {
+                $pluginConfig['enabled'] = $this->resolvePluginStatus($name, $pluginConfig);
+            }
+
             if ($pluginConfig['enabled']) {
                 $def = $container->getDefinition($pluginId);
                 $this->configurePluginByName($name, $def, $pluginConfig);
@@ -204,5 +209,26 @@ class HttplugExtension extends Extension
             $container->register('httplug.plugin.authentication.'.$name, AuthenticationPlugin::class)
                 ->addArgument(new Reference($authServiceKey));
         }
+    }
+
+    /**
+     * Resolve the plugin enabled status if it is 'auto'.
+     *
+     * Returns false if plugin has no auto status allowed.
+     *
+     * @param string $name
+     * @param array  $pluginConfig
+     *
+     * @return bool
+     */
+    private function resolvePluginStatus($name, array $pluginConfig)
+    {
+        switch ($name) {
+            case 'logger':
+                return class_exists('Http\Client\Common\Plugin\LoggerPlugin');
+                break;
+        }
+
+        return false;
     }
 }

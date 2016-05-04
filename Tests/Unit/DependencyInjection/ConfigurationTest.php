@@ -62,7 +62,7 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
                     'enabled' => false,
                 ],
                 'logger' => [
-                    'enabled' => true,
+                    'enabled' => 'auto',
                     'logger' => 'logger',
                     'formatter' => null,
                 ],
