@@ -193,7 +193,7 @@ class Configuration implements ConfigurationInterface
                                         }
                                     })
                                 ->end()
-                                ->values(array(true, false, 'auto'))
+                                ->values([true, false, 'auto'])
                                 ->defaultValue('auto')
                             ->end()
                             ->scalarNode('logger')
