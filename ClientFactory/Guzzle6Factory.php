@@ -2,8 +2,7 @@
 
 namespace Http\HttplugBundle\ClientFactory;
 
-use GuzzleHttp\Client;
-use Http\Adapter\Guzzle6\Client as Adapter;
+use Http\Adapter\Guzzle6\Client;
 
 /**
  * @author Tobias Nyholm <tobias.nyholm@gmail.com>
@@ -19,8 +18,6 @@ class Guzzle6Factory implements ClientFactory
             throw new \LogicException('To use the Guzzle6 adapter you need to install the "php-http/guzzle6-adapter" package.');
         }
 
-        $client = new Client($config);
-
-        return new Adapter($client);
+        return Client::createWithConfig($config);
     }
 }
