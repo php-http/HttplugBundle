@@ -7,6 +7,11 @@
 - Client factories for Buzz.
 
 
+### Fixed
+
+- Puli autoload issue on >=PHP 5.6, see [puli/issues#190](https://github.com/puli/issues/issues/190)
+
+
 ## 1.0.0 - 2016-03-04
 
 ### Added
