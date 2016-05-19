@@ -2,8 +2,8 @@
 
 namespace Http\HttplugBundle\ClientFactory;
 
-use Http\Client\Plugin\Plugin;
-use Http\Client\Plugin\PluginClient;
+use Http\Client\Common\Plugin;
+use Http\Client\Common\PluginClient;
 
 /**
  * This factory creates a PluginClient.

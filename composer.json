@@ -19,7 +19,10 @@
         "php": ">=5.5",
         "php-http/client-implementation": "^1.0",
         "php-http/message-factory": "^1.0.2",
-        "php-http/plugins": "^1.0",
+        "php-http/client-common": "^1.1",
+        "php-http/cache-plugin": "^1.0",
+        "php-http/logger-plugin": "^1.0",
+        "php-http/stopwatch-plugin": "^1.0",
         "symfony/options-resolver": "^2.7|^3.0",
         "symfony/framework-bundle": "^2.7|^3.0"
     },

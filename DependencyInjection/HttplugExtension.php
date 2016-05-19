@@ -2,8 +2,8 @@
 
 namespace Http\HttplugBundle\DependencyInjection;
 
-use Http\Client\Plugin\AuthenticationPlugin;
-use Http\Client\Plugin\PluginClient;
+use Http\Client\Common\Plugin\AuthenticationPlugin;
+use Http\Client\Common\PluginClient;
 use Http\HttplugBundle\ClientFactory\DummyClient;
 use Http\Message\Authentication\BasicAuth;
 use Http\Message\Authentication\Bearer;
@@ -119,6 +119,7 @@ class HttplugExtension extends Extension
 
         foreach ($config as $name => $pluginConfig) {
             $pluginId = 'httplug.plugin.'.$name;
+
             if ($pluginConfig['enabled']) {
                 $def = $container->getDefinition($pluginId);
                 $this->configurePluginByName($name, $def, $pluginConfig);
