@@ -3,28 +3,57 @@
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
+    <parameters>
+        <parameter key="httplug.plugin.add_host.class">Http\Client\Common\Plugin\AddHostPlugin</parameter>
+        <parameter key="httplug.plugin.authentication.class">Http\Client\Common\Plugin\AuthenticationPlugin</parameter>
+        <parameter key="httplug.plugin.cache.class">Http\Client\Common\Plugin\CachePlugin</parameter>
+        <parameter key="httplug.plugin.content_length.class">Http\Client\Common\Plugin\ContentLengthPlugin</parameter>
+        <parameter key="httplug.plugin.cookie.class">Http\Client\Common\Plugin\CookiePlugin</parameter>
+        <parameter key="httplug.plugin.decoder.class">Http\Client\Common\Plugin\DecoderPlugin</parameter>
+        <parameter key="httplug.plugin.error.class">Http\Client\Common\Plugin\ErrorPlugin</parameter>
+        <parameter key="httplug.plugin.header_append.class">Http\Client\Common\Plugin\HeaderAppendPlugin</parameter>
+        <parameter key="httplug.plugin.header_defaults.class">Http\Client\Common\Plugin\HeaderDefaultsPlugin</parameter>
+        <parameter key="httplug.plugin.header_remove.class">Http\Client\Common\Plugin\HeaderRemovePlugin</parameter>
+        <parameter key="httplug.plugin.header_set.class">Http\Client\Common\Plugin\HeaderSetPlugin</parameter>
+        <parameter key="httplug.plugin.history.class">Http\Client\Common\Plugin\HistoryPlugin</parameter>
+        <parameter key="httplug.plugin.logger.class">Http\Client\Common\Plugin\LoggerPlugin</parameter>
+        <parameter key="httplug.plugin.redirect.class">Http\Client\Common\Plugin\RedirectPlugin</parameter>
+        <parameter key="httplug.plugin.retry.class">Http\Client\Common\Plugin\RetryPlugin</parameter>
+        <parameter key="httplug.plugin.request_matcher.class">Http\Client\Common\Plugin\RequestMatcherPlugin</parameter>
+        <parameter key="httplug.plugin.stopwatch.class">Http\Client\Common\Plugin\StopwatchPlugin</parameter>
+    </parameters>
+
     <services>
-        <service id="httplug.plugin.cache" class="Http\Client\Common\Plugin\CachePlugin" public="false">
+        <service id="httplug.plugin.cache" class="%httplug.plugin.cache.class%" public="false">
             <argument />
             <argument />
             <argument />
         </service>
-        <service id="httplug.plugin.content_length" class="Http\Client\Common\Plugin\ContentLengthPlugin" public="false" />
-        <service id="httplug.plugin.cookie" class="Http\Client\Common\Plugin\CookiePlugin" public="false">
+
+        <service id="httplug.plugin.content_length" class="%httplug.plugin.content_length.class%" public="false" />
+
+        <service id="httplug.plugin.cookie" class="%httplug.plugin.cookie.class%" public="false">
             <argument />
         </service>
-        <service id="httplug.plugin.decoder" class="Http\Client\Common\Plugin\DecoderPlugin" public="false" />
-        <service id="httplug.plugin.error" class="Http\Client\Common\Plugin\ErrorPlugin" public="false" />
-        <service id="httplug.plugin.history" class="Http\Client\Common\Plugin\HistoryPlugin" public="false">
+
+        <service id="httplug.plugin.decoder" class="%httplug.plugin.decoder.class%" public="false" />
+
+        <service id="httplug.plugin.error" class="%httplug.plugin.error.class%" public="false" />
+
+        <service id="httplug.plugin.history" class="%httplug.plugin.history.class%" public="false">
             <argument />
         </service>
-        <service id="httplug.plugin.logger" class="Http\Client\Common\Plugin\LoggerPlugin" public="false">
+
+        <service id="httplug.plugin.logger" class="%httplug.plugin.logger.class%" public="false">
             <argument />
             <argument>null</argument>
         </service>
-        <service id="httplug.plugin.redirect" class="Http\Client\Common\Plugin\RedirectPlugin" public="false" />
-        <service id="httplug.plugin.retry" class="Http\Client\Common\Plugin\RetryPlugin" public="false" />
-        <service id="httplug.plugin.stopwatch" class="Http\Client\Common\Plugin\StopwatchPlugin" public="false">
+
+        <service id="httplug.plugin.redirect" class="%httplug.plugin.redirect.class%" public="false" />
+
+        <service id="httplug.plugin.retry" class="%httplug.plugin.retry.class%" public="false" />
+
+        <service id="httplug.plugin.stopwatch" class="%httplug.plugin.stopwatch.class%" public="false">
             <argument />
         </service>
     </services>

@@ -1,6 +1,13 @@
 # Change Log
 
 
+## UNRELEASED
+
+### Added
+
+- Plugin class name container parameters
+
+
 ## 1.1.0 - 2016-05-19
 
 ### Added
