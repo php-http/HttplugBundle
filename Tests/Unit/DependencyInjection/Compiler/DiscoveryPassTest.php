@@ -4,7 +4,6 @@ namespace Http\HttplugBundle\Tests\Unit\DependencyInjection\Compiler;
 
 use Http\Client\HttpClient;
 use Http\HttplugBundle\DependencyInjection\Compiler\DiscoveryPass;
-use Http\HttplugBundle\HttplugFactory;
 use Http\Message\MessageFactory;
 use Http\Message\StreamFactory;
 use Http\Message\UriFactory;

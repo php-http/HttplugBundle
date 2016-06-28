@@ -1,5 +1,10 @@
 # Change Log
 
+## 1.1.1 - 2016-06-30
+
+### Changed
+
+- Removed Puli logic and require `php-http/discovery:0.9` which makes Puli optional.
 
 ## 1.1.0 - 2016-05-19
 

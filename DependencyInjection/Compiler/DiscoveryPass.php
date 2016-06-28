@@ -7,14 +7,11 @@ use Http\Discovery\HttpClientDiscovery;
 use Http\Discovery\MessageFactoryDiscovery;
 use Http\Discovery\StreamFactoryDiscovery;
 use Http\Discovery\UriFactoryDiscovery;
-use Http\HttplugBundle\HttplugFactory;
 use Http\Message\MessageFactory;
 use Http\Message\StreamFactory;
 use Http\Message\UriFactory;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Exception\RuntimeException;
-use Symfony\Component\DependencyInjection\Reference;
 
 /**
  * Adds fallback and discovery services.
@@ -36,7 +33,7 @@ final class DiscoveryPass implements CompilerPassInterface
     ];
 
     /**
-     * Factories by type
+     * Factories by type.
      *
      * @var array
      */
