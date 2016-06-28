@@ -14,11 +14,7 @@ class AppKernel extends Kernel
             new \Symfony\Bundle\FrameworkBundle\FrameworkBundle(),
             new \Http\HttplugBundle\HttplugBundle(),
         ];
-
-        if (false === defined('HHVM_VERSION')) {
-            $bundles[] = new \Puli\SymfonyBundle\PuliBundle();
-        }
-
+        
         return $bundles;
     }
 

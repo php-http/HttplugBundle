@@ -3,6 +3,10 @@
 namespace Http\HttplugBundle\DependencyInjection\Compiler;
 
 use Http\Client\HttpClient;
+use Http\Discovery\HttpClientDiscovery;
+use Http\Discovery\MessageFactoryDiscovery;
+use Http\Discovery\StreamFactoryDiscovery;
+use Http\Discovery\UriFactoryDiscovery;
 use Http\HttplugBundle\HttplugFactory;
 use Http\Message\MessageFactory;
 use Http\Message\StreamFactory;
@@ -32,54 +36,31 @@ final class DiscoveryPass implements CompilerPassInterface
     ];
 
     /**
+     * Factories by type
+     *
+     * @var array
+     */
+    private $factoryClasses = [
+        'client' => HttpClientDiscovery::class,
+        'message_factory' => MessageFactoryDiscovery::class,
+        'uri_factory' => UriFactoryDiscovery::class,
+        'stream_factory' => StreamFactoryDiscovery::class,
+    ];
+
+    /**
      * {@inheritdoc}
      */
     public function process(ContainerBuilder $container)
     {
-        $useDiscovery = false;
-
         foreach ($this->services as $service => $class) {
             $serviceId = sprintf('httplug.%s.default', $service);
 
             if (false === $container->has($serviceId)) {
-                // Register and create factory for the first time
-                if (false === $useDiscovery) {
-                    $this->registerFactory($container);
-
-                    $factory = [
-                        new Reference('httplug.factory'),
-                        'find',
-                    ];
-
-                    $useDiscovery = true;
-                }
-
+                // Register and create factory for service
                 $definition = $container->register($serviceId, $class);
-
-                $definition->setFactory($factory);
+                $definition->setFactory([$this->factoryClasses[$service], 'find']);
                 $definition->addArgument($class);
             }
         }
-    }
-
-    /**
-     * @param ContainerBuilder $container
-     *
-     * @throws RuntimeException
-     */
-    private function registerFactory(ContainerBuilder $container)
-    {
-        if (false === $container->has('puli.discovery')) {
-            throw new RuntimeException(
-                'You need to install puli/symfony-bundle or add configuration at httplug.classes in order to use this bundle. Refer to http://docs.php-http.org/en/latest/integrations/symfony-bundle.html#discovery-of-factory-classes'
-            );
-        }
-
-        $definition = $container->register('httplug.factory', HttplugFactory::class);
-
-        $definition
-            ->addArgument(new Reference('puli.discovery'))
-            ->setPublic(false)
-        ;
     }
 }

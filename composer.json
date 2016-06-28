@@ -24,7 +24,8 @@
         "php-http/logger-plugin": "^1.0",
         "php-http/stopwatch-plugin": "^1.0",
         "symfony/options-resolver": "^2.7|^3.0",
-        "symfony/framework-bundle": "^2.7|^3.0"
+        "symfony/framework-bundle": "^2.7|^3.0",
+        "php-http/discovery": "^0.9"
     },
     "require-dev": {
         "phpunit/phpunit": "^4.5",
@@ -37,15 +38,12 @@
         "symfony/symfony": "^2.7|^3.0",
         "polishsymfonycommunity/symfony-mocker-container": "^1.0",
         "matthiasnoback/symfony-dependency-injection-test": "^0.7",
-        "puli/symfony-bundle": "^1.0@beta"
     },
     "conflict": {
-        "php-http/guzzle6-adapter": "<1.1",
-        "puli/composer-plugin": "<1.0.0-beta9",
-        "puli/symfony-bundle": "<=1.0.0-beta7"
+        "php-http/guzzle6-adapter": "<1.1"
     },
     "suggest": {
-        "puli/symfony-bundle": "Used for automatic service discovery"
+        "php-http/discovery": "Used for automatic service discovery"
     },
     "autoload": {
         "psr-4": {
