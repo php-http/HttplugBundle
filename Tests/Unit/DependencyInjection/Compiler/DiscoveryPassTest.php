@@ -4,7 +4,6 @@ namespace Http\HttplugBundle\Tests\Unit\DependencyInjection\Compiler;
 
 use Http\Client\HttpClient;
 use Http\HttplugBundle\DependencyInjection\Compiler\DiscoveryPass;
-use Http\HttplugBundle\HttplugFactory;
 use Http\Message\MessageFactory;
 use Http\Message\StreamFactory;
 use Http\Message\UriFactory;
@@ -24,11 +23,7 @@ final class DiscoveryPassTest extends AbstractCompilerPassTestCase
 
     public function testDiscoveryFallbacks()
     {
-        $this->setDefinition('puli.discovery', new Definition('Puli\Discovery\Api\Discovery'));
-
         $this->compile();
-
-        $this->assertContainerBuilderHasService('httplug.factory', HttplugFactory::class);
 
         $this->assertContainerBuilderHasService('httplug.client.default', HttpClient::class);
         $this->assertContainerBuilderHasService('httplug.message_factory.default', MessageFactory::class);
@@ -38,12 +33,9 @@ final class DiscoveryPassTest extends AbstractCompilerPassTestCase
 
     public function testDiscoveryPartialFallbacks()
     {
-        $this->setDefinition('puli.discovery', new Definition('Puli\Discovery\Api\Discovery'));
         $this->setDefinition('httplug.client.default', new Definition('Http\Adapter\Guzzle6\Client'));
 
         $this->compile();
-
-        $this->assertContainerBuilderHasService('httplug.factory', HttplugFactory::class);
 
         $this->assertContainerBuilderHasService('httplug.client.default', 'Http\Adapter\Guzzle6\Client');
         $this->assertContainerBuilderHasService('httplug.message_factory.default', MessageFactory::class);
@@ -58,19 +50,6 @@ final class DiscoveryPassTest extends AbstractCompilerPassTestCase
         $this->setDefinition('httplug.uri_factory.default', new Definition(UriFactory::class));
         $this->setDefinition('httplug.stream_factory.default', new Definition(StreamFactory::class));
 
-        $this->compile();
-
-        $this->assertContainerBuilderNotHasService('httplug.factory');
-    }
-
-    /**
-     * Overridden test as we have dependencies in this compiler pass.
-     *
-     * @test
-     * @expectedException \RuntimeException
-     */
-    public function compilation_should_not_fail_with_empty_container()
-    {
         $this->compile();
     }
 }
