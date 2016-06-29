@@ -40,6 +40,18 @@ class CurlFactory implements ClientFactory
             throw new \LogicException('To use the Curl client you need to install the "php-http/curl-client" package.');
         }
 
+        // Try to resolve curl constant names
+        foreach ($config as $key => $value) {
+            // If the value starts with 'CURL' we assume it is a reference to a constant.
+            if (strpos($key, 'CURL') === 0) {
+                $contantValue = constant($key);
+                if ($contantValue !== null) {
+                    unset($config[$key]);
+                    $config[$contantValue] = $value;
+                }
+            }
+        }
+
         return new Client($this->messageFactory, $this->streamFactory, $config);
     }
 }
