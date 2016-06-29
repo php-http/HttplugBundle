@@ -199,8 +199,8 @@ class HttplugExtension extends Extension
 
     /**
      * @param ContainerBuilder $container
-     * @param string $name
-     * @param array $arguments
+     * @param string           $name
+     * @param array            $arguments
      */
     private function configureClient(ContainerBuilder $container, $name, array $arguments)
     {
@@ -210,7 +210,6 @@ class HttplugExtension extends Extension
         if (empty($arguments['plugins'])) {
             $def->setFactory([new Reference($arguments['factory']), 'createClient'])
                 ->addArgument($arguments['config']);
-
         } else {
             $def->setFactory('Http\HttplugBundle\ClientFactory\PluginClientFactory::createPluginClient')
                 ->addArgument(
