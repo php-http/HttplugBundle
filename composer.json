@@ -31,7 +31,7 @@
         "phpunit/phpunit": "^4.5",
         "php-http/curl-client": "^1.0",
         "php-http/socket-client": "^1.0",
-        "php-http/guzzle6-adapter": "^1.1",
+        "php-http/guzzle6-adapter": "^1.1.1",
         "php-http/react-adapter": "^0.2",
         "php-http/buzz-adapter": "^0.2",
         "php-http/message": "^1.0",
