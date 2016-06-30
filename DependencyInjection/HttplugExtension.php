@@ -229,10 +229,6 @@ class HttplugExtension extends Extension
          * Decorate the client with clients from client-common
          */
 
-        if ($arguments['flexible_client'] && $arguments['add_http_methods']) {
-            throw new \LogicException('A http client can\'t be decorated with both FlexibleHttpClient and HttpMethodsClient. Only one of the following options can be true. ("flexible_client", "add_http_methods")');
-        }
-
         if ($arguments['flexible_client']) {
             $container->register($serviceId.'.flexible', FlexibleHttpClient::class)
                 ->addArgument(new Reference($serviceId.'.flexible.inner'))
@@ -240,7 +236,7 @@ class HttplugExtension extends Extension
                 ->setDecoratedService($serviceId);
         }
 
-        if ($arguments['add_http_methods']) {
+        if ($arguments['http_methods_client']) {
             $container->register($serviceId.'.http_methods', HttpMethodsClient::class)
                 ->setArguments([new Reference($serviceId.'.http_methods.inner'), new Reference('httplug.message_factory')])
                 ->setPublic(false)
