@@ -95,10 +95,11 @@ class Configuration implements ConfigurationInterface
         $root->children()
             ->arrayNode('clients')
                 ->validate()
-                    ->ifTrue(function($clients) {
+                    ->ifTrue(function ($clients) {
                         foreach ($clients as $name => $config) {
                             return $config['flexible_client'] && $config['http_methods_client'];
                         }
+
                         return false;
                     })
                     ->thenInvalid('A http client can\'t be decorated with both FlexibleHttpClient and HttpMethodsClient. Only one of the following options can be true. ("flexible_client", "http_methods_client")')->end()
