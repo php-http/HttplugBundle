@@ -94,6 +94,15 @@ class Configuration implements ConfigurationInterface
     {
         $root->children()
             ->arrayNode('clients')
+                ->validate()
+                    ->ifTrue(function ($clients) {
+                        foreach ($clients as $name => $config) {
+                            return $config['flexible_client'] && $config['http_methods_client'];
+                        }
+
+                        return false;
+                    })
+                    ->thenInvalid('A http client can\'t be decorated with both FlexibleHttpClient and HttpMethodsClient. Only one of the following options can be true. ("flexible_client", "http_methods_client")')->end()
                 ->useAttributeAsKey('name')
                 ->prototype('array')
                 ->children()
@@ -101,6 +110,14 @@ class Configuration implements ConfigurationInterface
                         ->isRequired()
                         ->cannotBeEmpty()
                         ->info('The service id of a factory to use when creating the adapter.')
+                    ->end()
+                    ->booleanNode('flexible_client')
+                        ->defaultFalse()
+                        ->info('Set to true to get the client wrapped in a FlexibleHttpClient which emulates async or sync behavior.')
+                    ->end()
+                    ->booleanNode('http_methods_client')
+                        ->defaultFalse()
+                        ->info('Set to true to get the client wrapped in a HttpMethodsClient which emulates provides functions for HTTP verbs.')
                     ->end()
                     ->arrayNode('plugins')
                         ->info('A list of service ids of plugins. The order is important.')

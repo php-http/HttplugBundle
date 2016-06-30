@@ -2,6 +2,8 @@
 
 namespace Http\HttplugBundle\DependencyInjection;
 
+use Http\Client\Common\FlexibleHttpClient;
+use Http\Client\Common\HttpMethodsClient;
 use Http\Client\Common\Plugin\AuthenticationPlugin;
 use Http\Client\Common\PluginClient;
 use Http\HttplugBundle\ClientFactory\DummyClient;
@@ -77,19 +79,7 @@ class HttplugExtension extends Extension
                 array_unshift($arguments['plugins'], 'httplug.collector.history_plugin');
             }
 
-            $def = $container->register('httplug.client.'.$name, DummyClient::class);
-
-            if (empty($arguments['plugins'])) {
-                $def->setFactory([new Reference($arguments['factory']), 'createClient'])
-                    ->addArgument($arguments['config']);
-            } else {
-                $def->setFactory('Http\HttplugBundle\ClientFactory\PluginClientFactory::createPluginClient')
-                    ->addArgument(array_map(function ($id) {
-                        return new Reference($id);
-                    }, $arguments['plugins']))
-                    ->addArgument(new Reference($arguments['factory']))
-                    ->addArgument($arguments['config']);
-            }
+            $this->configureClient($container, $name, $arguments);
         }
 
         // If we have clients configured
@@ -204,6 +194,53 @@ class HttplugExtension extends Extension
 
             $container->register('httplug.plugin.authentication.'.$name, AuthenticationPlugin::class)
                 ->addArgument(new Reference($authServiceKey));
+        }
+    }
+
+    /**
+     * @param ContainerBuilder $container
+     * @param string           $name
+     * @param array            $arguments
+     */
+    private function configureClient(ContainerBuilder $container, $name, array $arguments)
+    {
+        $serviceId = 'httplug.client.'.$name;
+        $def = $container->register($serviceId, DummyClient::class);
+
+        if (empty($arguments['plugins'])) {
+            $def->setFactory([new Reference($arguments['factory']), 'createClient'])
+                ->addArgument($arguments['config']);
+        } else {
+            $def->setFactory('Http\HttplugBundle\ClientFactory\PluginClientFactory::createPluginClient')
+                ->addArgument(
+                    array_map(
+                        function ($id) {
+                            return new Reference($id);
+                        },
+                        $arguments['plugins']
+                    )
+                )
+                ->addArgument(new Reference($arguments['factory']))
+                ->addArgument($arguments['config']);
+        }
+
+
+        /*
+         * Decorate the client with clients from client-common
+         */
+
+        if ($arguments['flexible_client']) {
+            $container->register($serviceId.'.flexible', FlexibleHttpClient::class)
+                ->addArgument(new Reference($serviceId.'.flexible.inner'))
+                ->setPublic(false)
+                ->setDecoratedService($serviceId);
+        }
+
+        if ($arguments['http_methods_client']) {
+            $container->register($serviceId.'.http_methods', HttpMethodsClient::class)
+                ->setArguments([new Reference($serviceId.'.http_methods.inner'), new Reference('httplug.message_factory')])
+                ->setPublic(false)
+                ->setDecoratedService($serviceId);
         }
     }
 }
