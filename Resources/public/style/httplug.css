@@ -1,0 +1,24 @@
+
+.push-right {
+    float: right;
+}
+
+.httplug-http-body {
+    display: none;
+}
+
+.httplug-request-table {
+
+}
+
+.httplug-plugin-name {
+    font-size: 130%;
+    font-weight: bold;
+}
+.httplug-request-stack {
+
+    display: none;
+}
+.httplug-error {
+    color: red;
+}
