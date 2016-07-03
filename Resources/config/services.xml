@@ -4,6 +4,9 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
+        <service id="httplug.strategy" class="Http\HttplugBundle\ConfiguredClientsStrategy" public="true">
+            <argument type="service" id="httplug.client"/>
+        </service>
 
         <!-- ClientFactories -->
         <service id="httplug.factory.buzz" class="Http\HttplugBundle\ClientFactory\BuzzFactory" public="false">
