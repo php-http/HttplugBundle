@@ -69,9 +69,12 @@ class HttplugExtension extends Extension
      */
     private function configureClients(ContainerBuilder $container, array $config)
     {
+        // If we have a client named 'default'
         $first = isset($config['clients']['default']) ? 'default' : null;
+
         foreach ($config['clients'] as $name => $arguments) {
             if ($first === null) {
+                // Save the name of the first configurated client.
                 $first = $name;
             }
 
