@@ -3,7 +3,6 @@
 namespace Http\HttplugBundle\Discovery;
 
 use Http\Client\HttpClient;
-use Http\Discovery\Exception\StrategyUnavailableException;
 use Http\Discovery\HttpClientDiscovery;
 use Http\Discovery\Strategy\DiscoveryStrategy;
 use Symfony\Component\Console\ConsoleEvents;
@@ -38,14 +37,17 @@ class ConfiguredClientsStrategy implements DiscoveryStrategy, EventSubscriberInt
     public static function getCandidates($type)
     {
         if (static::$client !== null && $type == HttpClient::class) {
-            return [['class' => function() { return static::$client; }]];
+            return [['class' => function () {
+                return static::$client;
+            }]];
         }
 
         return [];
     }
 
     /**
-     * Make sure to use our custom strategy
+     * Make sure to use our custom strategy.
+     *
      * @param Event $e
      */
     public function onEvent(Event $e)
