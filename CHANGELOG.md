@@ -1,10 +1,12 @@
 # Change Log
 
+
 ## 1.1.1 - 2016-06-30
 
 ### Changed
 
 - Removed Puli logic and require `php-http/discovery:0.9` which makes Puli optional.
+
 
 ## 1.1.0 - 2016-05-19
 
@@ -19,7 +21,6 @@
   for example if you want to get exceptions for failure HTTP status codes.
 - **[BC] PluginClientFactory returns an instance of `Http\Client\Common\PluginClient`** (see [php-http/client-common#14](https://github.com/php-http/client-common/pull/14))
 - Plugins are loaded from their new packages
-
 
 ### Fixed
 

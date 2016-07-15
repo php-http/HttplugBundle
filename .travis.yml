@@ -30,17 +30,13 @@ matrix:
         - php: 5.5
           env: COMPOSER_FLAGS="--prefer-stable --prefer-lowest" COVERAGE=true TEST_COMMAND="composer test-ci" SYMFONY_VERSION=2.7.*
 
-before_install:
-    - travis_retry composer self-update
-
 install:
-    - wget https://github.com/puli/cli/releases/download/1.0.0-beta10/puli.phar && chmod +x puli.phar
     - composer require symfony/symfony:${SYMFONY_VERSION} --no-update
-    - travis_retry composer update ${COMPOSER_FLAGS} --prefer-source --no-interaction
+    - travis_retry composer update ${COMPOSER_FLAGS} --prefer-dist --no-interaction
 
 script:
     - $TEST_COMMAND
 
 after_success:
-    - if [[ "$COVERAGE" = true ]]; then wget https://scrutinizer-ci.com/ocular.phar; fi
-    - if [[ "$COVERAGE" = true ]]; then php ocular.phar code-coverage:upload --format=php-clover build/coverage.xml; fi
+    - if [[ $COVERAGE = true ]]; then wget https://scrutinizer-ci.com/ocular.phar; fi
+    - if [[ $COVERAGE = true ]]; then php ocular.phar code-coverage:upload --format=php-clover build/coverage.xml; fi
