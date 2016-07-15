@@ -23,9 +23,9 @@
         "php-http/cache-plugin": "^1.0",
         "php-http/logger-plugin": "^1.0",
         "php-http/stopwatch-plugin": "^1.0",
-        "symfony/options-resolver": "^2.7|^3.0",
-        "symfony/event-dispatcher": "^2.7|^3.0",
-        "symfony/framework-bundle": "^2.7|^3.0",
+        "symfony/options-resolver": "^2.7 || ^3.0",
+        "symfony/event-dispatcher": "^2.7 || ^3.0",
+        "symfony/framework-bundle": "^2.7 || ^3.0",
         "php-http/discovery": "^0.9"
     },
     "require-dev": {
@@ -36,15 +36,12 @@
         "php-http/react-adapter": "^0.2",
         "php-http/buzz-adapter": "^0.2",
         "php-http/message": "^1.0",
-        "symfony/symfony": "^2.7|^3.0",
+        "symfony/symfony": "^2.7 || ^3.0",
         "polishsymfonycommunity/symfony-mocker-container": "^1.0",
         "matthiasnoback/symfony-dependency-injection-test": "^0.7"
     },
     "conflict": {
         "php-http/guzzle6-adapter": "<1.1"
-    },
-    "suggest": {
-        "php-http/discovery": "Used for automatic service discovery"
     },
     "autoload": {
         "psr-4": {
@@ -57,9 +54,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "1.0-dev"
+            "dev-master": "1.2-dev"
         }
-    },
-    "prefer-stable": true,
-    "minimum-stability": "beta"
+    }
 }
