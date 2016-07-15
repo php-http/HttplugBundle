@@ -6,6 +6,7 @@ use Http\Client\Common\FlexibleHttpClient;
 use Http\Client\Common\HttpMethodsClient;
 use Http\Client\Common\Plugin\AuthenticationPlugin;
 use Http\Client\Common\PluginClient;
+use Http\Discovery\HttpAsyncClientDiscovery;
 use Http\HttplugBundle\ClientFactory\DummyClient;
 use Http\HttplugBundle\Collector\DebugPlugin;
 use Http\Message\Authentication\BasicAuth;
@@ -65,6 +66,7 @@ class HttplugExtension extends Extension
 
         $this->configurePlugins($container, $config['plugins']);
         $this->configureClients($container, $config);
+        $this->configureAutoDiscoveryClients($container, $config);
     }
 
     /**
@@ -277,5 +279,73 @@ class HttplugExtension extends Extension
             ->setPublic(false);
 
         return $serviceIdDebugPlugin;
+    }
+
+    /**
+     * Make sure we inject the debug plugin for clients found by auto discovery.
+     *
+     * @param ContainerBuilder $container
+     * @param array            $config
+     */
+    private function configureAutoDiscoveryClients(ContainerBuilder $container, array $config)
+    {
+        $httpClient = null;
+        $asyncHttpClient = null;
+
+        // Verify if any clients were specifucally set to function as auto discoverable.
+        foreach ($config['clients'] as $name => $arguments) {
+            if ($arguments['use_with_discovery'] === 'http_client') {
+                if ($httpClient !== null) {
+                    throw new \LogicException('Only one client can configured with "use_with_discovery: http_client".');
+                }
+                $httpClient = new Reference('httplug.client.'.$name);
+            } elseif ($arguments['use_with_discovery'] === 'async_client') {
+                if ($asyncHttpClient !== null) {
+                    throw new \LogicException('Only one client can be configured with "use_with_discovery: async_client".');
+                }
+                $asyncHttpClient = new Reference('httplug.client.'.$name);
+            }
+        }
+
+        if ($httpClient === null) {
+            // Use auto discovery
+            if ($config['toolbar']['profile_discovered_client']) {
+                $httpClient = $this->registerAutoDiscoverableClientWithDebugPlugin($container, 'client');
+            }
+        }
+
+        if ($asyncHttpClient === null) {
+            // Use auto discovery
+            if ($config['toolbar']['profile_discovered_async_client']) {
+                $asyncHttpClient = $this->registerAutoDiscoverableClientWithDebugPlugin($container, 'async_client');
+            }
+        }
+
+
+        $container->getDefinition('httplug.strategy')
+            ->addArgument($httpClient)
+            ->addArgument($asyncHttpClient);
+    }
+
+    /**
+     * @param ContainerBuilder $container
+     * @param $name
+     *
+     * @return Reference
+     */
+    private function registerAutoDiscoverableClientWithDebugPlugin(ContainerBuilder $container, $name)
+    {
+        $definition = $container->register('httplug.auto_discovery_'.$name.'.pure', DummyClient::class);
+        $definition->setPublic(false);
+        $definition->setFactory([HttpAsyncClientDiscovery::class, 'find']);
+
+        $serviceIdDebugPlugin = $this->registerDebugPlugin($container, 'auto_discovery_'.$name);
+        $container->register('httplug.auto_discovery_'.$name.'.plugin', PluginClient::class)
+            ->setPublic(false)
+            ->addArgument(new Reference('httplug.auto_discovery_'.$name.'.pure'))
+            ->addArgument([])
+            ->addArgument(['debug_plugins' => [new Reference($serviceIdDebugPlugin)]]);
+
+        return new Reference('httplug.auto_discovery_'.$name.'.plugin');
     }
 }

@@ -21,7 +21,11 @@ final class PluginJournal
      */
     public function getPlugins($clientName)
     {
-        return $this->data[$clientName];
+        if (isset($this->data[$clientName])) {
+            return $this->data[$clientName];
+        }
+
+        return [];
     }
 
     /**

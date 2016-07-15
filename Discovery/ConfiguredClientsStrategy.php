@@ -3,6 +3,7 @@
 namespace Http\HttplugBundle\Discovery;
 
 use Http\Client\HttpClient;
+use Http\Client\HttpAsyncClient;
 use Http\Discovery\HttpClientDiscovery;
 use Http\Discovery\Strategy\DiscoveryStrategy;
 use Symfony\Component\Console\ConsoleEvents;
@@ -24,11 +25,18 @@ class ConfiguredClientsStrategy implements DiscoveryStrategy, EventSubscriberInt
     private static $client;
 
     /**
-     * @param HttpClient $httpClient
+     * @var HttpAsyncClient
      */
-    public function __construct(HttpClient $httpClient)
+    private static $asyncClient;
+
+    /**
+     * @param HttpClient      $httpClient
+     * @param HttpAsyncClient $asyncClient
+     */
+    public function __construct(HttpClient $httpClient = null, HttpAsyncClient $asyncClient = null)
     {
         static::$client = $httpClient;
+        static::$asyncClient = $asyncClient;
     }
 
     /**
@@ -39,6 +47,12 @@ class ConfiguredClientsStrategy implements DiscoveryStrategy, EventSubscriberInt
         if (static::$client !== null && $type == HttpClient::class) {
             return [['class' => function () {
                 return static::$client;
+            }]];
+        }
+
+        if (static::$asyncClient !== null && $type == HttpAsyncClient::class) {
+            return [['class' => function () {
+                return static::$asyncClient;
             }]];
         }
 
