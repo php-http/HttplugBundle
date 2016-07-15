@@ -4,6 +4,10 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
+        <service id="httplug.strategy" class="Http\HttplugBundle\Discovery\ConfiguredClientsStrategy" public="true">
+            <argument type="service" id="httplug.client"/>
+            <tag name="kernel.event_subscriber"/>
+        </service>
 
         <!-- ClientFactories -->
         <service id="httplug.factory.buzz" class="Http\HttplugBundle\ClientFactory\BuzzFactory" public="false">

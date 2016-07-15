@@ -24,6 +24,7 @@
         "php-http/logger-plugin": "^1.0",
         "php-http/stopwatch-plugin": "^1.0",
         "symfony/options-resolver": "^2.7|^3.0",
+        "symfony/event-dispatcher": "^2.7|^3.0",
         "symfony/framework-bundle": "^2.7|^3.0",
         "php-http/discovery": "^0.9"
     },
