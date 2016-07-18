@@ -83,6 +83,11 @@ class Configuration implements ConfigurationInterface
                             ->defaultValue('auto')
                         ->end()
                         ->scalarNode('formatter')->defaultNull()->end()
+                        ->scalarNode('captured_body_length')
+                            ->defaultValue(0)
+                            ->canNotBeEmpty()
+                            ->info('Limit long HTTP message bodies to x characters. If set to 0 we do not read the message body. Only available with the default formatter (FullHttpMessageFormatter).')
+                        ->end()
                     ->end()
                 ->end()
             ->end();

@@ -17,11 +17,11 @@
         {% set text %}
             <div class="sf-toolbar-info-piece">
                 <b>Successful requests</b>
-                <span>{{ collector.sucessfulRequests|length }}</span>
+                <span>{{ collector.sucessfulRequests }}</span>
             </div>
             <div class="sf-toolbar-info-piece">
-                <b>Faild requests</b>
-                <span>{{ collector.failedRequests|length }}</span>
+                <b>Failed requests</b>
+                <span>{{ collector.failedRequests }}</span>
             </div>
 
         {% endset %}
@@ -30,7 +30,8 @@
 {% endblock %}
 
 {% block head %}
-    {# Optional. Here you can link to or define your own CSS and JS contents. #}
+    <link rel="stylesheet" href="{{ asset('bundles/httplug/style/httplug.css') }}" />
+    <script type="text/javascript" src="{{ asset("bundles/httplug/script/httplug.js") }}"></script>
     {{ parent() }}
 {% endblock %}
 
@@ -50,37 +51,89 @@
 
 {% block panel %}
     <h2>HTTPlug</h2>
-    {% if (collector.failedRequests|length > 0) %}
-        <h3>Failed requests</h3>
-        {{ macro.printMessages(collector.failedRequests) }}
-    {% endif %}
+    <button class="btn push-right" onclick="httplug_toggleBody(this)" data-label="Hide message body">Show message body</button>
 
-    {% if (collector.sucessfulRequests|length > 0) %}
-        <h3>Successful requests</h3>
-        {{ macro.printMessages(collector.sucessfulRequests) }}
-    {% endif %}
+    <div class="sf-tabs">
+        {% for name, client in collector.clients %}
+        <div class="tab">
+            <h3 class="tab-title">{{ name }} <span class="badge">{{ client.stackIndexKeys|length }}</span></h3>
 
-    {% if collector.totalRequests == 0 %}
+            <div class="tab-content">
+                <p class="help">
+                    These messages are sent by client named "{{ name }}".
+                </p>
 
-        <div class="empty">
-            <p>No request were sent.</p>
+                {% for stackIndex in client.stackIndexKeys %}
+                    {% set failureStack = client.failureStack(stackIndex) %}
+                    <h3>
+                        Request #{{ stackIndex }}
+                        {% if failureStack[0] %}
+                            - <span class="httplug-error">Errored</span>
+                        {% endif %}
+                    </h3>
+                    {{ macro.printMessages(client.requstStack(stackIndex), client.responseStack(stackIndex), failureStack, collector.journal.plugins(name)) }}
+                {% endfor %}
+            </div>
         </div>
-    {% endif %}
+        {% else %}
+            <div class="empty">
+                <p>No request were sent.</p>
+            </div>
+        {% endfor %}
+
+    </div>
 
 {% endblock %}
 
-{% macro printMessages(messages) %}
-    <table>
+{% macro printMessages(requestStack, responseStack, failureStack, pluginNames) %}
+    <table class="httplug-request-table">
         <tr>
-            <th>Request</th>
-            <th>Response</th>
+            <th width="50%">Request</th>
+            <th width="50%">Response</th>
         </tr>
 
-        {% for message in messages %}
+        <tr>
+            <td>{{ requestStack[responseStack|length-1]|httplug_markup|nl2br }}</td>
+            <td>{{ responseStack[0]|httplug_markup|nl2br }}</td>
+        </tr>
+        {% if requestStack|length > 1 %}
             <tr>
-                <td>{{ message['request'] }}</td>
-                <td>{{ message['response'] }}</td>
+                <td colspan="2" style="text-align:center">
+                    <button class="btn" onclick="httplug_togglePluginStack(this)" data-label="Hide plugin stack">See plugin stack</button>
+                </td>
             </tr>
-        {% endfor %}
+            {% for idx in 0..requestStack|length-1 %}
+                {% if loop.first %}
+                    {# We do not have a plugin at the first entry in the stack #}
+                    <tr class="httplug-request-stack">
+                        <td class="httplug-plugin-name">&darr; Start </td>
+                        <td class="httplug-plugin-name">- End
+                            {% if failureStack[idx] %}
+                                <span class="httplug-error">&#9747;</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr class="httplug-request-stack">
+                        <td class="httplug-plugin-name">&darr; {{ pluginNames[idx-1] }} </td>
+                        <td class="httplug-plugin-name">&uarr;
+                            {% if failureStack[idx] %}
+                                <span class="httplug-error">&#9747;</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endif %}
+                <tr class="httplug-request-stack">
+                    <td>{{ requestStack[idx]|httplug_markup|nl2br }}</td>
+                    <td>{{ responseStack[idx]|httplug_markup|nl2br }}</td>
+                </tr>
+                {% if loop.last %}
+                    <tr class="httplug-request-stack">
+                        <td class="httplug-plugin-name">&#10230; <span class="push-right">HTTP client</span></td>
+                        <td class="httplug-plugin-name">&uarr;</td>
+                    </tr>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
     </table>
 {% endmacro %}

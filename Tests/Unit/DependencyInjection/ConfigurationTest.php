@@ -40,6 +40,7 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
             'toolbar' => [
                 'enabled' => 'auto',
                 'formatter' => null,
+                'captured_body_length' => 0,
             ],
             'plugins' => [
                 'authentication' => [],
@@ -114,6 +115,7 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
             'toolbar' => [
                 'enabled' => true,
                 'formatter' => 'my_toolbar_formatter',
+                'captured_body_length' => 0,
             ],
             'plugins' => [
                 'authentication' => [
