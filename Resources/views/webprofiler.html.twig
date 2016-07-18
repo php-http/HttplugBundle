@@ -117,7 +117,7 @@
                     <tr class="httplug-request-stack">
                         <td class="httplug-plugin-name">&darr; {{ pluginNames[idx-1] }} </td>
                         <td class="httplug-plugin-name">&uarr;
-                            {% if failureStack[idx] %}
+                            {% if failureStack[idx-1] %}
                                 <span class="httplug-error">&#9747;</span>
                             {% endif %}
                         </td>
@@ -130,7 +130,11 @@
                 {% if loop.last %}
                     <tr class="httplug-request-stack">
                         <td class="httplug-plugin-name">&#10230; <span class="push-right">HTTP client</span></td>
-                        <td class="httplug-plugin-name">&uarr;</td>
+                        <td class="httplug-plugin-name">&uarr;
+                            {% if failureStack[idx-1] %}
+                                <span class="httplug-error">&#9747;</span>
+                            {% endif %}
+                        </td>
                     </tr>
                 {% endif %}
             {% endfor %}
