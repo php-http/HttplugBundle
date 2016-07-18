@@ -23,6 +23,7 @@ env:
 branches:
     except:
         - /^analysis-.*$/
+        - /^dev-.*$/
 
 matrix:
     fast_finish: true
