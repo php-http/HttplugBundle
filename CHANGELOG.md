@@ -1,6 +1,19 @@
 # Change Log
 
 
+## 1.2.0 - 2016-07-18
+
+### Added
+
+- Support for cRUL constant names in configuration
+- Flexible and HTTP Methods client support
+- Discovery strategy to discover configured clients and/or add profiling
+
+### Changed
+
+- Improved collector to include plugin stack in profile data
+
+
 ## 1.1.1 - 2016-06-30
 
 ### Changed
