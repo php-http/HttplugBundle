@@ -90,6 +90,20 @@ class Configuration implements ConfigurationInterface
                         ->end()
                     ->end()
                 ->end()
+                ->arrayNode('discovery')
+                    ->addDefaultsIfNotSet()
+                    ->info('Control what clients should be found by the discovery.')
+                    ->children()
+                        ->scalarNode('client')
+                            ->defaultValue('auto')
+                            ->info('Set to "auto" to see auto discovered client in the web profiler. If provided a service id for a client then this client will be found by auto discovery.')
+                        ->end()
+                        ->scalarNode('async_client')
+                            ->defaultNull()
+                            ->info('Set to "auto" to see auto discovered client in the web profiler. If provided a service id for a client then this client will be found by auto discovery.')
+                        ->end()
+                    ->end()
+                ->end()
             ->end();
 
         return $treeBuilder;

@@ -81,6 +81,10 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
                     'stopwatch' => 'debug.stopwatch',
                 ],
             ],
+            'discovery' => [
+                'client' => 'auto',
+                'async_client' => null,
+            ],
         ];
 
         $formats = array_map(function ($path) {
@@ -177,6 +181,10 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
                     'enabled' => false,
                     'stopwatch' => 'debug.stopwatch',
                 ],
+            ],
+            'discovery' => [
+                'client' => 'auto',
+                'async_client' => null,
             ],
         ];
 
