@@ -41,6 +41,8 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
                 'enabled' => 'auto',
                 'formatter' => null,
                 'captured_body_length' => 0,
+                'profile_discovered_client' => true,
+                'profile_discovered_async_client' => false,
             ],
             'plugins' => [
                 'authentication' => [],
@@ -116,6 +118,8 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
                 'enabled' => true,
                 'formatter' => 'my_toolbar_formatter',
                 'captured_body_length' => 0,
+                'profile_discovered_client' => true,
+                'profile_discovered_async_client' => false,
             ],
             'plugins' => [
                 'authentication' => [
