@@ -289,38 +289,13 @@ class HttplugExtension extends Extension
      */
     private function configureAutoDiscoveryClients(ContainerBuilder $container, array $config)
     {
-        $httpClient = null;
-        $asyncHttpClient = null;
-
-        // Verify if any clients were specifucally set to function as auto discoverable.
-        foreach ($config['clients'] as $name => $arguments) {
-            if ($arguments['use_with_discovery'] === 'http_client') {
-                if ($httpClient !== null) {
-                    throw new \LogicException('Only one client can configured with "use_with_discovery: http_client".');
-                }
-                $httpClient = new Reference('httplug.client.'.$name);
-            } elseif ($arguments['use_with_discovery'] === 'async_client') {
-                if ($asyncHttpClient !== null) {
-                    throw new \LogicException('Only one client can be configured with "use_with_discovery: async_client".');
-                }
-                $asyncHttpClient = new Reference('httplug.client.'.$name);
-            }
+        if ('auto' === $httpClient = $config['discovery']['client']) {
+            $httpClient = $this->registerAutoDiscoverableClientWithDebugPlugin($container, 'client');
         }
 
-        if ($httpClient === null) {
-            // Use auto discovery
-            if ($config['toolbar']['profile_discovered_client']) {
-                $httpClient = $this->registerAutoDiscoverableClientWithDebugPlugin($container, 'client');
-            }
+        if ('auto' === $asyncHttpClient = $config['discovery']['async_client']) {
+            $asyncHttpClient = $this->registerAutoDiscoverableClientWithDebugPlugin($container, 'async_client');
         }
-
-        if ($asyncHttpClient === null) {
-            // Use auto discovery
-            if ($config['toolbar']['profile_discovered_async_client']) {
-                $asyncHttpClient = $this->registerAutoDiscoverableClientWithDebugPlugin($container, 'async_client');
-            }
-        }
-
 
         $container->getDefinition('httplug.strategy')
             ->addArgument($httpClient)
