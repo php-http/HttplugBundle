@@ -292,14 +292,14 @@ class HttplugExtension extends Extension
         $httpClient = $config['discovery']['client'];
         if ($httpClient === 'auto') {
             $httpClient = $this->registerAutoDiscoverableClientWithDebugPlugin($container, 'client');
-        } elseif ($httpClient !== null) {
+        } elseif ($httpClient) {
             $httpClient = new Reference($httpClient);
         }
 
         $asyncHttpClient = $config['discovery']['async_client'];
         if ($asyncHttpClient === 'auto') {
             $asyncHttpClient = $this->registerAutoDiscoverableClientWithDebugPlugin($container, 'async_client');
-        } elseif ($asyncHttpClient !== null) {
+        } elseif ($asyncHttpClient) {
             $asyncHttpClient = new Reference($httpClient);
         }
 
