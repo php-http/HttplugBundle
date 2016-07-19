@@ -1,6 +1,13 @@
 # Change Log
 
 
+## 1.2.1 - 2016-07-19
+
+### Fixed
+
+- Auto discovery by using the appropriate discovery class
+
+
 ## 1.2.0 - 2016-07-18
 
 ### Added
