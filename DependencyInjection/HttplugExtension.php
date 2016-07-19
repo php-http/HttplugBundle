@@ -7,6 +7,7 @@ use Http\Client\Common\HttpMethodsClient;
 use Http\Client\Common\Plugin\AuthenticationPlugin;
 use Http\Client\Common\PluginClient;
 use Http\Discovery\HttpAsyncClientDiscovery;
+use Http\Discovery\HttpClientDiscovery;
 use Http\HttplugBundle\ClientFactory\DummyClient;
 use Http\HttplugBundle\Collector\DebugPlugin;
 use Http\Message\Authentication\BasicAuth;
@@ -291,14 +292,22 @@ class HttplugExtension extends Extension
     {
         $httpClient = $config['discovery']['client'];
         if ($httpClient === 'auto') {
-            $httpClient = $this->registerAutoDiscoverableClientWithDebugPlugin($container, 'client');
+            $httpClient = $this->registerAutoDiscoverableClientWithDebugPlugin(
+                $container,
+                'client',
+                [HttpClientDiscovery::class, 'find']
+            );
         } elseif ($httpClient) {
             $httpClient = new Reference($httpClient);
         }
 
         $asyncHttpClient = $config['discovery']['async_client'];
         if ($asyncHttpClient === 'auto') {
-            $asyncHttpClient = $this->registerAutoDiscoverableClientWithDebugPlugin($container, 'async_client');
+            $asyncHttpClient = $this->registerAutoDiscoverableClientWithDebugPlugin(
+                $container,
+                'async_client',
+                [HttpAsyncClientDiscovery::class, 'find']
+                );
         } elseif ($asyncHttpClient) {
             $asyncHttpClient = new Reference($httpClient);
         }
@@ -310,15 +319,16 @@ class HttplugExtension extends Extension
 
     /**
      * @param ContainerBuilder $container
-     * @param $name
+     * @param string           $name
+     * @param callable         $factory
      *
      * @return Reference
      */
-    private function registerAutoDiscoverableClientWithDebugPlugin(ContainerBuilder $container, $name)
+    private function registerAutoDiscoverableClientWithDebugPlugin(ContainerBuilder $container, $name, $factory)
     {
         $definition = $container->register('httplug.auto_discovery_'.$name.'.pure', DummyClient::class);
         $definition->setPublic(false);
-        $definition->setFactory([HttpAsyncClientDiscovery::class, 'find']);
+        $definition->setFactory($factory);
 
         $serviceIdDebugPlugin = $this->registerDebugPlugin($container, 'auto_discovery_'.$name);
         $container->register('httplug.auto_discovery_'.$name.'.plugin', PluginClient::class)
