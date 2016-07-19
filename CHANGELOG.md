@@ -1,6 +1,13 @@
 # Change Log
 
 
+## 1.2.2 - 2016-07-19
+
+### Fixed
+
+- Do not register debug tools when debugging is disabled (eg. in prod mode)
+
+
 ## 1.2.1 - 2016-07-19
 
 ### Fixed
