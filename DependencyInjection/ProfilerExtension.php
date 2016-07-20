@@ -58,7 +58,7 @@ class ProfilerExtension
         $serviceIdDebugPlugin = $name.'.debug_plugin';
         $container->register($serviceIdDebugPlugin, DebugPlugin::class)
             ->addArgument(new Reference('httplug.collector.debug_collector'))
-            ->addArgument(substr($name, strrpos($name, '.')+1))
+            ->addArgument(substr($name, strrpos($name, '.') + 1))
             ->setPublic(false);
 
         return $serviceIdDebugPlugin;
