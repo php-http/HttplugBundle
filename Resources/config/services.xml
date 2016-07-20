@@ -8,6 +8,8 @@
             <tag name="kernel.event_subscriber"/>
         </service>
 
+        <service id="httplug.collector.plugin_journal" class="Http\HttplugBundle\Collector\PluginJournal" public="false" />
+
         <!-- ClientFactories -->
         <service id="httplug.factory.buzz" class="Http\HttplugBundle\ClientFactory\BuzzFactory" public="false">
             <argument type="service" id="httplug.message_factory"/>
