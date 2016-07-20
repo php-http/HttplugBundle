@@ -23,11 +23,13 @@ final class PluginClientFactory
     public static function createPluginClient(array $plugins, $factory, array $config, array $pluginClientOptions = [])
     {
         if ($factory instanceof ClientFactory) {
-            return new PluginClient($factory->createClient($config), $plugins, $pluginClientOptions);
+            $client = $factory->createClient($config);
         } elseif (is_callable($factory)) {
-            return new PluginClient($factory($config), $plugins, $pluginClientOptions);
+            $client = $factory($config);
+        } else {
+            throw new \RuntimeException(sprintf('Second argument to PluginClientFactory::createPluginClient must be a "%s" or a callale.', ClientFactory::class));
         }
 
-        throw new \RuntimeException(sprintf('Second argument to PluginClientFactory::createPluginClient must be a "%s" or a callale.', ClientFactory::class));
+        return new PluginClient($client, $plugins, $pluginClientOptions);
     }
 }
