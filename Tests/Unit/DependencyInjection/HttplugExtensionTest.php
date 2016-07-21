@@ -64,7 +64,7 @@ class HttplugExtensionTest extends AbstractExtensionTestCase
                 'clients' => [
                     'acme' => [
                         'factory' => 'httplug.factory.curl',
-                        'plugins' => ['foo']
+                        'plugins' => ['foo'],
                     ],
                 ],
             ]
@@ -81,7 +81,7 @@ class HttplugExtensionTest extends AbstractExtensionTestCase
                 'clients' => [
                     'acme' => [
                         'factory' => 'httplug.factory.curl',
-                        'plugins' => ['foo']
+                        'plugins' => ['foo'],
                     ],
                 ],
             ]
@@ -89,6 +89,7 @@ class HttplugExtensionTest extends AbstractExtensionTestCase
 
         $this->verifyProfilingDisabled();
     }
+
     public function testProfilingWhenToolbarIsSpecificallyOn()
     {
         $this->setParameter('kernel.debug', false);
@@ -100,7 +101,7 @@ class HttplugExtensionTest extends AbstractExtensionTestCase
                 'clients' => [
                     'acme' => [
                         'factory' => 'httplug.factory.curl',
-                        'plugins' => ['foo']
+                        'plugins' => ['foo'],
                     ],
                 ],
             ]
@@ -126,5 +127,4 @@ class HttplugExtensionTest extends AbstractExtensionTestCase
             );
         }
     }
-
 }

@@ -17,7 +17,7 @@ class ServiceInstantiationTest extends WebTestCase
 
     public function testHttpClientNoDebug()
     {
-        static::bootKernel(['debug'=>false]);
+        static::bootKernel(['debug' => false]);
         $container = static::$kernel->getContainer();
         $this->assertTrue($container->has('httplug.client'));
         $client = $container->get('httplug.client');
