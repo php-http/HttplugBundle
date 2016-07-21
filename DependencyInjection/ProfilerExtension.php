@@ -40,7 +40,7 @@ class ProfilerExtension
             $pluginClientDefinition = $container->getDefinition($clientId);
             $serviceIdDebugPlugin = $this->registerDebugPlugin($container, $clientId);
 
-            $argument = $this->mergeDebugPluginArguments($pluginClientDefinition->getArgument(3), [new Reference($serviceIdDebugPlugin)]);
+            $argument = $this->mergeDebugPluginArguments([new Reference($serviceIdDebugPlugin)], $pluginClientDefinition->getArgument(3));
             $pluginClientDefinition->replaceArgument(3, $argument);
         }
     }
@@ -65,12 +65,12 @@ class ProfilerExtension
     }
 
     /**
-     * @param array $existing
      * @param array $newArgument
+     * @param array $existing
      *
      * @return array
      */
-    private function mergeDebugPluginArguments($existing, $newArgument)
+    private function mergeDebugPluginArguments(array $newArgument, array $existing = [])
     {
         if (empty($existing)) {
             $mergedArgument = ['debug_plugins' => $newArgument];

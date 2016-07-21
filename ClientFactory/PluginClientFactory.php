@@ -27,7 +27,7 @@ final class PluginClientFactory
         } elseif (is_callable($factory)) {
             $client = $factory($config);
         } else {
-            throw new \RuntimeException(sprintf('Second argument to PluginClientFactory::createPluginClient must be a "%s" or a callale.', ClientFactory::class));
+            throw new \RuntimeException(sprintf('Second argument to PluginClientFactory::createPluginClient must be a "%s" or a callable.', ClientFactory::class));
         }
 
         return new PluginClient($client, $plugins, $pluginClientOptions);

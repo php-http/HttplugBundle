@@ -251,7 +251,7 @@ class HttplugExtension extends Extension
      * @param array            $config
      *
      * @return array of service ids.
-     * */
+     */
     private function configureAutoDiscoveryClients(ContainerBuilder $container, array $config)
     {
         $serviceIds = [];
