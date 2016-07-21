@@ -65,7 +65,7 @@ class HttplugExtension extends Extension
      * @param ContainerBuilder $container
      * @param array            $config
      *
-     * @raturn array with client service names
+     * @return array with client service names
      */
     private function configureClients(ContainerBuilder $container, array $config)
     {
