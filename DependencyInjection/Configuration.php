@@ -97,7 +97,9 @@ class Configuration implements ConfigurationInterface
                         ->booleanNode('enabled') // @deprecated value auto in 1.3.0
                             ->beforeNormalization()
                                 ->ifString()
-                                ->then(function ($v) { return 'auto' === $v ? $this->debug : $v; })
+                                ->then(function ($v) {
+                                    return 'auto' === $v ? $this->debug : $v;
+                                })
                             ->end()
                             ->info('Turn the toolbar on or off. Defaults to kernel debug mode.')
                             ->defaultValue($this->debug)
