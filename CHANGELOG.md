@@ -1,6 +1,13 @@
 # Change Log
 
 
+## UNRELEASED
+
+### Deprecated
+
+- `auto` value in `toolbar.enabled` config
+
+
 ## 1.2.2 - 2016-07-19
 
 ### Fixed
