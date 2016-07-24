@@ -3,10 +3,13 @@
 
 ## UNRELEASED
 
+### Changed
+
+- All clients are registered with the PluginClient. (even in production)
+
 ### Deprecated
 
 - `auto` value in `toolbar.enabled` config
-
 
 ## 1.2.2 - 2016-07-19
 
