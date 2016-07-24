@@ -11,6 +11,13 @@ use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractExtensionTestCase;
  */
 class HttplugExtensionTest extends AbstractExtensionTestCase
 {
+    protected function setUp()
+    {
+        parent::setUp();
+
+        $this->setParameter('kernel.debug', true);
+    }
+
     protected function getContainerExtensions()
     {
         return [

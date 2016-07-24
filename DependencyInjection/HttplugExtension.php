@@ -5,10 +5,10 @@ namespace Http\HttplugBundle\DependencyInjection;
 use Http\Client\Common\FlexibleHttpClient;
 use Http\Client\Common\HttpMethodsClient;
 use Http\Client\Common\Plugin\AuthenticationPlugin;
-use Http\Client\Common\PluginClient;
 use Http\Discovery\HttpAsyncClientDiscovery;
 use Http\Discovery\HttpClientDiscovery;
 use Http\HttplugBundle\ClientFactory\DummyClient;
+use Http\HttplugBundle\ClientFactory\PluginClientFactory;
 use Http\HttplugBundle\Collector\DebugPlugin;
 use Http\Message\Authentication\BasicAuth;
 use Http\Message\Authentication\Bearer;
@@ -39,21 +39,7 @@ class HttplugExtension extends Extension
         $loader->load('services.xml');
         $loader->load('plugins.xml');
 
-        $toolbar = is_bool($config['toolbar']['enabled']) ? $config['toolbar']['enabled'] : $container->hasParameter('kernel.debug') && $container->getParameter('kernel.debug');
-
-        if ($toolbar) {
-            $loader->load('data-collector.xml');
-
-            if (!empty($config['toolbar']['formatter'])) {
-                // Add custom formatter
-                $container->getDefinition('httplug.collector.debug_collector')
-                    ->replaceArgument(0, new Reference($config['toolbar']['formatter']));
-            }
-
-            $container->getDefinition('httplug.formatter.full_http_message')
-                ->addArgument($config['toolbar']['captured_body_length']);
-        }
-
+        // Register default services
         foreach ($config['classes'] as $service => $class) {
             if (!empty($class)) {
                 $container->register(sprintf('httplug.%s.default', $service), $class);
@@ -65,9 +51,27 @@ class HttplugExtension extends Extension
             $container->setAlias(sprintf('httplug.%s', $type), $id);
         }
 
+        // Configure toolbar
+        if ($config['toolbar']['enabled']) {
+            $loader->load('data-collector.xml');
+
+            if (!empty($config['toolbar']['formatter'])) {
+                // Add custom formatter
+                $container
+                    ->getDefinition('httplug.collector.debug_collector')
+                    ->replaceArgument(0, new Reference($config['toolbar']['formatter']))
+                ;
+            }
+
+            $container
+                ->getDefinition('httplug.formatter.full_http_message')
+                ->addArgument($config['toolbar']['captured_body_length'])
+            ;
+        }
+
         $this->configurePlugins($container, $config['plugins']);
-        $this->configureClients($container, $config, $toolbar);
-        $this->configureAutoDiscoveryClients($container, $config, $toolbar);
+        $this->configureClients($container, $config);
+        $this->configureAutoDiscoveryClients($container, $config);
     }
 
     /**
@@ -75,12 +79,10 @@ class HttplugExtension extends Extension
      *
      * @param ContainerBuilder $container
      * @param array            $config
-     * @param bool             $enableCollector
      */
-    private function configureClients(ContainerBuilder $container, array $config, $enableCollector)
+    private function configureClients(ContainerBuilder $container, array $config)
     {
-        // If we have a client named 'default'
-        $first = isset($config['clients']['default']) ? 'default' : null;
+        $first = null;
 
         foreach ($config['clients'] as $name => $arguments) {
             if ($first === null) {
@@ -88,22 +90,16 @@ class HttplugExtension extends Extension
                 $first = $name;
             }
 
-            $this->configureClient($container, $name, $arguments, $enableCollector);
+            $this->configureClient($container, $name, $arguments, $config['toolbar']['enabled']);
         }
 
         // If we have clients configured
         if ($first !== null) {
-            if ($first !== 'default') {
+            // If we do not have a client named 'default'
+            if (!isset($config['clients']['default'])) {
                 // Alias the first client to httplug.client.default
                 $container->setAlias('httplug.client.default', 'httplug.client.'.$first);
             }
-        } elseif ($enableCollector) {
-            $serviceIdDebugPlugin = $this->registerDebugPlugin($container, 'default');
-            // No client was configured. Make sure to configure the auto discovery client with the PluginClient.
-            $container->register('httplug.client', PluginClient::class)
-                ->addArgument(new Reference('httplug.client.default'))
-                ->addArgument([])
-                ->addArgument(['debug_plugins' => [new Reference($serviceIdDebugPlugin)]]);
         }
     }
 
@@ -212,144 +208,169 @@ class HttplugExtension extends Extension
      * @param ContainerBuilder $container
      * @param string           $name
      * @param array            $arguments
-     * @param bool             $enableCollector
+     * @param bool             $profiling
      */
-    private function configureClient(ContainerBuilder $container, $name, array $arguments, $enableCollector)
+    private function configureClient(ContainerBuilder $container, $name, array $arguments, $profiling)
     {
         $serviceId = 'httplug.client.'.$name;
-        $def = $container->register($serviceId, DummyClient::class);
 
-        // If there are no plugins nor should we use the data collector
-        if (empty($arguments['plugins']) && !$enableCollector) {
-            $def->setFactory([new Reference($arguments['factory']), 'createClient'])
-                ->addArgument($arguments['config']);
-        } else {
-            $def
-                ->setFactory('Http\HttplugBundle\ClientFactory\PluginClientFactory::createPluginClient')
-                ->addArgument(
-                    array_map(
-                        function ($id) {
-                            return new Reference($id);
-                        },
-                        $arguments['plugins']
-                    )
-                )
-                ->addArgument(new Reference($arguments['factory']))
-                ->addArgument($arguments['config'])
+        $pluginClientOptions = [];
+
+        if ($profiling) {
+            // Tell the plugin journal what plugins we used
+            $container
+                ->getDefinition('httplug.collector.plugin_journal')
+                ->addMethodCall('setPlugins', [$name, $arguments['plugins']])
             ;
 
-            if ($enableCollector) {
-                $serviceIdDebugPlugin = $this->registerDebugPlugin($container, $name);
-                $def->addArgument(['debug_plugins' => [new Reference($serviceIdDebugPlugin)]]);
+            $debugPluginServiceId = $this->registerDebugPlugin($container, $serviceId);
 
-                // tell the plugin journal what plugins we used
-                $container->getDefinition('httplug.collector.plugin_journal')
-                    ->addMethodCall('setPlugins', [$name, $arguments['plugins']]);
-            }
+            $pluginClientOptions['debug_plugins'] = [new Reference($debugPluginServiceId)];
         }
+
+        $container
+            ->register($serviceId, DummyClient::class)
+            ->setFactory([PluginClientFactory::class, 'createPluginClient'])
+            ->addArgument(
+                array_map(
+                    function ($id) {
+                        return new Reference($id);
+                    },
+                    $arguments['plugins']
+                )
+            )
+            ->addArgument(new Reference($arguments['factory']))
+            ->addArgument($arguments['config'])
+            ->addArgument($pluginClientOptions)
+        ;
+
 
         /*
          * Decorate the client with clients from client-common
          */
-
         if ($arguments['flexible_client']) {
-            $container->register($serviceId.'.flexible', FlexibleHttpClient::class)
+            $container
+                ->register($serviceId.'.flexible', FlexibleHttpClient::class)
                 ->addArgument(new Reference($serviceId.'.flexible.inner'))
                 ->setPublic(false)
-                ->setDecoratedService($serviceId);
+                ->setDecoratedService($serviceId)
+            ;
         }
 
         if ($arguments['http_methods_client']) {
-            $container->register($serviceId.'.http_methods', HttpMethodsClient::class)
+            $container
+                ->register($serviceId.'.http_methods', HttpMethodsClient::class)
                 ->setArguments([new Reference($serviceId.'.http_methods.inner'), new Reference('httplug.message_factory')])
                 ->setPublic(false)
-                ->setDecoratedService($serviceId);
+                ->setDecoratedService($serviceId)
+            ;
         }
+    }
+
+    /**
+     * Make the user can select what client is used for auto discovery. If none is provided, a service will be created
+     * by finding a client using auto discovery.
+     *
+     * @param ContainerBuilder $container
+     * @param array            $config
+     */
+    private function configureAutoDiscoveryClients(ContainerBuilder $container, array $config)
+    {
+        $httpClient = $config['discovery']['client'];
+
+        if (!empty($httpClient)) {
+            if ($httpClient === 'auto') {
+                $httpClient = $this->registerAutoDiscoverableClient(
+                    $container,
+                    'auto_discovered_client',
+                    [HttpClientDiscovery::class, 'find'],
+                    $config['toolbar']['enabled']
+                );
+            }
+
+            $httpClient = new Reference($httpClient);
+        }
+
+        $asyncHttpClient = $config['discovery']['async_client'];
+
+        if (!empty($asyncHttpClient)) {
+            if ($asyncHttpClient === 'auto') {
+                $asyncHttpClient = $this->registerAutoDiscoverableClient(
+                    $container,
+                    'auto_discovered_async',
+                    [HttpAsyncClientDiscovery::class, 'find'],
+                    $config['toolbar']['enabled']
+                );
+            }
+
+            $asyncHttpClient = new Reference($asyncHttpClient);
+        }
+
+        $container
+            ->getDefinition('httplug.strategy')
+            ->addArgument($httpClient)
+            ->addArgument($asyncHttpClient)
+        ;
+    }
+
+    /**
+     * Find a client with auto discovery and return a service Reference to it.
+     *
+     * @param ContainerBuilder $container
+     * @param string           $name
+     * @param callable         $factory
+     * @param bool             $profiling
+     *
+     * @return string service id
+     */
+    private function registerAutoDiscoverableClient(ContainerBuilder $container, $name, $factory, $profiling)
+    {
+        $serviceId = 'httplug.auto_discovery.'.$name;
+
+        $pluginClientOptions = [];
+
+        if ($profiling) {
+            $debugPluginServiceId = $this->registerDebugPlugin($container, $serviceId);
+
+            $pluginClientOptions['debug_plugins'] = [new Reference($debugPluginServiceId)];
+        }
+
+        $container
+            ->register($serviceId, DummyClient::class)
+            ->setFactory([PluginClientFactory::class, 'createPluginClient'])
+            ->setArguments([[], $factory, [], $pluginClientOptions])
+        ;
+
+        return $serviceId;
     }
 
     /**
      * Create a new plugin service for this client.
      *
      * @param ContainerBuilder $container
-     * @param string           $name
+     * @param string           $serviceId
      *
      * @return string
      */
-    private function registerDebugPlugin(ContainerBuilder $container, $name)
+    private function registerDebugPlugin(ContainerBuilder $container, $serviceId)
     {
-        $serviceIdDebugPlugin = 'httplug.client.'.$name.'.debug_plugin';
-        $container->register($serviceIdDebugPlugin, DebugPlugin::class)
+        $serviceIdDebugPlugin = $serviceId.'.debug_plugin';
+
+        $container
+            ->register($serviceIdDebugPlugin, DebugPlugin::class)
             ->addArgument(new Reference('httplug.collector.debug_collector'))
-            ->addArgument($name)
-            ->setPublic(false);
+            ->addArgument(substr($serviceId, strrpos($serviceId, '.') + 1))
+            ->setPublic(false)
+        ;
 
         return $serviceIdDebugPlugin;
     }
 
     /**
-     * Make sure we inject the debug plugin for clients found by auto discovery.
-     *
-     * @param ContainerBuilder $container
-     * @param array            $config
-     * @param bool             $enableCollector
+     * {@inheritdoc}
      */
-    private function configureAutoDiscoveryClients(ContainerBuilder $container, array $config, $enableCollector)
+    public function getConfiguration(array $config, ContainerBuilder $container)
     {
-        $httpClient = $config['discovery']['client'];
-        if ($httpClient === 'auto') {
-            $httpClient = $this->registerAutoDiscoverableClientWithDebugPlugin(
-                $container,
-                'client',
-                [HttpClientDiscovery::class, 'find'],
-                $enableCollector
-            );
-        } elseif ($httpClient) {
-            $httpClient = new Reference($httpClient);
-        }
-
-        $asyncHttpClient = $config['discovery']['async_client'];
-        if ($asyncHttpClient === 'auto') {
-            $asyncHttpClient = $this->registerAutoDiscoverableClientWithDebugPlugin(
-                $container,
-                'async_client',
-                [HttpAsyncClientDiscovery::class, 'find'],
-                $enableCollector
-            );
-        } elseif ($asyncHttpClient) {
-            $asyncHttpClient = new Reference($httpClient);
-        }
-
-        $container->getDefinition('httplug.strategy')
-            ->addArgument($httpClient)
-            ->addArgument($asyncHttpClient);
-    }
-
-    /**
-     * @param ContainerBuilder $container
-     * @param string           $name
-     * @param callable         $factory
-     * @param bool             $enableCollector
-     *
-     * @return Reference
-     */
-    private function registerAutoDiscoverableClientWithDebugPlugin(ContainerBuilder $container, $name, $factory, $enableCollector)
-    {
-        $definition = $container->register('httplug.auto_discovery_'.$name.'.pure', DummyClient::class);
-        $definition->setPublic(false);
-        $definition->setFactory($factory);
-
-        $pluginDefinition = $container
-            ->register('httplug.auto_discovery_'.$name.'.plugin', PluginClient::class)
-            ->setPublic(false)
-            ->addArgument(new Reference('httplug.auto_discovery_'.$name.'.pure'))
-            ->addArgument([])
-        ;
-
-        if ($enableCollector) {
-            $serviceIdDebugPlugin = $this->registerDebugPlugin($container, 'auto_discovery_'.$name);
-            $pluginDefinition->addArgument(['debug_plugins' => [new Reference($serviceIdDebugPlugin)]]);
-        }
-
-        return new Reference('httplug.auto_discovery_'.$name.'.plugin');
+        return new Configuration($container->getParameter('kernel.debug'));
     }
 }

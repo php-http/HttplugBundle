@@ -5,6 +5,7 @@
 
     <services>
         <service id="httplug.collector.plugin_journal" class="Http\HttplugBundle\Collector\PluginJournal" public="false" />
+
         <service id="httplug.formatter.full_http_message" class="Http\Message\Formatter\FullHttpMessageFormatter" public="false" />
 
         <service id="httplug.collector.debug_collector" class="Http\HttplugBundle\Collector\DebugPluginCollector" public="false">

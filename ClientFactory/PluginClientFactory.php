@@ -13,15 +13,23 @@ use Http\Client\Common\PluginClient;
 final class PluginClientFactory
 {
     /**
-     * @param Plugin[]      $plugins
-     * @param ClientFactory $factory
-     * @param array         $config              config to the client factory
-     * @param array         $pluginClientOptions config forwarded to the PluginClient
+     * @param Plugin[]               $plugins
+     * @param ClientFactory|callable $factory
+     * @param array                  $config              config to the client factory
+     * @param array                  $pluginClientOptions config forwarded to the PluginClient
      *
      * @return PluginClient
      */
-    public static function createPluginClient(array $plugins, ClientFactory $factory, array $config, array $pluginClientOptions = [])
+    public static function createPluginClient(array $plugins, $factory, array $config, array $pluginClientOptions = [])
     {
-        return new PluginClient($factory->createClient($config), $plugins, $pluginClientOptions);
+        if ($factory instanceof ClientFactory) {
+            $client = $factory->createClient($config);
+        } elseif (is_callable($factory)) {
+            $client = $factory($config);
+        } else {
+            throw new \RuntimeException(sprintf('Second argument to PluginClientFactory::createPluginClient must be a "%s" or a callable.', ClientFactory::class));
+        }
+
+        return new PluginClient($client, $plugins, $pluginClientOptions);
     }
 }

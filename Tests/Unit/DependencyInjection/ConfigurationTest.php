@@ -11,6 +11,8 @@ use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractExtensionConfigurati
  */
 class ConfigurationTest extends AbstractExtensionConfigurationTestCase
 {
+    private $debug = true;
+
     protected function getContainerExtension()
     {
         return new HttplugExtension();
@@ -18,7 +20,7 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
 
     protected function getConfiguration()
     {
-        return new Configuration();
+        return new Configuration($this->debug);
     }
 
     public function testEmptyConfiguration()
@@ -38,7 +40,7 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
             ],
             'clients' => [],
             'toolbar' => [
-                'enabled' => 'auto',
+                'enabled' => true,
                 'formatter' => null,
                 'captured_body_length' => 0,
             ],
@@ -93,6 +95,7 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
             'config/empty.yml',
             'config/empty.xml',
             'config/empty.php',
+            'config/toolbar_auto.yml',
         ]);
 
         foreach ($formats as $format) {
