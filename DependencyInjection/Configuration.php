@@ -20,6 +20,23 @@ use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 class Configuration implements ConfigurationInterface
 {
     /**
+     * Whether to use the debug mode.
+     *
+     * @see https://github.com/doctrine/DoctrineBundle/blob/v1.5.2/DependencyInjection/Configuration.php#L31-L41
+     *
+     * @var bool
+     */
+    private $debug;
+
+    /**
+     * @param bool $debug
+     */
+    public function __construct($debug)
+    {
+        $this->debug = (bool) $debug;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function getConfigTreeBuilder()
@@ -75,12 +92,17 @@ class Configuration implements ConfigurationInterface
                 ->end()
                 ->arrayNode('toolbar')
                     ->addDefaultsIfNotSet()
-                    ->info('Extend the debug profiler with inforation about requests.')
+                    ->info('Extend the debug profiler with information about requests.')
                     ->children()
-                        ->enumNode('enabled')
-                            ->info('If "auto" (default), the toolbar is activated when kernel.debug is true. You can force the toolbar on and off by changing this option.')
-                            ->values([true, false, 'auto'])
-                            ->defaultValue('auto')
+                        ->booleanNode('enabled') // @deprecated value auto in 1.3.0
+                            ->beforeNormalization()
+                                ->ifString()
+                                ->then(function ($v) {
+                                    return 'auto' === $v ? $this->debug : $v;
+                                })
+                            ->end()
+                            ->info('Turn the toolbar on or off. Defaults to kernel debug mode.')
+                            ->defaultValue($this->debug)
                         ->end()
                         ->scalarNode('formatter')->defaultNull()->end()
                         ->scalarNode('captured_body_length')
