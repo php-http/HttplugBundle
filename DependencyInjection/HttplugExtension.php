@@ -218,8 +218,10 @@ class HttplugExtension extends Extension
         $pluginClientOptions = [];
 
         if ($profiling) {
-            // Add the stopwatch plugin
-            array_unshift($arguments['plugins'], 'httplug.plugin.stopwatch');
+            if (!in_array('httplug.plugin.stopwatch', $arguments['plugins'])) {
+                // Add the stopwatch plugin
+                array_unshift($arguments['plugins'], 'httplug.plugin.stopwatch');
+            }
 
             // Tell the plugin journal what plugins we used
             $container
