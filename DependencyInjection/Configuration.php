@@ -138,7 +138,7 @@ class Configuration implements ConfigurationInterface
                 ->validate()
                     ->ifTrue(function ($clients) {
                         foreach ($clients as $name => $config) {
-                            return $config['flexible_client'] && $config['http_methods_client'];
+                            return $config['flexible_client'] && $config['http_methods_client'] && $config['batch_client'];
                         }
 
                         return false;
@@ -159,6 +159,10 @@ class Configuration implements ConfigurationInterface
                     ->booleanNode('http_methods_client')
                         ->defaultFalse()
                         ->info('Set to true to get the client wrapped in a HttpMethodsClient which emulates provides functions for HTTP verbs.')
+                    ->end()
+                    ->booleanNode('batch_client')
+                        ->defaultFalse()
+                        ->info('Set to true to get the client wrapped in a BatchClient which allows you to send multiple request at the same time.')
                     ->end()
                     ->arrayNode('plugins')
                         ->info('A list of service ids of plugins. The order is important.')

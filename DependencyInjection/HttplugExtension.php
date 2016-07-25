@@ -2,6 +2,7 @@
 
 namespace Http\HttplugBundle\DependencyInjection;
 
+use Http\Client\Common\BatchClient;
 use Http\Client\Common\FlexibleHttpClient;
 use Http\Client\Common\HttpMethodsClient;
 use Http\Client\Common\Plugin\AuthenticationPlugin;
@@ -261,6 +262,15 @@ class HttplugExtension extends Extension
             $container
                 ->register($serviceId.'.http_methods', HttpMethodsClient::class)
                 ->setArguments([new Reference($serviceId.'.http_methods.inner'), new Reference('httplug.message_factory')])
+                ->setPublic(false)
+                ->setDecoratedService($serviceId)
+            ;
+        }
+
+        if ($arguments['batch_client']) {
+            $container
+                ->register($serviceId.'.batch_client', BatchClient::class)
+                ->setArguments([new Reference($serviceId.'.batch_client.inner')])
                 ->setPublic(false)
                 ->setDecoratedService($serviceId)
             ;
