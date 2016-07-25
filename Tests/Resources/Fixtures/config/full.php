@@ -16,6 +16,7 @@ $container->loadFromExtension('httplug', [
     'toolbar' => [
         'enabled' => true,
         'formatter' => 'my_toolbar_formatter',
+        'captured_body_length' => 0,
     ],
     'plugins' => [
         'authentication' => [
