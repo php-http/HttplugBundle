@@ -138,7 +138,8 @@ class Configuration implements ConfigurationInterface
                 ->validate()
                     ->ifTrue(function ($clients) {
                         foreach ($clients as $name => $config) {
-                            return $config['flexible_client'] && $config['http_methods_client'] && $config['batch_client'];
+                            // Make sure we only allow one of these to be true
+                            return (bool) $config['flexible_client'] + (bool) $config['http_methods_client'] + (bool) $config['batch_client'] >= 2;
                         }
 
                         return false;
