@@ -5,11 +5,13 @@
 
 ### Changed
 
-- All clients are registered with the PluginClient. (even in production)
+- All clients are registered with the PluginClient (even in production)
+- Improved debug tool registration
 
 ### Deprecated
 
 - `auto` value in `toolbar.enabled` config
+
 
 ## 1.2.2 - 2016-07-19
 
