@@ -13,7 +13,7 @@ $container->loadFromExtension('httplug', [
         'uri_factory'     => 'Http\Message\UriFactory\GuzzleUriFactory',
         'stream_factory'  => 'Http\Message\StreamFactory\GuzzleStreamFactory',
     ],
-    'toolbar' => [
+    'profiling' => [
         'enabled' => true,
         'formatter' => 'my_toolbar_formatter',
         'captured_body_length' => 0,

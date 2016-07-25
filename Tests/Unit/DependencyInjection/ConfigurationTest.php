@@ -11,7 +11,69 @@ use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractExtensionConfigurati
  */
 class ConfigurationTest extends AbstractExtensionConfigurationTestCase
 {
-    private $debug = true;
+    private $emptyConfig = [
+        'main_alias' => [
+            'client' => 'httplug.client.default',
+            'message_factory' => 'httplug.message_factory.default',
+            'uri_factory' => 'httplug.uri_factory.default',
+            'stream_factory' => 'httplug.stream_factory.default',
+        ],
+        'classes' => [
+            'client' => null,
+            'message_factory' => null,
+            'uri_factory' => null,
+            'stream_factory' => null,
+        ],
+        'clients' => [],
+        'profiling' => [
+            'enabled' => true,
+            'formatter' => null,
+            'captured_body_length' => 0,
+        ],
+        'plugins' => [
+            'authentication' => [],
+            'cache' => [
+                'enabled' => false,
+                'stream_factory' => 'httplug.stream_factory',
+                'config' => [
+                    'default_ttl' => null,
+                    'respect_cache_headers' => true,
+                ],
+            ],
+            'cookie' => [
+                'enabled' => false,
+            ],
+            'decoder' => [
+                'enabled' => true,
+                'use_content_encoding' => true,
+            ],
+            'history' => [
+                'enabled' => false,
+            ],
+            'logger' => [
+                'enabled' => true,
+                'logger' => 'logger',
+                'formatter' => null,
+            ],
+            'redirect' => [
+                'enabled' => true,
+                'preserve_header' => true,
+                'use_default_for_multiple' => true,
+            ],
+            'retry' => [
+                'enabled' => true,
+                'retry' => 1,
+            ],
+            'stopwatch' => [
+                'enabled' => true,
+                'stopwatch' => 'debug.stopwatch',
+            ],
+        ],
+        'discovery' => [
+            'client' => 'auto',
+            'async_client' => null,
+        ],
+    ];
 
     protected function getContainerExtension()
     {
@@ -20,86 +82,21 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
 
     protected function getConfiguration()
     {
-        return new Configuration($this->debug);
+        return new Configuration(true);
     }
 
     public function testEmptyConfiguration()
     {
-        $expectedConfiguration = [
-            'main_alias' => [
-                'client' => 'httplug.client.default',
-                'message_factory' => 'httplug.message_factory.default',
-                'uri_factory' => 'httplug.uri_factory.default',
-                'stream_factory' => 'httplug.stream_factory.default',
-            ],
-            'classes' => [
-                'client' => null,
-                'message_factory' => null,
-                'uri_factory' => null,
-                'stream_factory' => null,
-            ],
-            'clients' => [],
-            'toolbar' => [
-                'enabled' => true,
-                'formatter' => null,
-                'captured_body_length' => 0,
-            ],
-            'plugins' => [
-                'authentication' => [],
-                'cache' => [
-                    'enabled' => false,
-                    'stream_factory' => 'httplug.stream_factory',
-                    'config' => [
-                        'default_ttl' => null,
-                        'respect_cache_headers' => true,
-                    ],
-                ],
-                'cookie' => [
-                    'enabled' => false,
-                ],
-                'decoder' => [
-                    'enabled' => true,
-                    'use_content_encoding' => true,
-                ],
-                'history' => [
-                    'enabled' => false,
-                ],
-                'logger' => [
-                    'enabled' => true,
-                    'logger' => 'logger',
-                    'formatter' => null,
-                ],
-                'redirect' => [
-                    'enabled' => true,
-                    'preserve_header' => true,
-                    'use_default_for_multiple' => true,
-                ],
-                'retry' => [
-                    'enabled' => true,
-                    'retry' => 1,
-                ],
-                'stopwatch' => [
-                    'enabled' => true,
-                    'stopwatch' => 'debug.stopwatch',
-                ],
-            ],
-            'discovery' => [
-                'client' => 'auto',
-                'async_client' => null,
-            ],
-        ];
-
         $formats = array_map(function ($path) {
             return __DIR__.'/../../Resources/Fixtures/'.$path;
         }, [
             'config/empty.yml',
             'config/empty.xml',
             'config/empty.php',
-            'config/toolbar_auto.yml',
         ]);
 
         foreach ($formats as $format) {
-            $this->assertProcessedConfigurationEquals($expectedConfiguration, [$format]);
+            $this->assertProcessedConfigurationEquals($this->emptyConfig, [$format]);
         }
     }
 
@@ -119,7 +116,7 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
                 'stream_factory' => 'Http\Message\StreamFactory\GuzzleStreamFactory',
             ],
             'clients' => [],
-            'toolbar' => [
+            'profiling' => [
                 'enabled' => true,
                 'formatter' => 'my_toolbar_formatter',
                 'captured_body_length' => 0,
@@ -221,6 +218,30 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
     public function testInvalidAuthentication()
     {
         $file = __DIR__.'/../../Resources/Fixtures/config/invalid_auth.yml';
+        $this->assertProcessedConfigurationEquals([], [$file]);
+    }
+
+    public function testBackwardCompatibility()
+    {
+        $formats = array_map(function ($path) {
+            return __DIR__.'/../../Resources/Fixtures//'.$path;
+        }, [
+            'config/bc/toolbar.yml',
+            'config/bc/toolbar_auto.yml',
+        ]);
+
+        foreach ($formats as $format) {
+            $this->assertProcessedConfigurationEquals($this->emptyConfig, [$format]);
+        }
+    }
+
+    /**
+     * @expectedException \Symfony\Component\Config\Definition\Exception\InvalidConfigurationException
+     * @expectedExceptionMessage Can't configure both "toolbar" and "profiling" section. The "toolbar" config is deprecated as of version 1.3.0, please only use "profiling".
+     */
+    public function testProfilingToolbarCollision()
+    {
+        $file = __DIR__.'/../../Resources/Fixtures/config/bc/profiling_toolbar.yml';
         $this->assertProcessedConfigurationEquals([], [$file]);
     }
 }

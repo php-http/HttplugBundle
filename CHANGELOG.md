@@ -15,6 +15,7 @@
 ### Deprecated
 
 - `auto` value in `toolbar.enabled` config
+- `toolbar` config, use `profiling` instead
 
 
 ## 1.2.2 - 2016-07-19

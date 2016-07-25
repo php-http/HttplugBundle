@@ -69,6 +69,29 @@ class Configuration implements ConfigurationInterface
                     return $v;
                 })
             ->end()
+            ->beforeNormalization()
+                ->ifTrue(function ($v) {
+                    return is_array($v) && array_key_exists('toolbar', $v) && is_array($v['toolbar']);
+                })
+                ->then(function ($v) {
+                    if (array_key_exists('profiling', $v)) {
+                        throw new InvalidConfigurationException('Can\'t configure both "toolbar" and "profiling" section. The "toolbar" config is deprecated as of version 1.3.0, please only use "profiling".');
+                    }
+
+                    @trigger_error('"httplug.toolbar" config is deprecated since version 1.3 and will be removed in 2.0. Use "httplug.profiling" instead.', E_USER_DEPRECATED);
+
+                    if (array_key_exists('enabled', $v['toolbar']) && 'auto' === $v['toolbar']['enabled']) {
+                        @trigger_error('"auto" value in "httplug.toolbar" config is deprecated since version 1.3 and will be removed in 2.0. Use a boolean value instead.', E_USER_DEPRECATED);
+                        $v['toolbar']['enabled'] = $this->debug;
+                    }
+
+                    $v['profiling'] = $v['toolbar'];
+
+                    unset($v['toolbar']);
+
+                    return $v;
+                })
+            ->end()
             ->children()
                 ->arrayNode('main_alias')
                     ->addDefaultsIfNotSet()
@@ -90,17 +113,14 @@ class Configuration implements ConfigurationInterface
                         ->scalarNode('stream_factory')->defaultNull()->end()
                     ->end()
                 ->end()
-                ->arrayNode('toolbar')
+                ->arrayNode('profiling')
                     ->addDefaultsIfNotSet()
+                    ->treatFalseLike(['enabled' => false])
+                    ->treatTrueLike(['enabled' => true])
+                    ->treatNullLike(['enabled' => $this->debug])
                     ->info('Extend the debug profiler with information about requests.')
                     ->children()
-                        ->booleanNode('enabled') // @deprecated value auto in 1.3.0
-                            ->beforeNormalization()
-                                ->ifString()
-                                ->then(function ($v) {
-                                    return 'auto' === $v ? $this->debug : $v;
-                                })
-                            ->end()
+                        ->booleanNode('enabled')
                             ->info('Turn the toolbar on or off. Defaults to kernel debug mode.')
                             ->defaultValue($this->debug)
                         ->end()

@@ -53,20 +53,20 @@ class HttplugExtension extends Extension
         }
 
         // Configure toolbar
-        if ($config['toolbar']['enabled']) {
+        if ($config['profiling']['enabled']) {
             $loader->load('data-collector.xml');
 
-            if (!empty($config['toolbar']['formatter'])) {
+            if (!empty($config['profiling']['formatter'])) {
                 // Add custom formatter
                 $container
                     ->getDefinition('httplug.collector.debug_collector')
-                    ->replaceArgument(0, new Reference($config['toolbar']['formatter']))
+                    ->replaceArgument(0, new Reference($config['profiling']['formatter']))
                 ;
             }
 
             $container
                 ->getDefinition('httplug.formatter.full_http_message')
-                ->addArgument($config['toolbar']['captured_body_length'])
+                ->addArgument($config['profiling']['captured_body_length'])
             ;
         }
 
@@ -91,7 +91,7 @@ class HttplugExtension extends Extension
                 $first = $name;
             }
 
-            $this->configureClient($container, $name, $arguments, $config['toolbar']['enabled']);
+            $this->configureClient($container, $name, $arguments, $config['profiling']['enabled']);
         }
 
         // If we have clients configured
@@ -294,7 +294,7 @@ class HttplugExtension extends Extension
                     $container,
                     'auto_discovered_client',
                     [HttpClientDiscovery::class, 'find'],
-                    $config['toolbar']['enabled']
+                    $config['profiling']['enabled']
                 );
             }
 
@@ -309,7 +309,7 @@ class HttplugExtension extends Extension
                     $container,
                     'auto_discovered_async',
                     [HttpAsyncClientDiscovery::class, 'find'],
-                    $config['toolbar']['enabled']
+                    $config['profiling']['enabled']
                 );
             }
 
