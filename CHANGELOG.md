@@ -6,6 +6,7 @@
 ### Added
 
 - Support for BatchClient
+- The stopwatch plugin in included by default when using profiling. 
 
 ### Changed
 
