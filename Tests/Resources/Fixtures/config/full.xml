@@ -14,7 +14,7 @@
             <uri-factory>Http\Message\UriFactory\GuzzleUriFactory</uri-factory>
             <stream-factory>Http\Message\StreamFactory\GuzzleStreamFactory</stream-factory>
         </classes>
-        <toolbar enabled="true" formatter="my_toolbar_formatter" captured_body_length="0"/>
+        <profiling enabled="true" formatter="my_toolbar_formatter" captured_body_length="0"/>
         <plugins>
             <authentication>
                 <my_basic type="basic" username="foo" password="bar"/>
