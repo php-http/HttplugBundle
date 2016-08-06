@@ -9,6 +9,28 @@ httplug:
         message_factory: Http\Message\MessageFactory\GuzzleMessageFactory
         uri_factory: Http\Message\UriFactory\GuzzleUriFactory
         stream_factory: Http\Message\StreamFactory\GuzzleStreamFactory
+    clients:
+        test:
+            factory: httplug.factory.guzzle6
+            http_methods_client: true
+            plugins:
+                - 'httplug.plugin.redirect'
+                -
+                    add_host:
+                        host: http://localhost
+                -
+                    header_set:
+                        headers:
+                            X-FOO: bar
+                -
+                    header_remove:
+                        headers: [X-FOO]
+                -
+                    authentication:
+                        my_basic:
+                            type: basic
+                            username: foo
+                            password: bar
     profiling:
         enabled: true
         formatter: my_toolbar_formatter

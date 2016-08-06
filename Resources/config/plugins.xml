@@ -27,5 +27,25 @@
         <service id="httplug.plugin.stopwatch" class="Http\Client\Common\Plugin\StopwatchPlugin" public="false">
             <argument />
         </service>
+
+        <!-- client specific plugin definition prototypes -->
+
+        <service id="httplug.plugin.add_host" class="Http\Client\Common\Plugin\AddHostPlugin" public="false" abstract="true">
+            <argument/>
+            <argument/>
+        </service>
+        <service id="httplug.plugin.header_append" class="Http\Client\Common\Plugin\HeaderAppendPlugin" public="false" abstract="true">
+            <argument/>
+        </service>
+        <service id="httplug.plugin.header_defaults" class="Http\Client\Common\Plugin\HeaderDefaultsPlugin" public="false" abstract="true">
+            <argument/>
+        </service>
+        <service id="httplug.plugin.header_set" class="Http\Client\Common\Plugin\HeaderSetPlugin" public="false" abstract="true">
+            <argument/>
+        </service>
+        <service id="httplug.plugin.header_remove" class="Http\Client\Common\Plugin\HeaderRemovePlugin" public="false" abstract="true">
+            <argument/>
+        </service>
+
     </services>
 </container>
