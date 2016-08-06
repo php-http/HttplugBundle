@@ -14,8 +14,10 @@ use Http\HttplugBundle\Collector\DebugPlugin;
 use Http\Message\Authentication\BasicAuth;
 use Http\Message\Authentication\Bearer;
 use Http\Message\Authentication\Wsse;
+use Psr\Http\Message\UriInterface;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use Symfony\Component\DependencyInjection\Reference;
@@ -70,8 +72,8 @@ class HttplugExtension extends Extension
             ;
         }
 
-        $this->configurePlugins($container, $config['plugins']);
         $this->configureClients($container, $config);
+        $this->configurePlugins($container, $config['plugins']); // must be after clients, as the extra_plugins in clients might use plugins as template that will be removed
         $this->configureAutoDiscoveryClients($container, $config);
     }
 
@@ -107,32 +109,43 @@ class HttplugExtension extends Extension
     /**
      * @param ContainerBuilder $container
      * @param array            $config
+     * @param string           $idPrefix  Start of service id for these plugins.
      */
-    private function configurePlugins(ContainerBuilder $container, array $config)
+    private function configurePlugins(ContainerBuilder $container, array $config, $idPrefix = 'httplug.plugin')
     {
+        $sharedPluginPrefix = 'httplug.plugin';
+        $shared = $sharedPluginPrefix === $idPrefix;
         if (!empty($config['authentication'])) {
+            // TODO: handle extra auth plugin on client
             $this->configureAuthentication($container, $config['authentication']);
         }
         unset($config['authentication']);
 
         foreach ($config as $name => $pluginConfig) {
-            $pluginId = 'httplug.plugin.'.$name;
+            $pluginId = $idPrefix.'.'.$name;
 
             if ($pluginConfig['enabled']) {
-                $def = $container->getDefinition($pluginId);
-                $this->configurePluginByName($name, $def, $pluginConfig);
-            } else {
+                $def = $container->getDefinition($sharedPluginPrefix.'.'.$name);
+                if (!$shared) {
+                    $def = clone $def;
+                    $def->setAbstract(false);
+                    $container->setDefinition($pluginId, $def);
+                }
+                $this->configurePluginByName($name, $def, $pluginConfig, $container, $pluginId);
+            } elseif ($shared) {
                 $container->removeDefinition($pluginId);
             }
         }
     }
 
     /**
-     * @param string     $name
-     * @param Definition $definition
-     * @param array      $config
+     * @param string           $name
+     * @param Definition       $definition
+     * @param array            $config
+     * @param ContainerBuilder $container In case we need to add additional services for this plugin
+     * @param string           $serviceId Service id of the plugin, in case we need to add additional services for this plugin.
      */
-    private function configurePluginByName($name, Definition $definition, array $config)
+    private function configurePluginByName($name, Definition $definition, array $config, ContainerInterface $container, $serviceId)
     {
         switch ($name) {
             case 'cache':
@@ -145,7 +158,9 @@ class HttplugExtension extends Extension
                 $definition->replaceArgument(0, new Reference($config['cookie_jar']));
                 break;
             case 'decoder':
-                $definition->addArgument($config['use_content_encoding']);
+                $definition->addArgument([
+                    'use_content_encoding' => $config['use_content_encoding'],
+                ]);
                 break;
             case 'history':
                 $definition->replaceArgument(0, new Reference($config['journal']));
@@ -157,16 +172,32 @@ class HttplugExtension extends Extension
                 }
                 break;
             case 'redirect':
-                $definition
-                    ->addArgument($config['preserve_header'])
-                    ->addArgument($config['use_default_for_multiple']);
+                $definition->addArgument([
+                    'preserve_header' => $config['preserve_header'],
+                    'use_default_for_multiple' => $config['use_default_for_multiple'],
+                ]);
                 break;
             case 'retry':
-                $definition->addArgument($config['retry']);
+                $definition->addArgument([
+                    'retries' => $config['retry'],
+                ]);
                 break;
             case 'stopwatch':
                 $definition->replaceArgument(0, new Reference($config['stopwatch']));
                 break;
+
+            // client specific plugins
+            case 'add_host':
+                $uriService = $serviceId.'.host_uri';
+                $this->createUri($container, $uriService, $config['host']);
+                $definition->replaceArgument(0, new Reference($uriService));
+                $definition->replaceArgument(1, [
+                    'replace' => $config['replace'],
+                ]);
+                break;
+
+            default:
+                throw new \InvalidArgumentException(sprintf('Internal exception: Plugin %s is not handled', $name));
         }
     }
 
@@ -215,6 +246,7 @@ class HttplugExtension extends Extension
     {
         $serviceId = 'httplug.client.'.$name;
 
+        $plugins = $arguments['plugins'];
         $pluginClientOptions = [];
 
         if ($profiling) {
@@ -234,6 +266,17 @@ class HttplugExtension extends Extension
             $pluginClientOptions['debug_plugins'] = [new Reference($debugPluginServiceId)];
         }
 
+        if (array_key_exists('extra_plugins', $arguments)) {
+            $this->configurePlugins($container, $arguments['extra_plugins'], $serviceId.'.plugin');
+
+            // add to end of plugins list unless explicitly configured
+            foreach ($arguments['extra_plugins'] as $name => $config) {
+                if (!in_array($serviceId.'.plugin.'.$name, $plugins)) {
+                    $plugins[] = $serviceId.'.plugin.'.$name;
+                }
+            }
+        }
+
         $container
             ->register($serviceId, DummyClient::class)
             ->setFactory([PluginClientFactory::class, 'createPluginClient'])
@@ -242,7 +285,7 @@ class HttplugExtension extends Extension
                     function ($id) {
                         return new Reference($id);
                     },
-                    $arguments['plugins']
+                    $plugins
                 )
             )
             ->addArgument(new Reference($arguments['factory']))
@@ -280,6 +323,23 @@ class HttplugExtension extends Extension
                 ->setDecoratedService($serviceId)
             ;
         }
+    }
+
+    /**
+     * Create a URI object with the default URI factory.
+     *
+     * @param ContainerBuilder $container
+     * @param string           $serviceId Name of the private service to create
+     * @param string           $uri       String representation of the URI
+     */
+    private function createUri(ContainerBuilder $container, $serviceId, $uri)
+    {
+        $container
+            ->register($serviceId, UriInterface::class)
+            ->setPublic(false)
+            ->setFactory([new Reference('httplug.uri_factory'), 'createUri'])
+            ->addArgument($uri)
+        ;
     }
 
     /**

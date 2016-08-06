@@ -2,6 +2,7 @@
 
 namespace Http\HttplugBundle\Tests\Unit\DependencyInjection;
 
+use Http\Client\Common\PluginClient;
 use Http\HttplugBundle\DependencyInjection\HttplugExtension;
 use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractExtensionTestCase;
 
@@ -59,6 +60,38 @@ class HttplugExtensionTest extends AbstractExtensionTestCase
         foreach (['client', 'message_factory', 'uri_factory', 'stream_factory'] as $type) {
             $this->assertContainerBuilderHasAlias("httplug.$type", "my_{$type}_service");
         }
+    }
+
+    public function testClientExtraPlugins()
+    {
+        $this->load([
+            'clients' => [
+                'acme' => [
+                    'factory' => 'httplug.factory.curl',
+                    'extra_plugins' => [
+                        'add_host' => [
+                            'host' => 'http://localhost:8000',
+                        ],
+                        'decoder' => [
+                            'use_content_encoding' => false,
+                        ]
+                    ],
+                    'plugins' => ['httplug.client.acme.plugin.decoder', 'httplug.plugin.redirect'],
+                ],
+            ],
+        ]);
+
+        $plugins = [
+            'httplug.client.acme.plugin.decoder',
+            'httplug.plugin.redirect',
+            'httplug.client.acme.plugin.add_host',
+        ];
+
+        $this->assertContainerBuilderHasService('httplug.client.acme');
+        foreach ($plugins as $id) {
+            $this->assertContainerBuilderHasService($id);
+        }
+        $this->assertContainerBuilderHasServiceDefinitionWithArgument('httplug.client.acme', 0, $plugins);
     }
 
     public function testNoProfilingWhenToolbarIsDisabled()
