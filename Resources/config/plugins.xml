@@ -27,5 +27,13 @@
         <service id="httplug.plugin.stopwatch" class="Http\Client\Common\Plugin\StopwatchPlugin" public="false">
             <argument />
         </service>
+
+        <!-- extra plugin definitions -->
+
+        <service id="httplug.plugin.add_host" class="Http\Client\Common\Plugin\AddHostPlugin" public="false" abstract="true">
+            <argument/>
+            <argument/>
+        </service>
+
     </services>
 </container>
