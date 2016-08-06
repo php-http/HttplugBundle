@@ -14,6 +14,9 @@
             <uri-factory>Http\Message\UriFactory\GuzzleUriFactory</uri-factory>
             <stream-factory>Http\Message\StreamFactory\GuzzleStreamFactory</stream-factory>
         </classes>
+        <client name="test" factory="httplug.factory.guzzle6" http-methods-client="true">
+            <options default-host="http://localhost"/>
+        </client>
         <profiling enabled="true" formatter="my_toolbar_formatter" captured_body_length="0"/>
         <plugins>
             <authentication>

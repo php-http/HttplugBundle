@@ -115,7 +115,19 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
                 'uri_factory' => 'Http\Message\UriFactory\GuzzleUriFactory',
                 'stream_factory' => 'Http\Message\StreamFactory\GuzzleStreamFactory',
             ],
-            'clients' => [],
+            'clients' => [
+                'test' => [
+                    'factory' => 'httplug.factory.guzzle6',
+                    'http_methods_client' => true,
+                    'flexible_client' => false,
+                    'batch_client' => false,
+                    'options' => [
+                        'default_host' => 'http://localhost',
+                    ],
+                    'plugins' => [],
+                    'config' => [],
+                ],
+            ],
             'profiling' => [
                 'enabled' => true,
                 'formatter' => 'my_toolbar_formatter',
