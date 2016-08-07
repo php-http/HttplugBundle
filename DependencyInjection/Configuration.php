@@ -228,6 +228,7 @@ class Configuration implements ConfigurationInterface
                         unset($plugins[$name]);
                     }
                 }
+
                 return $plugins;
             })
         ;

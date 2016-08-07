@@ -74,7 +74,7 @@ class HttplugExtensionTest extends AbstractExtensionTestCase
                         ],
                         'decoder' => [
                             'use_content_encoding' => false,
-                        ]
+                        ],
                     ],
                     'plugins' => ['httplug.client.acme.plugin.decoder', 'httplug.plugin.redirect'],
                 ],

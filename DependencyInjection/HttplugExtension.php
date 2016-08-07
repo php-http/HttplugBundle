@@ -142,8 +142,8 @@ class HttplugExtension extends Extension
      * @param string           $name
      * @param Definition       $definition
      * @param array            $config
-     * @param ContainerBuilder $container In case we need to add additional services for this plugin
-     * @param string           $serviceId Service id of the plugin, in case we need to add additional services for this plugin.
+     * @param ContainerBuilder $container  In case we need to add additional services for this plugin
+     * @param string           $serviceId  Service id of the plugin, in case we need to add additional services for this plugin.
      */
     private function configurePluginByName($name, Definition $definition, array $config, ContainerInterface $container, $serviceId)
     {
