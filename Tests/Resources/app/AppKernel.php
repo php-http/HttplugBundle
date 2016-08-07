@@ -14,7 +14,7 @@ class AppKernel extends Kernel
             new \Symfony\Bundle\FrameworkBundle\FrameworkBundle(),
             new \Http\HttplugBundle\HttplugBundle(),
         ];
-        
+
         return $bundles;
     }
 
@@ -23,11 +23,7 @@ class AppKernel extends Kernel
      */
     public function registerContainerConfiguration(LoaderInterface $loader)
     {
-        $runtime = 'php';
-        if (defined('HHVM_VERSION')) {
-            $runtime = 'hhvm';
-        }
-        $loader->load(__DIR__.'/config/config_'.$runtime.'.yml');
+        $loader->load(__DIR__.'/config/config.yml');
     }
 
     /**
