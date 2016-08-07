@@ -145,7 +145,9 @@ class HttplugExtension extends Extension
                 $definition->replaceArgument(0, new Reference($config['cookie_jar']));
                 break;
             case 'decoder':
-                $definition->addArgument($config['use_content_encoding']);
+                $definition->addArgument([
+                    'use_content_encoding' => $config['use_content_encoding'],
+                ]);
                 break;
             case 'history':
                 $definition->replaceArgument(0, new Reference($config['journal']));
@@ -157,16 +159,22 @@ class HttplugExtension extends Extension
                 }
                 break;
             case 'redirect':
-                $definition
-                    ->addArgument($config['preserve_header'])
-                    ->addArgument($config['use_default_for_multiple']);
+                $definition->addArgument([
+                    'preserve_header' => $config['preserve_header'],
+                    'use_default_for_multiple' => $config['use_default_for_multiple'],
+                ]);
                 break;
             case 'retry':
-                $definition->addArgument($config['retry']);
+                $definition->addArgument([
+                    'retries' => $config['retry'],
+                ]);
                 break;
             case 'stopwatch':
                 $definition->replaceArgument(0, new Reference($config['stopwatch']));
                 break;
+
+            default:
+                throw new \InvalidArgumentException(sprintf('Internal exception: Plugin %s is not handled', $name));
         }
     }
 

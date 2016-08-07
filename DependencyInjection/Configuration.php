@@ -92,6 +92,7 @@ class Configuration implements ConfigurationInterface
                     return $v;
                 })
             ->end()
+            ->fixXmlConfig('client')
             ->children()
                 ->arrayNode('main_alias')
                     ->addDefaultsIfNotSet()
@@ -150,7 +151,7 @@ class Configuration implements ConfigurationInterface
         return $treeBuilder;
     }
 
-    protected function configureClients(ArrayNodeDefinition $root)
+    private function configureClients(ArrayNodeDefinition $root)
     {
         $root->children()
             ->arrayNode('clients')
@@ -196,7 +197,7 @@ class Configuration implements ConfigurationInterface
     /**
      * @param ArrayNodeDefinition $root
      */
-    protected function configurePlugins(ArrayNodeDefinition $root)
+    private function configurePlugins(ArrayNodeDefinition $root)
     {
         $root->children()
             ->arrayNode('plugins')
