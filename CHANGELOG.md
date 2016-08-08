@@ -3,10 +3,14 @@
 
 ## UNRELEASED
 
+### Fixed
+
+- decoder, redirect and retry plugins can now be used and no longer trigger an error because of incorrect constructor arguments.
+
 ### Added
 
 - Support for BatchClient
-- The stopwatch plugin in included by default when using profiling. 
+- The stopwatch plugin in included by default when using profiling.
 
 ### Changed
 
