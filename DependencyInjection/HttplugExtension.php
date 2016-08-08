@@ -5,6 +5,7 @@ namespace Http\HttplugBundle\DependencyInjection;
 use Http\Client\Common\BatchClient;
 use Http\Client\Common\FlexibleHttpClient;
 use Http\Client\Common\HttpMethodsClient;
+use Http\Client\Common\Plugin\AddHostPlugin;
 use Http\Client\Common\Plugin\AuthenticationPlugin;
 use Http\Discovery\HttpAsyncClientDiscovery;
 use Http\Discovery\HttpClientDiscovery;
@@ -14,6 +15,7 @@ use Http\HttplugBundle\Collector\DebugPlugin;
 use Http\Message\Authentication\BasicAuth;
 use Http\Message\Authentication\Bearer;
 use Http\Message\Authentication\Wsse;
+use Psr\Http\Message\UriInterface;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
@@ -223,6 +225,7 @@ class HttplugExtension extends Extension
     {
         $serviceId = 'httplug.client.'.$name;
 
+        $plugins = $arguments['plugins'];
         $pluginClientOptions = [];
 
         if ($profiling) {
@@ -242,6 +245,42 @@ class HttplugExtension extends Extension
             $pluginClientOptions['debug_plugins'] = [new Reference($debugPluginServiceId)];
         }
 
+        if (array_key_exists('options', $arguments)) {
+            foreach ($arguments['options'] as $option => $value) {
+                switch ($option) {
+                    case 'default_host':
+                        $uriService = $serviceId.'.default_host_uri';
+                        $addHostPlugin = $serviceId.'.default_host_plugin';
+                        $this->createUri($container, $uriService, $value);
+                        $container
+                            ->register($addHostPlugin, AddHostPlugin::class)
+                            ->setPublic(false)
+                            ->addArgument(new Reference($uriService))
+                        ;
+                        // add to end of plugins list unless explicitly configured
+                        if (!in_array($addHostPlugin, $plugins)) {
+                            $plugins[] = $addHostPlugin;
+                        }
+                        break;
+                    case 'force_host':
+                        $uriService = $serviceId.'.force_host_uri';
+                        $addHostPlugin = $serviceId.'.force_host_plugin';
+                        $this->createUri($container, $uriService, $value);
+                        $container
+                            ->register($addHostPlugin, AddHostPlugin::class)
+                            ->setPublic(false)
+                            ->addArgument(new Reference($uriService))
+                            ->addArgument(['replace' => true])
+                        ;
+                        // add to end of plugins list unless explicitly configured
+                        if (!in_array($addHostPlugin, $plugins)) {
+                            $plugins[] = $addHostPlugin;
+                        }
+                        break;
+                }
+            }
+        }
+
         $container
             ->register($serviceId, DummyClient::class)
             ->setFactory([PluginClientFactory::class, 'createPluginClient'])
@@ -250,7 +289,7 @@ class HttplugExtension extends Extension
                     function ($id) {
                         return new Reference($id);
                     },
-                    $arguments['plugins']
+                    $plugins
                 )
             )
             ->addArgument(new Reference($arguments['factory']))
@@ -288,6 +327,23 @@ class HttplugExtension extends Extension
                 ->setDecoratedService($serviceId)
             ;
         }
+    }
+
+    /**
+     * Create a URI object with the default URI factory.
+     *
+     * @param ContainerBuilder $container
+     * @param string           $serviceId Name of the private service to create
+     * @param string           $uri       String representation of the URI
+     */
+    private function createUri(ContainerBuilder $container, $serviceId, $uri)
+    {
+        $container
+            ->register($serviceId, UriInterface::class)
+            ->setPublic(false)
+            ->setFactory([new Reference('httplug.uri_factory'), 'createUri'])
+            ->addArgument($uri)
+        ;
     }
 
     /**

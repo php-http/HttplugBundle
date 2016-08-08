@@ -185,6 +185,22 @@ class Configuration implements ConfigurationInterface
                         ->defaultFalse()
                         ->info('Set to true to get the client wrapped in a BatchClient which allows you to send multiple request at the same time.')
                     ->end()
+                    ->arrayNode('options')
+                        ->validate()
+                            ->ifTrue(function ($options) {
+                                return array_key_exists('default_host', $options) && array_key_exists('force_host', $options);
+                            })
+                            ->thenInvalid('You can only set one of default_host and force_host for each client')
+                        ->end()
+                        ->children()
+                            ->scalarNode('default_host')
+                                ->info('Configure the AddHostPlugin for this client. Add host if request is only for a path.')
+                            ->end()
+                            ->scalarNode('force_host')
+                                ->info('Configure the AddHostPlugin for this client. Send all requests to this host regardless of host in request.')
+                            ->end()
+                        ->end()
+                    ->end()
                     ->arrayNode('plugins')
                         ->info('A list of service ids of plugins. The order is important.')
                         ->prototype('scalar')->end()
@@ -203,7 +219,7 @@ class Configuration implements ConfigurationInterface
             ->arrayNode('plugins')
                 ->addDefaultsIfNotSet()
                 ->children()
-                    ->append($this->addAuthenticationPluiginNode())
+                    ->append($this->addAuthenticationPluginNode())
 
                     ->arrayNode('cache')
                     ->canBeEnabled()
@@ -314,7 +330,7 @@ class Configuration implements ConfigurationInterface
      *
      * @return ArrayNodeDefinition|\Symfony\Component\Config\Definition\Builder\NodeDefinition
      */
-    private function addAuthenticationPluiginNode()
+    private function addAuthenticationPluginNode()
     {
         $builder = new TreeBuilder();
         $node = $builder->root('authentication');

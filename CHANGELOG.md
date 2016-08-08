@@ -9,6 +9,7 @@
 
 ### Added
 
+- Option to configure default host for each client. default_host to add host if missing, force_host to change all requests to a specific host.
 - Support for BatchClient
 - The stopwatch plugin in included by default when using profiling.
 
