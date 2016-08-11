@@ -3,7 +3,6 @@
 namespace Http\HttplugBundle\DependencyInjection;
 
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
-use Symfony\Component\Config\Definition\Builder\NodeBuilder;
 use Symfony\Component\Config\Definition\Builder\NodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
@@ -356,7 +355,7 @@ class Configuration implements ConfigurationInterface
         // End history plugin
 
         $logger = $children->arrayNode('logger');
-        $disableAll ?  $logger->canBeEnabled() : $logger->canBeDisabled();
+        $disableAll ? $logger->canBeEnabled() : $logger->canBeDisabled();
         $logger->addDefaultsIfNotSet()
             ->children()
                 ->scalarNode('logger')

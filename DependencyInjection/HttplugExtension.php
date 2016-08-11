@@ -276,7 +276,6 @@ class HttplugExtension extends Extension
                 $container->setDefinition($pluginServiceId, $def);
                 $plugins[] = $pluginServiceId;
             }
-
         }
 
         $container
