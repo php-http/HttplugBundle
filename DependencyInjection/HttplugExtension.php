@@ -73,7 +73,7 @@ class HttplugExtension extends Extension
         }
 
         $this->configureClients($container, $config);
-        $this->configurePlugins($container, $config['plugins']); // must be after clients, as the extra_plugins in clients might use plugins as template that will be removed
+        $this->configureSharedPlugins($container, $config['plugins']); // must be after clients, as the extra_plugins in clients might use plugins as template that will be removed
         $this->configureAutoDiscoveryClients($container, $config);
     }
 
@@ -109,30 +109,21 @@ class HttplugExtension extends Extension
     /**
      * @param ContainerBuilder $container
      * @param array            $config
-     * @param string           $idPrefix  Start of service id for these plugins.
      */
-    private function configurePlugins(ContainerBuilder $container, array $config, $idPrefix = 'httplug.plugin')
+    private function configureSharedPlugins(ContainerBuilder $container, array $config)
     {
-        $sharedPluginPrefix = 'httplug.plugin';
-        $shared = $sharedPluginPrefix === $idPrefix;
         if (!empty($config['authentication'])) {
-            // TODO: handle extra auth plugin on client
             $this->configureAuthentication($container, $config['authentication']);
         }
         unset($config['authentication']);
 
         foreach ($config as $name => $pluginConfig) {
-            $pluginId = $idPrefix.'.'.$name;
+            $pluginId = 'httplug.plugin.'.$name;
 
             if ($pluginConfig['enabled']) {
-                $def = $container->getDefinition($sharedPluginPrefix.'.'.$name);
-                if (!$shared) {
-                    $def = clone $def;
-                    $def->setAbstract(false);
-                    $container->setDefinition($pluginId, $def);
-                }
+                $def = $container->getDefinition($pluginId);
                 $this->configurePluginByName($name, $def, $pluginConfig, $container, $pluginId);
-            } elseif ($shared) {
+            } else {
                 $container->removeDefinition($pluginId);
             }
         }
@@ -247,13 +238,16 @@ class HttplugExtension extends Extension
     {
         $serviceId = 'httplug.client.'.$name;
 
-        $plugins = $arguments['plugins'];
         $pluginClientOptions = [];
 
         if ($profiling) {
             if (!in_array('httplug.plugin.stopwatch', $arguments['plugins'])) {
                 // Add the stopwatch plugin
-                array_unshift($arguments['plugins'], 'httplug.plugin.stopwatch');
+                array_unshift($arguments['plugins'], [
+                    'reference' => [
+                        'id' => 'httplug.plugin.stopwatch',
+                    ],
+                ]);
             }
 
             // Tell the plugin journal what plugins we used
@@ -267,15 +261,22 @@ class HttplugExtension extends Extension
             $pluginClientOptions['debug_plugins'] = [new Reference($debugPluginServiceId)];
         }
 
-        if (array_key_exists('extra_plugins', $arguments)) {
-            $this->configurePlugins($container, $arguments['extra_plugins'], $serviceId.'.plugin');
-
-            // add to end of plugins list unless explicitly configured
-            foreach ($arguments['extra_plugins'] as $name => $config) {
-                if (!in_array($serviceId.'.plugin.'.$name, $plugins)) {
-                    $plugins[] = $serviceId.'.plugin.'.$name;
-                }
+        $plugins = [];
+        foreach ($arguments['plugins'] as $plugin) {
+            list($name, $pluginConfig) = each($plugin);
+            if ('reference' === $name) {
+                $plugins[] = $pluginConfig['id'];
+            } elseif ('authentication' === $name) {
+                // TODO handle custom authentication
+            } else {
+                $pluginServiceId = $serviceId.'.plugin.'.$name;
+                $def = clone $container->getDefinition('httplug.plugin'.'.'.$name);
+                $def->setAbstract(false);
+                $this->configurePluginByName($name, $def, $pluginConfig, $container, $pluginServiceId);
+                $container->setDefinition($pluginServiceId, $def);
+                $plugins[] = $pluginServiceId;
             }
+
         }
 
         $container

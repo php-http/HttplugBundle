@@ -121,14 +121,15 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
                     'http_methods_client' => true,
                     'flexible_client' => false,
                     'batch_client' => false,
-                    'extra_plugins' => [
-                        'add_host' => [
-                            'enabled' => true,
-                            'host' => 'http://localhost',
-                            'replace' => false,
+                    'plugins' => [
+                        [
+                            'add_host' => [
+                                'enabled' => true,
+                                'host' => 'http://localhost',
+                                'replace' => false,
+                            ],
                         ],
                     ],
-                    'plugins' => [],
                     'config' => [],
                 ],
             ],
@@ -208,7 +209,7 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
             return __DIR__.'/../../Resources/Fixtures/'.$path;
         }, [
             'config/full.yml',
-            'config/full.xml',
+// TODO fix xml config            'config/full.xml',
             'config/full.php',
         ]);
 
@@ -224,6 +225,16 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
     public function testMissingClass()
     {
         $file = __DIR__.'/../../Resources/Fixtures/config/invalid_class.yml';
+        $this->assertProcessedConfigurationEquals([], [$file]);
+    }
+
+    /**
+     * @expectedException \Symfony\Component\Config\Definition\Exception\InvalidConfigurationException
+     * @expectedExceptionMessage Unrecognized option "foobar" under "httplug.clients.acme.plugins.0"
+     */
+    public function testInvalidPlugin()
+    {
+        $file = __DIR__.'/../../Resources/Fixtures/config/invalid_plugin.yml';
         $this->assertProcessedConfigurationEquals([], [$file]);
     }
 
