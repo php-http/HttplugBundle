@@ -5,6 +5,7 @@ namespace Http\HttplugBundle\Tests\Unit\DependencyInjection;
 use Http\Client\Common\PluginClient;
 use Http\HttplugBundle\DependencyInjection\HttplugExtension;
 use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractExtensionTestCase;
+use Symfony\Component\DependencyInjection\Reference;
 
 /**
  * @author David Buchmann <mail@davidbu.ch>
@@ -62,36 +63,40 @@ class HttplugExtensionTest extends AbstractExtensionTestCase
         }
     }
 
-    public function testClientExtraPlugins()
+    public function testClientPlugins()
     {
         $this->load([
             'clients' => [
                 'acme' => [
                     'factory' => 'httplug.factory.curl',
-                    'extra_plugins' => [
-                        'add_host' => [
-                            'host' => 'http://localhost:8000',
-                        ],
-                        'decoder' => [
+                    'plugins' => [
+                        ['decoder' => [
                             'use_content_encoding' => false,
-                        ],
+                        ]],
+                        'httplug.plugin.redirect',
+                        ['add_host' => [
+                            'host' => 'http://localhost:8000',
+                        ]],
                     ],
-                    'plugins' => ['httplug.client.acme.plugin.decoder', 'httplug.plugin.redirect'],
                 ],
             ],
         ]);
 
         $plugins = [
+            'httplug.plugin.stopwatch',
             'httplug.client.acme.plugin.decoder',
             'httplug.plugin.redirect',
             'httplug.client.acme.plugin.add_host',
         ];
+        $pluginReferences = array_map(function ($id) {
+            return new Reference($id);
+        }, $plugins);
 
         $this->assertContainerBuilderHasService('httplug.client.acme');
         foreach ($plugins as $id) {
             $this->assertContainerBuilderHasService($id);
         }
-        $this->assertContainerBuilderHasServiceDefinitionWithArgument('httplug.client.acme', 0, $plugins);
+        $this->assertContainerBuilderHasServiceDefinitionWithArgument('httplug.client.acme', 0, $pluginReferences);
     }
 
     public function testNoProfilingWhenToolbarIsDisabled()

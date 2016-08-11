@@ -7,9 +7,9 @@ httplug:
     clients:
         acme:
             factory: httplug.factory.curl
-            extra_plugins:
-                add_host:
-                    host: "http://localhost:8000"
-                decoder:
+            plugins:
+                - decoder:
                     use_content_encoding: false
-            plugins: ['httplug.client.acme.plugin.decoder', 'httplug.plugin.redirect']
+                - httplug.plugin.redirect
+                - add_host:
+                    host: "http://localhost:8000"

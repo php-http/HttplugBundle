@@ -2,8 +2,8 @@
 
 namespace Http\HttplugBundle\DependencyInjection;
 
-use Symfony\Component\Config\Definition\ArrayNode;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
+use Symfony\Component\Config\Definition\Builder\NodeBuilder;
 use Symfony\Component\Config\Definition\Builder\NodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
@@ -46,7 +46,7 @@ class Configuration implements ConfigurationInterface
         $rootNode = $treeBuilder->root('httplug');
 
         $this->configureClients($rootNode);
-        $this->configurePlugins($rootNode);
+        $this->configureSharedPlugins($rootNode);
 
         $rootNode
             ->validate()
@@ -154,8 +154,9 @@ class Configuration implements ConfigurationInterface
 
     private function configureClients(ArrayNodeDefinition $root)
     {
-        $root->children()
+        $pluginNode = $root->children()
             ->arrayNode('clients')
+                ->fixXmlConfig('plugin')
                 ->validate()
                     ->ifTrue(function ($clients) {
                         foreach ($clients as $name => $config) {
@@ -186,55 +187,82 @@ class Configuration implements ConfigurationInterface
                         ->defaultFalse()
                         ->info('Set to true to get the client wrapped in a BatchClient which allows you to send multiple request at the same time.')
                     ->end()
-                    ->arrayNode('plugins')
-                        ->info('A list of service ids of plugins. The order is important.')
-                        ->prototype('scalar')->end()
-                    ->end()
                     ->variableNode('config')->defaultValue([])->end()
-                    ->append($this->createExtraPluginsNode())
-                ->end()
-            ->end();
+                    ->arrayNode('plugins')
+                        ->info('A list of plugin service ids and client specific plugin definitions. The order is important.')
+                        ->prototype('array')
+        ;
+
+        $this->configureClientPlugins($pluginNode);
     }
 
     /**
      * @param ArrayNodeDefinition $root
      */
-    private function configurePlugins(ArrayNodeDefinition $root)
+    private function configureSharedPlugins(ArrayNodeDefinition $root)
     {
         $pluginsNode = $root
             ->children()
                 ->arrayNode('plugins')
                 ->addDefaultsIfNotSet()
         ;
-        $this->configureSharedPluginNodes($pluginsNode);
+        $this->addSharedPluginNodes($pluginsNode);
     }
 
     /**
-     * Create configuration for the extra_plugins node inside the client.
+     * Configure plugins node of a client.
      *
-     * @return NodeDefinition Definition of the extra_plugins node in the client.
+     * @param ArrayNodeDefinition $pluginNode The node to add plugin definitions to.
      */
-    private function createExtraPluginsNode()
+    private function configureClientPlugins(ArrayNodeDefinition $pluginNode)
     {
-        $builder = new TreeBuilder();
-        $node = $builder->root('extra_plugins');
-        $node->validate()
-            ->always(function ($plugins) {
-                if (!count($plugins['authentication'])) {
-                    unset($plugins['authentication']);
-                }
-                foreach ($plugins as $name => $definition) {
-                    if (!$definition['enabled']) {
-                        unset($plugins[$name]);
+        $pluginNode
+            // support having just a service id in the list
+            ->beforeNormalization()
+                ->always(function ($plugin) {
+                    if (is_string($plugin)) {
+                        return [
+                            'reference' => [
+                                'enabled' => true,
+                                'id' => $plugin,
+                            ],
+                        ];
                     }
-                }
 
-                return $plugins;
-            })
+                    return $plugin;
+                })
+            ->end()
+
+            ->validate()
+                ->always(function ($plugins) {
+                    if (isset($plugins['authentication']) && !count($plugins['authentication'])) {
+                        unset($plugins['authentication']);
+                    }
+                    foreach ($plugins as $name => $definition) {
+                        if (!$definition['enabled']) {
+                            unset($plugins[$name]);
+                        }
+                    }
+
+                    return $plugins;
+                })
+            ->end()
         ;
-        $this->configureSharedPluginNodes($node, true);
-        $node
+        $this->addSharedPluginNodes($pluginNode, true);
+
+        $pluginNode
             ->children()
+                ->arrayNode('reference')
+                    ->canBeEnabled()
+                    ->info('Reference to a plugin service')
+                    ->children()
+                        ->scalarNode('id')
+                            ->info('Service id of a plugin')
+                            ->isRequired()
+                            ->cannotBeEmpty()
+                        ->end()
+                    ->end()
+                ->end()
                 ->arrayNode('add_host')
                     ->canBeEnabled()
                     ->addDefaultsIfNotSet()
@@ -251,17 +279,19 @@ class Configuration implements ConfigurationInterface
                         ->end()
                     ->end()
                 ->end()
+
+                // TODO add aditional plugins that are only usable on a specific client
             ->end()
         ->end();
-
-        return $node;
     }
 
     /**
-     * @param ArrayNodeDefinition $pluginNode
+     * Add the definitions for shared plugin configurations.
+     *
+     * @param ArrayNodeDefinition $pluginNode The node to add to.
      * @param bool                $disableAll Some shared plugins are enabled by default. On the client, all are disabled by default.
      */
-    private function configureSharedPluginNodes(ArrayNodeDefinition $pluginNode, $disableAll = false)
+    private function addSharedPluginNodes(ArrayNodeDefinition $pluginNode, $disableAll = false)
     {
         $children = $pluginNode->children();
 
@@ -305,11 +335,7 @@ class Configuration implements ConfigurationInterface
         // End cookie plugin
 
         $decoder = $children->arrayNode('decoder');
-        if ($disableAll) {
-            $decoder->canBeEnabled();
-        } else {
-            $decoder->canBeDisabled();
-        }
+        $disableAll ? $decoder->canBeEnabled() : $decoder->canBeDisabled();
         $decoder->addDefaultsIfNotSet()
             ->children()
                 ->scalarNode('use_content_encoding')->defaultTrue()->end()
@@ -330,11 +356,7 @@ class Configuration implements ConfigurationInterface
         // End history plugin
 
         $logger = $children->arrayNode('logger');
-        if ($disableAll) {
-            $logger->canBeEnabled();
-        } else {
-            $logger->canBeDisabled();
-        }
+        $disableAll ?  $logger->canBeEnabled() : $logger->canBeDisabled();
         $logger->addDefaultsIfNotSet()
             ->children()
                 ->scalarNode('logger')
@@ -351,11 +373,7 @@ class Configuration implements ConfigurationInterface
         // End logger plugin
 
         $redirect = $children->arrayNode('redirect');
-        if ($disableAll) {
-            $redirect->canBeEnabled();
-        } else {
-            $redirect->canBeDisabled();
-        }
+        $disableAll ? $redirect->canBeEnabled() : $redirect->canBeDisabled();
         $redirect->addDefaultsIfNotSet()
             ->children()
                 ->scalarNode('preserve_header')->defaultTrue()->end()
@@ -365,11 +383,7 @@ class Configuration implements ConfigurationInterface
         // End redirect plugin
 
         $retry = $children->arrayNode('retry');
-        if ($disableAll) {
-            $retry->canBeEnabled();
-        } else {
-            $retry->canBeDisabled();
-        }
+        $disableAll ? $retry->canBeEnabled() : $retry->canBeDisabled();
         $retry->addDefaultsIfNotSet()
             ->children()
                 ->scalarNode('retry')->defaultValue(1)->end() // TODO: should be called retries for consistency with the class
@@ -378,11 +392,7 @@ class Configuration implements ConfigurationInterface
         // End retry plugin
 
         $stopwatch = $children->arrayNode('stopwatch');
-        if ($disableAll) {
-            $stopwatch->canBeEnabled();
-        } else {
-            $stopwatch->canBeDisabled();
-        }
+        $disableAll ? $stopwatch->canBeEnabled() : $stopwatch->canBeDisabled();
         $stopwatch->addDefaultsIfNotSet()
             ->children()
                 ->scalarNode('stopwatch')

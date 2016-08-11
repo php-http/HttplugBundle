@@ -17,9 +17,11 @@ $container->loadFromExtension('httplug', [
         'test' => [
             'factory' => 'httplug.factory.guzzle6',
             'http_methods_client' => true,
-            'extra_plugins' => [
-                'add_host' => [
-                    'host' => 'http://localhost',
+            'plugins' => [
+                [
+                    'add_host' => [
+                        'host' => 'http://localhost',
+                    ],
                 ],
             ],
         ],
