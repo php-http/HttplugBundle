@@ -23,6 +23,20 @@ $container->loadFromExtension('httplug', [
                         'host' => 'http://localhost',
                     ],
                 ],
+                [
+                    'header_set' => [
+                        'headers' => [
+                            'X-FOO' => 'bar',
+                        ],
+                    ],
+                ],
+                [
+                    'header_remove' => [
+                        'headers' => [
+                            'X-FOO',
+                        ],
+                    ],
+                ],
             ],
         ],
     ],

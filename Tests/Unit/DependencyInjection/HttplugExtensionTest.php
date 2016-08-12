@@ -70,13 +70,37 @@ class HttplugExtensionTest extends AbstractExtensionTestCase
                 'acme' => [
                     'factory' => 'httplug.factory.curl',
                     'plugins' => [
-                        ['decoder' => [
-                            'use_content_encoding' => false,
-                        ]],
+                        [
+                            'decoder' => [
+                                'use_content_encoding' => false,
+                            ]
+                        ],
                         'httplug.plugin.redirect',
-                        ['add_host' => [
-                            'host' => 'http://localhost:8000',
-                        ]],
+                        [
+                            'add_host' => [
+                                'host' => 'http://localhost:8000',
+                            ]
+                        ],
+                        [
+                            'header_append' => [
+                                'headers' => ['X-FOO' => 'bar']
+                            ]
+                        ],
+                        [
+                            'header_defaults' => [
+                                'headers' => ['X-FOO' => 'bar']
+                            ]
+                        ],
+                        [
+                            'header_set' => [
+                                'headers' => ['X-FOO' => 'bar']
+                            ]
+                        ],
+                        [
+                            'header_remove' => [
+                                'headers' => ['X-FOO']
+                            ]
+                        ],
                     ],
                 ],
             ],
@@ -87,6 +111,10 @@ class HttplugExtensionTest extends AbstractExtensionTestCase
             'httplug.client.acme.plugin.decoder',
             'httplug.plugin.redirect',
             'httplug.client.acme.plugin.add_host',
+            'httplug.client.acme.plugin.header_append',
+            'httplug.client.acme.plugin.header_defaults',
+            'httplug.client.acme.plugin.header_set',
+            'httplug.client.acme.plugin.header_remove',
         ];
         $pluginReferences = array_map(function ($id) {
             return new Reference($id);

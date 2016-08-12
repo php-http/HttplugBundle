@@ -187,6 +187,12 @@ class HttplugExtension extends Extension
                     'replace' => $config['replace'],
                 ]);
                 break;
+            case 'header_append':
+            case 'header_defaults':
+            case 'header_set':
+            case 'header_remove':
+                $definition->replaceArgument(0, $config['headers']);
+                break;
 
             default:
                 throw new \InvalidArgumentException(sprintf('Internal exception: Plugin %s is not handled', $name));

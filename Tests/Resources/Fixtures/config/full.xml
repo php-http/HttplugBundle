@@ -18,6 +18,16 @@
             <plugin>
                 <add-host host="http://localhost"/>
             </plugin>
+            <plugin>
+                <header-set>
+                    <header name="X-FOO">bar</header>
+                </header-set>
+            </plugin>
+            <plugin>
+                <header-remove>
+                    <header>X-FOO</header>
+                </header-remove>
+            </plugin>
         </client>
         <profiling enabled="true" formatter="my_toolbar_formatter" captured_body_length="0"/>
         <plugins>

@@ -129,6 +129,22 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
                                 'replace' => false,
                             ],
                         ],
+                        [
+                            'header_set' => [
+                                'enabled' => true,
+                                'headers' => [
+                                    'X-FOO' => 'bar',
+                                ],
+                            ],
+                        ],
+                        [
+                            'header_remove' => [
+                                'enabled' => true,
+                                'headers' => [
+                                    'X-FOO',
+                                ],
+                            ],
+                        ],
                     ],
                     'config' => [],
                 ],

@@ -14,8 +14,17 @@ httplug:
             factory: httplug.factory.guzzle6
             http_methods_client: true
             plugins:
-                - add_host:
-                      host: http://localhost
+                -
+                    add_host:
+                        host: http://localhost
+                -
+                    header_set:
+                        headers:
+                            X-FOO: bar
+                -
+                    header_remove:
+                        headers: [X-FOO]
+
     profiling:
         enabled: true
         formatter: my_toolbar_formatter
