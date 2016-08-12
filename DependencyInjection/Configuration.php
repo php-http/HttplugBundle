@@ -155,7 +155,6 @@ class Configuration implements ConfigurationInterface
     {
         $pluginNode = $root->children()
             ->arrayNode('clients')
-                ->fixXmlConfig('plugin')
                 ->validate()
                     ->ifTrue(function ($clients) {
                         foreach ($clients as $name => $config) {
@@ -168,6 +167,7 @@ class Configuration implements ConfigurationInterface
                     ->thenInvalid('A http client can\'t be decorated with both FlexibleHttpClient and HttpMethodsClient. Only one of the following options can be true. ("flexible_client", "http_methods_client")')->end()
                 ->useAttributeAsKey('name')
                 ->prototype('array')
+                ->fixXmlConfig('plugin')
                 ->children()
                     ->scalarNode('factory')
                         ->isRequired()

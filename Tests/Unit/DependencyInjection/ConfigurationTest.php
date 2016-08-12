@@ -209,7 +209,7 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
             return __DIR__.'/../../Resources/Fixtures/'.$path;
         }, [
             'config/full.yml',
-// TODO fix xml config            'config/full.xml',
+            'config/full.xml',
             'config/full.php',
         ]);
 
