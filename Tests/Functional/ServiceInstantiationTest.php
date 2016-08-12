@@ -2,7 +2,11 @@
 
 namespace Http\HttplugBundle\Tests\Functional;
 
+use Http\Client\HttpClient;
+use Http\HttplugBundle\Collector\DebugPluginCollector;
+use Http\HttplugBundle\Collector\PluginJournal;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\HttpKernel\Profiler\Profiler;
 
 class ServiceInstantiationTest extends WebTestCase
 {
@@ -12,7 +16,7 @@ class ServiceInstantiationTest extends WebTestCase
         $container = static::$kernel->getContainer();
         $this->assertTrue($container->has('httplug.client'));
         $client = $container->get('httplug.client');
-        $this->assertInstanceOf('Http\Client\HttpClient', $client);
+        $this->assertInstanceOf(HttpClient::class, $client);
     }
 
     public function testHttpClientNoDebug()
@@ -21,6 +25,25 @@ class ServiceInstantiationTest extends WebTestCase
         $container = static::$kernel->getContainer();
         $this->assertTrue($container->has('httplug.client'));
         $client = $container->get('httplug.client');
-        $this->assertInstanceOf('Http\Client\HttpClient', $client);
+        $this->assertInstanceOf(HttpClient::class, $client);
+    }
+
+    public function testDebugToolbar()
+    {
+        static::bootKernel(['debug' => true]);
+        $container = static::$kernel->getContainer();
+        $this->assertTrue($container->has('profiler'));
+        $profiler = $container->get('profiler');
+        $this->assertInstanceOf(Profiler::class, $profiler);
+        $this->assertTrue($profiler->has('httplug'));
+        $collector = $profiler->get('httplug');
+        $this->assertInstanceOf(DebugPluginCollector::class, $collector);
+        /** @var PluginJournal $journal */
+        $journal = $collector->getJournal();
+        $plugins = $journal->getPlugins('acme');
+        $this->assertEquals([
+            'httplug.plugin.stopwatch',
+            'httplug.plugin.redirect',
+        ], $plugins);
     }
 }

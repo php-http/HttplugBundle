@@ -2,5 +2,9 @@ framework:
   secret: php-http
   test: ~
 
-# Use auto discovery
-httplug: ~
+httplug:
+    clients:
+        acme:
+            factory: httplug.factory.curl
+            plugins:
+                - httplug.plugin.redirect

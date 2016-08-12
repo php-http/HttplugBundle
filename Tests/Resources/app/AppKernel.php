@@ -12,8 +12,13 @@ class AppKernel extends Kernel
     {
         $bundles =  [
             new \Symfony\Bundle\FrameworkBundle\FrameworkBundle(),
+            new \Symfony\Bundle\TwigBundle\TwigBundle(),
             new \Http\HttplugBundle\HttplugBundle(),
         ];
+
+        if (in_array($this->getEnvironment(), array('dev', 'test'))) {
+            $bundles[] = new Symfony\Bundle\WebProfilerBundle\WebProfilerBundle();
+        }
 
         return $bundles;
     }
@@ -23,7 +28,9 @@ class AppKernel extends Kernel
      */
     public function registerContainerConfiguration(LoaderInterface $loader)
     {
-        $loader->load(__DIR__.'/config/config.yml');
+        $this->isDebug()
+            ? $loader->load(__DIR__.'/config/config_debug.yml')
+            : $loader->load(__DIR__.'/config/config.yml');
     }
 
     /**
