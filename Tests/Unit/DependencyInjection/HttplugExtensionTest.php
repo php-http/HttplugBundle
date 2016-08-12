@@ -73,33 +73,33 @@ class HttplugExtensionTest extends AbstractExtensionTestCase
                         [
                             'decoder' => [
                                 'use_content_encoding' => false,
-                            ]
+                            ],
                         ],
                         'httplug.plugin.redirect',
                         [
                             'add_host' => [
                                 'host' => 'http://localhost:8000',
-                            ]
+                            ],
                         ],
                         [
                             'header_append' => [
-                                'headers' => ['X-FOO' => 'bar']
-                            ]
+                                'headers' => ['X-FOO' => 'bar'],
+                            ],
                         ],
                         [
                             'header_defaults' => [
-                                'headers' => ['X-FOO' => 'bar']
-                            ]
+                                'headers' => ['X-FOO' => 'bar'],
+                            ],
                         ],
                         [
                             'header_set' => [
-                                'headers' => ['X-FOO' => 'bar']
-                            ]
+                                'headers' => ['X-FOO' => 'bar'],
+                            ],
                         ],
                         [
                             'header_remove' => [
-                                'headers' => ['X-FOO']
-                            ]
+                                'headers' => ['X-FOO'],
+                            ],
                         ],
                     ],
                 ],
