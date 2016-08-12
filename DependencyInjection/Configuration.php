@@ -234,7 +234,6 @@ class Configuration implements ConfigurationInterface
 
             ->validate()
                 ->always(function ($plugins) {
-
                     foreach ($plugins as $name => $definition) {
                         if ('authentication' === $name) {
                             if (!count($definition)) {

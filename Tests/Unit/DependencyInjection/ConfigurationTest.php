@@ -159,7 +159,7 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
                                     'password' => 'bar',
                                 ],
                             ],
-                        ]
+                        ],
                     ],
                     'config' => [],
                 ],
