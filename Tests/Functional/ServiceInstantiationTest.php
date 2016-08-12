@@ -46,6 +46,7 @@ class ServiceInstantiationTest extends WebTestCase
             'httplug.client.acme.plugin.decoder',
             'httplug.plugin.redirect',
             'httplug.client.acme.plugin.add_host',
+            'httplug.client.acme.authentication.my_basic',
         ], $plugins);
     }
 }

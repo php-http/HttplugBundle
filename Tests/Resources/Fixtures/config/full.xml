@@ -15,6 +15,7 @@
             <stream-factory>Http\Message\StreamFactory\GuzzleStreamFactory</stream-factory>
         </classes>
         <client name="test" factory="httplug.factory.guzzle6" http-methods-client="true">
+            <plugin>httplug.plugin.redirect</plugin>
             <plugin>
                 <add-host host="http://localhost"/>
             </plugin>
@@ -27,6 +28,11 @@
                 <header-remove>
                     <header>X-FOO</header>
                 </header-remove>
+            </plugin>
+            <plugin>
+                <authentication>
+                    <my_basic type="basic" username="foo" password="bar"/>
+                </authentication>
             </plugin>
         </client>
         <profiling enabled="true" formatter="my_toolbar_formatter" captured_body_length="0"/>

@@ -234,11 +234,13 @@ class Configuration implements ConfigurationInterface
 
             ->validate()
                 ->always(function ($plugins) {
-                    if (isset($plugins['authentication']) && !count($plugins['authentication'])) {
-                        unset($plugins['authentication']);
-                    }
+
                     foreach ($plugins as $name => $definition) {
-                        if (!$definition['enabled']) {
+                        if ('authentication' === $name) {
+                            if (!count($definition)) {
+                                unset($plugins['authentication']);
+                            }
+                        } elseif (!$definition['enabled']) {
                             unset($plugins[$name]);
                         }
                     }

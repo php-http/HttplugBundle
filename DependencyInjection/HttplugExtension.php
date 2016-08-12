@@ -202,11 +202,15 @@ class HttplugExtension extends Extension
     /**
      * @param ContainerBuilder $container
      * @param array            $config
+     *
+     * @return array List of service ids for the authentication plugins.
      */
-    private function configureAuthentication(ContainerBuilder $container, array $config)
+    private function configureAuthentication(ContainerBuilder $container, array $config, $servicePrefix = 'httplug.plugin.authentication')
     {
+        $pluginServices = [];
+
         foreach ($config as $name => $values) {
-            $authServiceKey = sprintf('httplug.plugin.authentication.%s.auth', $name);
+            $authServiceKey = sprintf($servicePrefix.'.%s.auth', $name);
             switch ($values['type']) {
                 case 'bearer':
                     $container->register($authServiceKey, Bearer::class)
@@ -229,9 +233,14 @@ class HttplugExtension extends Extension
                     throw new \LogicException(sprintf('Unknown authentication type: "%s"', $values['type']));
             }
 
-            $container->register('httplug.plugin.authentication.'.$name, AuthenticationPlugin::class)
-                ->addArgument(new Reference($authServiceKey));
+            $pluginServiceKey = $servicePrefix.'.'.$name;
+            $container->register($pluginServiceKey, AuthenticationPlugin::class)
+                ->addArgument(new Reference($authServiceKey))
+            ;
+            $pluginServices[] = $pluginServiceKey;
         }
+
+        return $pluginServices;
     }
 
     /**
@@ -250,7 +259,7 @@ class HttplugExtension extends Extension
             if ('reference' === $pluginName) {
                 $plugins[] = $pluginConfig['id'];
             } elseif ('authentication' === $pluginName) {
-                // TODO handle custom authentication
+                $plugins = array_merge($plugins, $this->configureAuthentication($container, $pluginConfig, $serviceId.'.authentication'));
             } else {
                 $pluginServiceId = $serviceId.'.plugin.'.$pluginName;
                 $def = clone $container->getDefinition('httplug.plugin'.'.'.$pluginName);

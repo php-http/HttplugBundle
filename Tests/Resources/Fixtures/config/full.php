@@ -18,6 +18,7 @@ $container->loadFromExtension('httplug', [
             'factory' => 'httplug.factory.guzzle6',
             'http_methods_client' => true,
             'plugins' => [
+                'httplug.plugin.redirect',
                 [
                     'add_host' => [
                         'host' => 'http://localhost',
@@ -37,6 +38,15 @@ $container->loadFromExtension('httplug', [
                         ],
                     ],
                 ],
+                [
+                    'authentication' => [
+                        'my_basic' => [
+                            'type' => 'basic',
+                            'username' => 'foo',
+                            'password' => 'bar',
+                        ],
+                    ],
+                ]
             ],
         ],
     ],

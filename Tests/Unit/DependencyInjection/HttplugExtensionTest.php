@@ -101,6 +101,15 @@ class HttplugExtensionTest extends AbstractExtensionTestCase
                                 'headers' => ['X-FOO'],
                             ],
                         ],
+                        [
+                            'authentication' => [
+                                'my_basic' => [
+                                    'type' => 'basic',
+                                    'username' => 'foo',
+                                    'password' => 'bar',
+                                ],
+                            ],
+                        ],
                     ],
                 ],
             ],
@@ -115,6 +124,7 @@ class HttplugExtensionTest extends AbstractExtensionTestCase
             'httplug.client.acme.plugin.header_defaults',
             'httplug.client.acme.plugin.header_set',
             'httplug.client.acme.plugin.header_remove',
+            'httplug.client.acme.authentication.my_basic',
         ];
         $pluginReferences = array_map(function ($id) {
             return new Reference($id);

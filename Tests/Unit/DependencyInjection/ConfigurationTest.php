@@ -123,6 +123,12 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
                     'batch_client' => false,
                     'plugins' => [
                         [
+                            'reference' => [
+                                'enabled' => true,
+                                'id' => 'httplug.plugin.redirect',
+                            ],
+                        ],
+                        [
                             'add_host' => [
                                 'enabled' => true,
                                 'host' => 'http://localhost',
@@ -145,6 +151,15 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
                                 ],
                             ],
                         ],
+                        [
+                            'authentication' => [
+                                'my_basic' => [
+                                    'type' => 'basic',
+                                    'username' => 'foo',
+                                    'password' => 'bar',
+                                ],
+                            ],
+                        ]
                     ],
                     'config' => [],
                 ],
