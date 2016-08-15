@@ -2,8 +2,8 @@
 
 namespace Http\HttplugBundle\DependencyInjection;
 
-use Symfony\Component\Config\Definition\ArrayNode;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
+use Symfony\Component\Config\Definition\Builder\NodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
@@ -45,7 +45,7 @@ class Configuration implements ConfigurationInterface
         $rootNode = $treeBuilder->root('httplug');
 
         $this->configureClients($rootNode);
-        $this->configurePlugins($rootNode);
+        $this->configureSharedPlugins($rootNode);
 
         $rootNode
             ->validate()
@@ -167,6 +167,7 @@ class Configuration implements ConfigurationInterface
                     ->thenInvalid('A http client can\'t be decorated with both FlexibleHttpClient and HttpMethodsClient. Only one of the following options can be true. ("flexible_client", "http_methods_client")')->end()
                 ->useAttributeAsKey('name')
                 ->prototype('array')
+                ->fixXmlConfig('plugin')
                 ->children()
                     ->scalarNode('factory')
                         ->isRequired()
@@ -185,136 +186,289 @@ class Configuration implements ConfigurationInterface
                         ->defaultFalse()
                         ->info('Set to true to get the client wrapped in a BatchClient which allows you to send multiple request at the same time.')
                     ->end()
-                    ->arrayNode('plugins')
-                        ->info('A list of service ids of plugins. The order is important.')
-                        ->prototype('scalar')->end()
-                    ->end()
                     ->variableNode('config')->defaultValue([])->end()
-                ->end()
-            ->end();
-    }
-
-    /**
-     * @param ArrayNodeDefinition $root
-     */
-    private function configurePlugins(ArrayNodeDefinition $root)
-    {
-        $root->children()
-            ->arrayNode('plugins')
-                ->addDefaultsIfNotSet()
-                ->children()
-                    ->append($this->addAuthenticationPluiginNode())
-
-                    ->arrayNode('cache')
-                    ->canBeEnabled()
-                    ->addDefaultsIfNotSet()
-                        ->children()
-                            ->scalarNode('cache_pool')
-                                ->info('This must be a service id to a service implementing Psr\Cache\CacheItemPoolInterface')
-                                ->isRequired()
-                                ->cannotBeEmpty()
-                            ->end()
-                            ->scalarNode('stream_factory')
-                                ->info('This must be a service id to a service implementing Http\Message\StreamFactory')
-                                ->defaultValue('httplug.stream_factory')
-                                ->cannotBeEmpty()
-                            ->end()
-                            ->arrayNode('config')
-                                ->addDefaultsIfNotSet()
-                                ->children()
-                                    ->scalarNode('default_ttl')->defaultNull()->end()
-                                    ->scalarNode('respect_cache_headers')->defaultTrue()->end()
-                                ->end()
-                            ->end()
-                        ->end()
-                    ->end() // End cache plugin
-
-                    ->arrayNode('cookie')
-                    ->canBeEnabled()
-                        ->children()
-                            ->scalarNode('cookie_jar')
-                                ->info('This must be a service id to a service implementing Http\Message\CookieJar')
-                                ->isRequired()
-                                ->cannotBeEmpty()
-                            ->end()
-                        ->end()
-                    ->end() // End cookie plugin
-
-                    ->arrayNode('decoder')
-                    ->canBeDisabled()
-                    ->addDefaultsIfNotSet()
-                        ->children()
-                            ->scalarNode('use_content_encoding')->defaultTrue()->end()
-                        ->end()
-                    ->end() // End decoder plugin
-
-                    ->arrayNode('history')
-                    ->canBeEnabled()
-                        ->children()
-                            ->scalarNode('journal')
-                                ->info('This must be a service id to a service implementing Http\Client\Plugin\Journal')
-                                ->isRequired()
-                                ->cannotBeEmpty()
-                            ->end()
-                        ->end()
-                    ->end() // End history plugin
-
-                    ->arrayNode('logger')
-                    ->canBeDisabled()
-                    ->addDefaultsIfNotSet()
-                        ->children()
-                            ->scalarNode('logger')
-                                ->info('This must be a service id to a service implementing Psr\Log\LoggerInterface')
-                                ->defaultValue('logger')
-                                ->cannotBeEmpty()
-                            ->end()
-                            ->scalarNode('formatter')
-                                ->info('This must be a service id to a service implementing Http\Message\Formatter')
-                                ->defaultNull()
-                            ->end()
-                        ->end()
-                    ->end() // End logger plugin
-
-                    ->arrayNode('redirect')
-                    ->canBeDisabled()
-                    ->addDefaultsIfNotSet()
-                        ->children()
-                            ->scalarNode('preserve_header')->defaultTrue()->end()
-                            ->scalarNode('use_default_for_multiple')->defaultTrue()->end()
-                        ->end()
-                    ->end() // End redirect plugin
-
-                    ->arrayNode('retry')
-                    ->canBeDisabled()
-                    ->addDefaultsIfNotSet()
-                        ->children()
-                            ->scalarNode('retry')->defaultValue(1)->end()
-                        ->end()
-                    ->end() // End retry plugin
-
-                    ->arrayNode('stopwatch')
-                    ->canBeDisabled()
-                    ->addDefaultsIfNotSet()
-                        ->children()
-                            ->scalarNode('stopwatch')
-                                ->info('This must be a service id to a service extending Symfony\Component\Stopwatch\Stopwatch')
-                                ->defaultValue('debug.stopwatch')
-                                ->cannotBeEmpty()
-                            ->end()
-                        ->end()
-                    ->end() // End stopwatch plugin
-
+                    ->append($this->createClientPluginNode())
                 ->end()
             ->end()
         ->end();
     }
 
     /**
-     * Add configuration for authentication plugin.
-     *
-     * @return ArrayNodeDefinition|\Symfony\Component\Config\Definition\Builder\NodeDefinition
+     * @param ArrayNodeDefinition $root
      */
-    private function addAuthenticationPluiginNode()
+    private function configureSharedPlugins(ArrayNodeDefinition $root)
+    {
+        $pluginsNode = $root
+            ->children()
+                ->arrayNode('plugins')
+                ->info('Global plugin configuration. Plugins need to be explicitly added to clients.')
+                ->addDefaultsIfNotSet()
+            // don't call end to get the plugins node
+        ;
+        $this->addSharedPluginNodes($pluginsNode);
+    }
+
+    /**
+     * Createplugins node of a client.
+     *
+     * @return ArrayNodeDefinition The plugin node
+     */
+    private function createClientPluginNode()
+    {
+        $builder = new TreeBuilder();
+        $node = $builder->root('plugins');
+
+        /** @var ArrayNodeDefinition $pluginList */
+        $pluginList = $node
+            ->info('A list of plugin service ids and client specific plugin definitions. The order is important.')
+            ->prototype('array')
+        ;
+        $pluginList
+            // support having just a service id in the list
+            ->beforeNormalization()
+                ->always(function ($plugin) {
+                    if (is_string($plugin)) {
+                        return [
+                            'reference' => [
+                                'enabled' => true,
+                                'id' => $plugin,
+                            ],
+                        ];
+                    }
+
+                    return $plugin;
+                })
+            ->end()
+
+            ->validate()
+                ->always(function ($plugins) {
+                    foreach ($plugins as $name => $definition) {
+                        if ('authentication' === $name) {
+                            if (!count($definition)) {
+                                unset($plugins['authentication']);
+                            }
+                        } elseif (!$definition['enabled']) {
+                            unset($plugins[$name]);
+                        }
+                    }
+
+                    return $plugins;
+                })
+            ->end()
+        ;
+        $this->addSharedPluginNodes($pluginList, true);
+
+        $pluginList
+            ->children()
+                ->arrayNode('reference')
+                    ->canBeEnabled()
+                    ->info('Reference to a plugin service')
+                    ->children()
+                        ->scalarNode('id')
+                            ->info('Service id of a plugin')
+                            ->isRequired()
+                            ->cannotBeEmpty()
+                        ->end()
+                    ->end()
+                ->end()
+                ->arrayNode('add_host')
+                    ->canBeEnabled()
+                    ->addDefaultsIfNotSet()
+                    ->info('Set scheme, host and port in the request URI.')
+                    ->children()
+                        ->scalarNode('host')
+                            ->info('Host name including protocol and optionally the port number, e.g. https://api.local:8000')
+                            ->isRequired()
+                            ->cannotBeEmpty()
+                        ->end()
+                        ->scalarNode('replace')
+                            ->info('Whether to replace the host if request already specifies one')
+                            ->defaultValue(false)
+                        ->end()
+                    ->end()
+                ->end()
+                ->arrayNode('header_append')
+                    ->canBeEnabled()
+                    ->info('Append headers to the request. If the header already exists the value will be appended to the current value.')
+                    ->fixXmlConfig('header')
+                    ->children()
+                        ->arrayNode('headers')
+                            ->info('Keys are the header names, values the header values')
+                            ->normalizeKeys(false)
+                            ->useAttributeAsKey('name')
+                            ->prototype('scalar')->end()
+                        ->end()
+                    ->end()
+                ->end()
+                ->arrayNode('header_defaults')
+                    ->canBeEnabled()
+                    ->info('Set header to default value if it does not exist.')
+                    ->fixXmlConfig('header')
+                    ->children()
+                        ->arrayNode('headers')
+                            ->info('Keys are the header names, values the header values')
+                            ->normalizeKeys(false)
+                            ->useAttributeAsKey('name')
+                            ->prototype('scalar')->end()
+                        ->end()
+                    ->end()
+                ->end()
+                ->arrayNode('header_set')
+                    ->canBeEnabled()
+                    ->info('Set headers to requests. If the header does not exist it wil be set, if the header already exists it will be replaced.')
+                    ->fixXmlConfig('header')
+                    ->children()
+                        ->arrayNode('headers')
+                            ->info('Keys are the header names, values the header values')
+                            ->normalizeKeys(false)
+                            ->useAttributeAsKey('name')
+                            ->prototype('scalar')->end()
+                        ->end()
+                    ->end()
+                ->end()
+                ->arrayNode('header_remove')
+                    ->canBeEnabled()
+                    ->info('Remove headers from requests.')
+                    ->fixXmlConfig('header')
+                    ->children()
+                        ->arrayNode('headers')
+                            ->info('List of header names to remove')
+                            ->prototype('scalar')->end()
+                        ->end()
+                    ->end()
+                ->end()
+            ->end()
+        ->end();
+
+        return $node;
+    }
+
+    /**
+     * Add the definitions for shared plugin configurations.
+     *
+     * @param ArrayNodeDefinition $pluginNode The node to add to.
+     * @param bool                $disableAll Some shared plugins are enabled by default. On the client, all are disabled by default.
+     */
+    private function addSharedPluginNodes(ArrayNodeDefinition $pluginNode, $disableAll = false)
+    {
+        $children = $pluginNode->children();
+
+        $children->append($this->createAuthenticationPluginNode());
+
+        $children->arrayNode('cache')
+            ->canBeEnabled()
+            ->addDefaultsIfNotSet()
+                ->children()
+                    ->scalarNode('cache_pool')
+                        ->info('This must be a service id to a service implementing Psr\Cache\CacheItemPoolInterface')
+                        ->isRequired()
+                        ->cannotBeEmpty()
+                    ->end()
+                    ->scalarNode('stream_factory')
+                        ->info('This must be a service id to a service implementing Http\Message\StreamFactory')
+                        ->defaultValue('httplug.stream_factory')
+                        ->cannotBeEmpty()
+                    ->end()
+                    ->arrayNode('config')
+                        ->addDefaultsIfNotSet()
+                        ->children()
+                            ->scalarNode('default_ttl')->defaultNull()->end()
+                            ->scalarNode('respect_cache_headers')->defaultTrue()->end()
+                        ->end()
+                    ->end()
+                ->end()
+            ->end();
+        // End cache plugin
+
+        $children->arrayNode('cookie')
+            ->canBeEnabled()
+                ->children()
+                    ->scalarNode('cookie_jar')
+                        ->info('This must be a service id to a service implementing Http\Message\CookieJar')
+                        ->isRequired()
+                        ->cannotBeEmpty()
+                    ->end()
+                ->end()
+            ->end();
+        // End cookie plugin
+
+        $decoder = $children->arrayNode('decoder');
+        $disableAll ? $decoder->canBeEnabled() : $decoder->canBeDisabled();
+        $decoder->addDefaultsIfNotSet()
+            ->children()
+                ->scalarNode('use_content_encoding')->defaultTrue()->end()
+            ->end()
+        ->end();
+        // End decoder plugin
+
+        $children->arrayNode('history')
+            ->canBeEnabled()
+                ->children()
+                    ->scalarNode('journal')
+                        ->info('This must be a service id to a service implementing Http\Client\Plugin\Journal')
+                        ->isRequired()
+                        ->cannotBeEmpty()
+                    ->end()
+                ->end()
+            ->end();
+        // End history plugin
+
+        $logger = $children->arrayNode('logger');
+        $disableAll ? $logger->canBeEnabled() : $logger->canBeDisabled();
+        $logger->addDefaultsIfNotSet()
+            ->children()
+                ->scalarNode('logger')
+                    ->info('This must be a service id to a service implementing Psr\Log\LoggerInterface')
+                    ->defaultValue('logger')
+                    ->cannotBeEmpty()
+                ->end()
+                ->scalarNode('formatter')
+                    ->info('This must be a service id to a service implementing Http\Message\Formatter')
+                    ->defaultNull()
+                ->end()
+            ->end()
+        ->end();
+        // End logger plugin
+
+        $redirect = $children->arrayNode('redirect');
+        $disableAll ? $redirect->canBeEnabled() : $redirect->canBeDisabled();
+        $redirect->addDefaultsIfNotSet()
+            ->children()
+                ->scalarNode('preserve_header')->defaultTrue()->end()
+                ->scalarNode('use_default_for_multiple')->defaultTrue()->end()
+            ->end()
+        ->end();
+        // End redirect plugin
+
+        $retry = $children->arrayNode('retry');
+        $disableAll ? $retry->canBeEnabled() : $retry->canBeDisabled();
+        $retry->addDefaultsIfNotSet()
+            ->children()
+                ->scalarNode('retry')->defaultValue(1)->end() // TODO: should be called retries for consistency with the class
+            ->end()
+        ->end();
+        // End retry plugin
+
+        $stopwatch = $children->arrayNode('stopwatch');
+        $disableAll ? $stopwatch->canBeEnabled() : $stopwatch->canBeDisabled();
+        $stopwatch->addDefaultsIfNotSet()
+            ->children()
+                ->scalarNode('stopwatch')
+                    ->info('This must be a service id to a service extending Symfony\Component\Stopwatch\Stopwatch')
+                    ->defaultValue('debug.stopwatch')
+                    ->cannotBeEmpty()
+                ->end()
+            ->end()
+        ->end();
+        // End stopwatch plugin
+    }
+
+    /**
+     * Create configuration for authentication plugin.
+     *
+     * @return NodeDefinition Definition for the authentication node in the plugins list.
+     */
+    private function createAuthenticationPluginNode()
     {
         $builder = new TreeBuilder();
         $node = $builder->root('authentication');

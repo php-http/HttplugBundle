@@ -1,0 +1,6 @@
+httplug:
+    clients:
+        acme:
+            plugins:
+                - foobar:
+                    baz: ~

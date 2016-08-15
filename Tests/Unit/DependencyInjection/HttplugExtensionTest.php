@@ -2,8 +2,10 @@
 
 namespace Http\HttplugBundle\Tests\Unit\DependencyInjection;
 
+use Http\Client\Common\PluginClient;
 use Http\HttplugBundle\DependencyInjection\HttplugExtension;
 use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractExtensionTestCase;
+use Symfony\Component\DependencyInjection\Reference;
 
 /**
  * @author David Buchmann <mail@davidbu.ch>
@@ -59,6 +61,80 @@ class HttplugExtensionTest extends AbstractExtensionTestCase
         foreach (['client', 'message_factory', 'uri_factory', 'stream_factory'] as $type) {
             $this->assertContainerBuilderHasAlias("httplug.$type", "my_{$type}_service");
         }
+    }
+
+    public function testClientPlugins()
+    {
+        $this->load([
+            'clients' => [
+                'acme' => [
+                    'factory' => 'httplug.factory.curl',
+                    'plugins' => [
+                        [
+                            'decoder' => [
+                                'use_content_encoding' => false,
+                            ],
+                        ],
+                        'httplug.plugin.redirect',
+                        [
+                            'add_host' => [
+                                'host' => 'http://localhost:8000',
+                            ],
+                        ],
+                        [
+                            'header_append' => [
+                                'headers' => ['X-FOO' => 'bar'],
+                            ],
+                        ],
+                        [
+                            'header_defaults' => [
+                                'headers' => ['X-FOO' => 'bar'],
+                            ],
+                        ],
+                        [
+                            'header_set' => [
+                                'headers' => ['X-FOO' => 'bar'],
+                            ],
+                        ],
+                        [
+                            'header_remove' => [
+                                'headers' => ['X-FOO'],
+                            ],
+                        ],
+                        [
+                            'authentication' => [
+                                'my_basic' => [
+                                    'type' => 'basic',
+                                    'username' => 'foo',
+                                    'password' => 'bar',
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ]);
+
+        $plugins = [
+            'httplug.plugin.stopwatch',
+            'httplug.client.acme.plugin.decoder',
+            'httplug.plugin.redirect',
+            'httplug.client.acme.plugin.add_host',
+            'httplug.client.acme.plugin.header_append',
+            'httplug.client.acme.plugin.header_defaults',
+            'httplug.client.acme.plugin.header_set',
+            'httplug.client.acme.plugin.header_remove',
+            'httplug.client.acme.authentication.my_basic',
+        ];
+        $pluginReferences = array_map(function ($id) {
+            return new Reference($id);
+        }, $plugins);
+
+        $this->assertContainerBuilderHasService('httplug.client.acme');
+        foreach ($plugins as $id) {
+            $this->assertContainerBuilderHasService($id);
+        }
+        $this->assertContainerBuilderHasServiceDefinitionWithArgument('httplug.client.acme', 0, $pluginReferences);
     }
 
     public function testNoProfilingWhenToolbarIsDisabled()

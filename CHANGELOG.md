@@ -9,6 +9,8 @@
 
 ### Added
 
+- You can now also configure client specific plugins in the `plugins` option of a client.
+  Some plugins that you previously had to define in your own services can now be configured on the client.
 - Support for BatchClient
 - The stopwatch plugin in included by default when using profiling.
 

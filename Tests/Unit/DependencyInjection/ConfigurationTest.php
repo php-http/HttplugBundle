@@ -115,7 +115,55 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
                 'uri_factory' => 'Http\Message\UriFactory\GuzzleUriFactory',
                 'stream_factory' => 'Http\Message\StreamFactory\GuzzleStreamFactory',
             ],
-            'clients' => [],
+            'clients' => [
+                'test' => [
+                    'factory' => 'httplug.factory.guzzle6',
+                    'http_methods_client' => true,
+                    'flexible_client' => false,
+                    'batch_client' => false,
+                    'plugins' => [
+                        [
+                            'reference' => [
+                                'enabled' => true,
+                                'id' => 'httplug.plugin.redirect',
+                            ],
+                        ],
+                        [
+                            'add_host' => [
+                                'enabled' => true,
+                                'host' => 'http://localhost',
+                                'replace' => false,
+                            ],
+                        ],
+                        [
+                            'header_set' => [
+                                'enabled' => true,
+                                'headers' => [
+                                    'X-FOO' => 'bar',
+                                ],
+                            ],
+                        ],
+                        [
+                            'header_remove' => [
+                                'enabled' => true,
+                                'headers' => [
+                                    'X-FOO',
+                                ],
+                            ],
+                        ],
+                        [
+                            'authentication' => [
+                                'my_basic' => [
+                                    'type' => 'basic',
+                                    'username' => 'foo',
+                                    'password' => 'bar',
+                                ],
+                            ],
+                        ],
+                    ],
+                    'config' => [],
+                ],
+            ],
             'profiling' => [
                 'enabled' => true,
                 'formatter' => 'my_toolbar_formatter',
@@ -208,6 +256,16 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
     public function testMissingClass()
     {
         $file = __DIR__.'/../../Resources/Fixtures/config/invalid_class.yml';
+        $this->assertProcessedConfigurationEquals([], [$file]);
+    }
+
+    /**
+     * @expectedException \Symfony\Component\Config\Definition\Exception\InvalidConfigurationException
+     * @expectedExceptionMessage Unrecognized option "foobar" under "httplug.clients.acme.plugins.0"
+     */
+    public function testInvalidPlugin()
+    {
+        $file = __DIR__.'/../../Resources/Fixtures/config/invalid_plugin.yml';
         $this->assertProcessedConfigurationEquals([], [$file]);
     }
 
