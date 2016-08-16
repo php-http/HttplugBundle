@@ -1,18 +1,14 @@
 # Change Log
 
 
-## UNRELEASED
-
-### Fixed
-
-- decoder, redirect and retry plugins can now be used and no longer trigger an error because of incorrect constructor arguments.
+## 1.3.0 - 2016-08-16
 
 ### Added
 
 - You can now also configure client specific plugins in the `plugins` option of a client.
-  Some plugins that you previously had to define in your own services can now be configured on the client.
+- Some plugins that you previously had to define in your own services can now be configured on the client.
 - Support for BatchClient
-- The stopwatch plugin in included by default when using profiling.
+- The stopwatch plugin included by default when using profiling.
 
 ### Changed
 
@@ -23,6 +19,10 @@
 
 - `auto` value in `toolbar.enabled` config
 - `toolbar` config, use `profiling` instead
+
+### Fixed
+
+- Decoder, Redirect and Retry plugins can now be used and no longer trigger an error because of incorrect constructor arguments.
 
 
 ## 1.2.2 - 2016-07-19
