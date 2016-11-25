@@ -17,6 +17,7 @@ Via Composer
 ``` bash
 $ composer require php-http/httplug-bundle
 ```
+Make sure to also require at least one client (eg: [guzzle6-adapter](https://github.com/php-http/guzzle6-adapter) or [curl](https://github.com/php-http/curl-client)).
 
 Enable the bundle in your kernel:
 
