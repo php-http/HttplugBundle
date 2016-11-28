@@ -17,6 +17,7 @@ Via Composer
 ``` bash
 $ composer require php-http/httplug-bundle
 ```
+Make sure to also require at least one [client](http://docs.php-http.org/en/latest/clients.html).
 
 Enable the bundle in your kernel:
 
