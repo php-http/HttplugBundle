@@ -111,7 +111,7 @@ var httplug_isHidden = function (el) {
 }
 
 /**
- * Toggle visibility on elemets
+ * Toggle visibility on elements
  * @param els
  * @param display defaults to "block"
  */

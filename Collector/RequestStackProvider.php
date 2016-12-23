@@ -74,13 +74,13 @@ final class RequestStackProvider
      */
     private static function createOne($messages)
     {
-        $orderedFaulure = [];
+        $orderedFailure = [];
         $orderedRequests = [];
         $orderedResponses = [];
 
         foreach ($messages['failure'] as $depth => $failures) {
             foreach ($failures as $idx => $failure) {
-                $orderedFaulure[$idx][$depth] = $failure;
+                $orderedFailure[$idx][$depth] = $failure;
             }
         }
 
@@ -96,7 +96,7 @@ final class RequestStackProvider
             }
         }
 
-        return new self($orderedFaulure, $orderedRequests, $orderedResponses);
+        return new self($orderedFailure, $orderedRequests, $orderedResponses);
     }
 
     /**
@@ -114,7 +114,7 @@ final class RequestStackProvider
      *
      * @return array
      */
-    public function getRequstStack($idx)
+    public function getRequestStack($idx)
     {
         return $this->requests[$idx];
     }
