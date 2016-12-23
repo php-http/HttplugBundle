@@ -195,7 +195,7 @@ class HttplugExtensionTest extends AbstractExtensionTestCase
 
         $this->assertTrue(isset($arguments[3]));
         $this->assertTrue(isset($arguments[3]['debug_plugins']));
-        $this->assertFalse(empty($arguments[3]['debug_plugins']));
+        $this->assertNotEmpty($arguments[3]['debug_plugins']);
     }
 
     private function verifyProfilingDisabled()

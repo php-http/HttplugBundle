@@ -89,7 +89,7 @@ class HttplugExtension extends Extension
 
         foreach ($config['clients'] as $name => $arguments) {
             if ($first === null) {
-                // Save the name of the first configurated client.
+                // Save the name of the first configured client.
                 $first = $name;
             }
 
@@ -303,7 +303,6 @@ class HttplugExtension extends Extension
             ->addArgument($arguments['config'])
             ->addArgument($pluginClientOptions)
         ;
-
 
         /*
          * Decorate the client with clients from client-common

@@ -78,11 +78,11 @@ final class DebugPluginCollector extends DataCollector
     }
 
     /**
-     * Returns the successful request-resonse pairs.
+     * Returns the successful request-response pairs.
      *
-     * @return array
+     * @return int
      */
-    public function getSucessfulRequests()
+    public function getSuccessfulRequests()
     {
         $count = 0;
         foreach ($this->data as $client) {
@@ -99,9 +99,9 @@ final class DebugPluginCollector extends DataCollector
     }
 
     /**
-     * Returns the failed request-resonse pairs.
+     * Returns the failed request-response pairs.
      *
-     * @return array
+     * @return int
      */
     public function getFailedRequests()
     {
@@ -126,7 +126,7 @@ final class DebugPluginCollector extends DataCollector
      */
     public function getTotalRequests()
     {
-        return $this->getSucessfulRequests() + $this->getFailedRequests();
+        return $this->getSuccessfulRequests() + $this->getFailedRequests();
     }
 
     /**
