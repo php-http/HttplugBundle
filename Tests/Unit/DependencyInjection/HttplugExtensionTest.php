@@ -116,6 +116,7 @@ class HttplugExtensionTest extends AbstractExtensionTestCase
         ]);
 
         $plugins = [
+            'httplug.client.acme.plugin.newstack',
             'httplug.plugin.stopwatch',
             'httplug.client.acme.plugin.decoder',
             'httplug.plugin.redirect',
@@ -194,8 +195,6 @@ class HttplugExtensionTest extends AbstractExtensionTestCase
         $arguments = $def->getArguments();
 
         $this->assertTrue(isset($arguments[3]));
-        $this->assertTrue(isset($arguments[3]['debug_plugins']));
-        $this->assertNotEmpty($arguments[3]['debug_plugins']);
     }
 
     private function verifyProfilingDisabled()
