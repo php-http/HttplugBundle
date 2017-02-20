@@ -1,5 +1,14 @@
 # Change Log
 
+## 1.4.0 - 2017-XX-XX
+
+### Changed
+
+- The profiler collector has been rewritten to use objects instead of arrays.
+
+### Fixed
+
+- WebProfiler is no longer broken when there was a redirect.
 
 ## 1.3.0 - 2016-08-16
 

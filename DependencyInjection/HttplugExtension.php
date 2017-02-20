@@ -10,7 +10,7 @@ use Http\Discovery\HttpAsyncClientDiscovery;
 use Http\Discovery\HttpClientDiscovery;
 use Http\HttplugBundle\ClientFactory\DummyClient;
 use Http\HttplugBundle\ClientFactory\PluginClientFactory;
-use Http\HttplugBundle\Collector\DebugPlugin;
+use Http\HttplugBundle\Collector\ProfilePlugin;
 use Http\Message\Authentication\BasicAuth;
 use Http\Message\Authentication\Bearer;
 use Http\Message\Authentication\Wsse;
@@ -72,7 +72,7 @@ class HttplugExtension extends Extension
             ;
         }
 
-        $this->configureClients($container, $config);
+        $this->configureClients($container, $config, $this->isConfigEnabled($container, $config['profiling']));
         $this->configureSharedPlugins($container, $config['plugins']); // must be after clients, as clients.X.plugins might use plugins as templates that will be removed
         $this->configureAutoDiscoveryClients($container, $config);
     }
@@ -82,10 +82,12 @@ class HttplugExtension extends Extension
      *
      * @param ContainerBuilder $container
      * @param array            $config
+     * @param bool             $profiling
      */
-    private function configureClients(ContainerBuilder $container, array $config)
+    private function configureClients(ContainerBuilder $container, array $config, $profiling)
     {
         $first = null;
+        $clients = [];
 
         foreach ($config['clients'] as $name => $arguments) {
             if ($first === null) {
@@ -94,6 +96,7 @@ class HttplugExtension extends Extension
             }
 
             $this->configureClient($container, $name, $arguments, $this->isConfigEnabled($container, $config['profiling']));
+            $clients[] = $name;
         }
 
         // If we have clients configured
@@ -103,6 +106,12 @@ class HttplugExtension extends Extension
                 // Alias the first client to httplug.client.default
                 $container->setAlias('httplug.client.default', 'httplug.client.'.$first);
             }
+        }
+
+        if ($profiling) {
+            $container->getDefinition('httplug.collector.collector')
+                ->setArguments([$clients])
+            ;
         }
     }
 
@@ -262,10 +271,10 @@ class HttplugExtension extends Extension
                 $plugins = array_merge($plugins, $this->configureAuthentication($container, $pluginConfig, $serviceId.'.authentication'));
             } else {
                 $pluginServiceId = $serviceId.'.plugin.'.$pluginName;
-                $def = clone $container->getDefinition('httplug.plugin'.'.'.$pluginName);
-                $def->setAbstract(false);
-                $this->configurePluginByName($pluginName, $def, $pluginConfig, $container, $pluginServiceId);
-                $container->setDefinition($pluginServiceId, $def);
+                $definition = clone $container->getDefinition('httplug.plugin'.'.'.$pluginName);
+                $definition->setAbstract(false);
+                $this->configurePluginByName($pluginName, $definition, $pluginConfig, $container, $pluginServiceId);
+                $container->setDefinition($pluginServiceId, $definition);
                 $plugins[] = $pluginServiceId;
             }
         }
@@ -277,15 +286,26 @@ class HttplugExtension extends Extension
                 array_unshift($plugins, 'httplug.plugin.stopwatch');
             }
 
-            // Tell the plugin journal what plugins we used
-            $container
-                ->getDefinition('httplug.collector.plugin_journal')
-                ->addMethodCall('setPlugins', [$clientName, $plugins])
-            ;
+            //Decorate each plugin with a ProfilePlugin instance.
+            foreach ($plugins as $pluginServiceId) {
+                $container->register($pluginServiceId.'.debug', ProfilePlugin::class)
+                    ->setDecoratedService($pluginServiceId)
+                    ->setArguments([
+                        new Reference($pluginServiceId.'.debug.inner'),
+                        new Reference('httplug.collector.collector'),
+                        new Reference('httplug.collector.formatter'),
+                        $pluginServiceId,
+                    ])
+                    ->setPublic(false)
+                ;
+            }
 
-            $debugPluginServiceId = $this->registerDebugPlugin($container, $serviceId);
-
-            $pluginClientOptions['debug_plugins'] = [new Reference($debugPluginServiceId)];
+            // Add the newstack plugin
+            $definition = clone $container->getDefinition('httplug.plugin.stack');
+            $definition->setAbstract(false);
+            $definition->addArgument($clientName);
+            $container->setDefinition($serviceId.'.plugin.newstack', $definition);
+            array_unshift($plugins, $serviceId.'.plugin.newstack');
         }
 
         $container
@@ -420,10 +440,6 @@ class HttplugExtension extends Extension
                 ->getDefinition('httplug.collector.plugin_journal')
                 ->addMethodCall('setPlugins', [$name, ['httplug.plugin.stopwatch']])
             ;
-
-            $debugPluginServiceId = $this->registerDebugPlugin($container, $serviceId);
-
-            $pluginClientOptions['debug_plugins'] = [new Reference($debugPluginServiceId)];
         }
 
         $container
@@ -433,28 +449,6 @@ class HttplugExtension extends Extension
         ;
 
         return $serviceId;
-    }
-
-    /**
-     * Create a new plugin service for this client.
-     *
-     * @param ContainerBuilder $container
-     * @param string           $serviceId
-     *
-     * @return string
-     */
-    private function registerDebugPlugin(ContainerBuilder $container, $serviceId)
-    {
-        $serviceIdDebugPlugin = $serviceId.'.debug_plugin';
-
-        $container
-            ->register($serviceIdDebugPlugin, DebugPlugin::class)
-            ->addArgument(new Reference('httplug.collector.debug_collector'))
-            ->addArgument(substr($serviceId, strrpos($serviceId, '.') + 1))
-            ->setPublic(false)
-        ;
-
-        return $serviceIdDebugPlugin;
     }
 
     /**

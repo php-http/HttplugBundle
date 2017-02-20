@@ -3,8 +3,7 @@
 namespace Http\HttplugBundle\Tests\Functional;
 
 use Http\Client\HttpClient;
-use Http\HttplugBundle\Collector\DebugPluginCollector;
-use Http\HttplugBundle\Collector\PluginJournal;
+use Http\HttplugBundle\Collector\Collector;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpKernel\Profiler\Profiler;
 
@@ -37,16 +36,6 @@ class ServiceInstantiationTest extends WebTestCase
         $this->assertInstanceOf(Profiler::class, $profiler);
         $this->assertTrue($profiler->has('httplug'));
         $collector = $profiler->get('httplug');
-        $this->assertInstanceOf(DebugPluginCollector::class, $collector);
-        /** @var PluginJournal $journal */
-        $journal = $collector->getJournal();
-        $plugins = $journal->getPlugins('acme');
-        $this->assertEquals([
-            'httplug.plugin.stopwatch',
-            'httplug.client.acme.plugin.decoder',
-            'httplug.plugin.redirect',
-            'httplug.client.acme.plugin.add_host',
-            'httplug.client.acme.authentication.my_basic',
-        ], $plugins);
+        $this->assertInstanceOf(Collector::class, $collector);
     }
 }
