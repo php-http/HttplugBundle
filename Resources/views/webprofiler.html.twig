@@ -5,11 +5,7 @@
 {% block toolbar %}
     {% if collector.stacks|length > 0 %}
         {% set icon %}
-            {% if constant('Symfony\\Component\\HttpKernel\\Kernel::VERSION_ID') >= 20800 %}
-                {{ include('@Httplug/Icon/httplug.svg') }}
-            {% else %}
-                {{ include('@Httplug/Icon/httplug_old.svg') }}
-            {% endif %}
+            {{ include('@Httplug/Icon/httplug.svg') }}
             <span class="sf-toolbar-value">{{ collector.stacks|length }}</span>
             <span class="sf-toolbar-label">req.</span>
         {% endset %}
@@ -39,11 +35,7 @@
     {# This left-hand menu appears when using the full-screen profiler. #}
     <span class="label {{ collector.stacks|length == 0 ? 'disabled' }}">
         <span class="icon">
-            {% if constant('Symfony\\Component\\HttpKernel\\Kernel::VERSION_ID') >= 20800 %}
-                {{ include('@Httplug/Icon/httplug.svg') }}
-            {% else %}
-                {{ include('@Httplug/Icon/httplug_old.svg') }}
-            {% endif %}
+            {{ include('@Httplug/Icon/httplug.svg') }}
         </span>
         <strong>Httplug</strong>
     </span>

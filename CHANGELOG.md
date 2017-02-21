@@ -5,6 +5,7 @@
 ### Changed
 
 - The profiler collector has been rewritten to use objects instead of arrays.
+- Bumped minimum Symfony version to 2.8.
 
 ### Fixed
 
