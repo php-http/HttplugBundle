@@ -1,6 +1,6 @@
 # Change Log
 
-## 1.4.0 - 2017-XX-XX
+## 1.4.0 - 2017-02-21
 
 ### Changed
 
@@ -11,6 +11,7 @@
 ### Fixed
 
 - WebProfiler is no longer broken when there was a redirect.
+- Dummy client should provide methods of HttpClient and HttpAsyncClient
 
 ## 1.3.0 - 2016-08-16
 
