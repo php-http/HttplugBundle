@@ -6,6 +6,7 @@
 
 - The profiler collector has been rewritten to use objects instead of arrays.
 - Bumped minimum Symfony version to 2.8.
+- Updated profiler badges to match Symfony 2.8+ profiler design.
 
 ### Fixed
 
