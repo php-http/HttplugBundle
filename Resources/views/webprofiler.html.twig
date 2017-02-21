@@ -13,15 +13,15 @@
         {% set text %}
             <div class="sf-toolbar-info-piece">
                 <b>Successful requests</b>
-                <span>{{ collector.successfulStacks|length }}</span>
+                <span class="sf-toolbar-status">{{ collector.successfulStacks|length }}</span>
             </div>
             <div class="sf-toolbar-info-piece">
                 <b>Failed requests</b>
-                <span>{{ collector.failedStacks|length }}</span>
+                <span class="sf-toolbar-status {{ collector.failedStacks|length ? 'sf-toolbar-status-red' }}">{{ collector.failedStacks|length }}</span>
             </div>
         {% endset %}
 
-        {% include 'WebProfilerBundle:Profiler:toolbar_item.html.twig' with { 'link': profiler_url } %}
+        {% include 'WebProfilerBundle:Profiler:toolbar_item.html.twig' with { 'link': profiler_url, 'status': collector.failedStacks|length ? 'red' : '' } %}
     {% endif %}
 {% endblock %}
 
@@ -33,11 +33,16 @@
 
 {% block menu %}
     {# This left-hand menu appears when using the full-screen profiler. #}
-    <span class="label {{ collector.stacks|length == 0 ? 'disabled' }}">
+    <span class="label {{ collector.stacks|length == 0 ? 'disabled' }} {{ collector.failedStacks|length ? 'label-status-error' }}">
         <span class="icon">
             {{ include('@Httplug/Icon/httplug.svg') }}
         </span>
         <strong>Httplug</strong>
+        {% if collector.failedStacks|length %}
+            <span class="count">
+                <span>{{ collector.failedStacks|length }}</span>
+            </span>
+        {% endif %}
     </span>
 {% endblock %}
 
