@@ -62,7 +62,7 @@ class Collector extends DataCollector
     }
 
     /**
-     * @return Stack
+     * @return Stack|boolean false if no current stack.
      */
     public function getCurrentStack()
     {
