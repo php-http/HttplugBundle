@@ -58,7 +58,9 @@ class ProfilePlugin implements Plugin
     {
         $profile = new Profile($this->pluginName, $this->formatter->formatRequest($request));
 
-        $this->collector->getCurrentStack()->addProfile($profile);
+        if ($stack = $this->collector->getCurrentStack()) {
+            $stack->addProfile($profile);
+        }
 
         return $this->plugin->handleRequest($request, $next, $first)->then(function (ResponseInterface $response) use ($profile) {
             $profile->setResponse($this->formatter->formatResponse($response));
