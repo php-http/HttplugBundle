@@ -62,7 +62,7 @@
 
                 {% for stack in collector.clientStacks(client) %}
                     <h3>
-                        Request #{{ loop.index }}
+                        Request #{{ loop.index }} - {{ stack.requestMethod }} {{ stack.requestTarget }}
                         {% if stack.failed %}
                             - <span class="httplug-error">Errored</span>
                         {% endif %}

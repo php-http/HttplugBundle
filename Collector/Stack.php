@@ -37,6 +37,16 @@ final class Stack
     private $failed = false;
 
     /**
+     * @var string
+     */
+    private $requestTarget;
+
+    /**
+     * @var string
+     */
+    private $requestMethod;
+
+    /**
      * @param string $client
      * @param string $request
      */
@@ -108,5 +118,37 @@ final class Stack
     public function setFailed($failed)
     {
         $this->failed = $failed;
+    }
+
+    /**
+     * @return string
+     */
+    public function getRequestTarget()
+    {
+        return $this->requestTarget;
+    }
+
+    /**
+     * @param string $requestTarget
+     */
+    public function setRequestTarget($requestTarget)
+    {
+        $this->requestTarget = $requestTarget;
+    }
+
+    /**
+     * @return string
+     */
+    public function getRequestMethod()
+    {
+        return $this->requestMethod;
+    }
+
+    /**
+     * @param string $requestMethod
+     */
+    public function setRequestMethod($requestMethod)
+    {
+        $this->requestMethod = $requestMethod;
     }
 }

@@ -29,5 +29,31 @@
         <service id="httplug.collector.twig.http_message" class="Http\HttplugBundle\Collector\Twig\HttpMessageMarkupExtension" public="false">
             <tag name="twig.extension" />
         </service>
+
+        <!-- ClientFactories -->
+        <service id="httplug.collector.factory.buzz" class="Http\HttplugBundle\Collector\ProfileClientFactory" decorates="httplug.factory.buzz" public="false">
+            <argument type="service" id="httplug.collector.factory.buzz.inner"/>
+            <argument type="service" id="httplug.collector.collector"/>
+        </service>
+        <service id="httplug.collector.factory.curl" class="Http\HttplugBundle\Collector\ProfileClientFactory" decorates="httplug.factory.curl" public="false">
+            <argument type="service" id="httplug.collector.factory.curl.inner"/>
+            <argument type="service" id="httplug.collector.collector"/>
+        </service>
+        <service id="httplug.collector.factory.guzzle5" class="Http\HttplugBundle\Collector\ProfileClientFactory" decorates="httplug.factory.guzzle5" public="false">
+            <argument type="service" id="httplug.collector.factory.guzzle5.inner"/>
+            <argument type="service" id="httplug.collector.collector"/>
+        </service>
+        <service id="httplug.collector.factory.guzzle6" class="Http\HttplugBundle\Collector\ProfileClientFactory" decorates="httplug.factory.guzzle6" public="false">
+            <argument type="service" id="httplug.collector.factory.guzzle6.inner"/>
+            <argument type="service" id="httplug.collector.collector"/>
+        </service>
+        <service id="httplug.collector.factory.react" class="Http\HttplugBundle\Collector\ProfileClientFactory" decorates="httplug.factory.react" public="false">
+            <argument type="service" id="httplug.collector.factory.react.inner"/>
+            <argument type="service" id="httplug.collector.collector"/>
+        </service>
+        <service id="httplug.collector.factory.socket" class="Http\HttplugBundle\Collector\ProfileClientFactory" decorates="httplug.factory.socket" public="false">
+            <argument type="service" id="httplug.collector.factory.socket.inner"/>
+            <argument type="service" id="httplug.collector.collector"/>
+        </service>
     </services>
 </container>
