@@ -1,5 +1,11 @@
 # Change Log
 
+## Unreleased
+
+### Added
+
+- The real request method and target url are now displayed in the profiler.
+
 ## 1.4.0 - 2017-02-21
 
 ### Changed
