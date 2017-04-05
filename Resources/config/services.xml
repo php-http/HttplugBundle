@@ -8,6 +8,9 @@
             <tag name="kernel.event_subscriber"/>
         </service>
 
+        <!-- enable autowiring compatibility in Symfony 3.3+ -->
+        <service id="Http\Client\HttpClient" alias="httplug.client" public="false" />
+
         <!-- ClientFactories -->
         <service id="httplug.factory.buzz" class="Http\HttplugBundle\ClientFactory\BuzzFactory" public="false">
             <argument type="service" id="httplug.message_factory"/>
