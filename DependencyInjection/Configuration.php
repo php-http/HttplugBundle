@@ -155,19 +155,16 @@ class Configuration implements ConfigurationInterface
     {
         $root->children()
             ->arrayNode('clients')
-                ->validate()
-                    ->ifTrue(function ($clients) {
-                        foreach ($clients as $name => $config) {
-                            // Make sure we only allow one of these to be true
-                            return (bool) $config['flexible_client'] + (bool) $config['http_methods_client'] + (bool) $config['batch_client'] >= 2;
-                        }
-
-                        return false;
-                    })
-                    ->thenInvalid('A http client can\'t be decorated with both FlexibleHttpClient and HttpMethodsClient. Only one of the following options can be true. ("flexible_client", "http_methods_client")')->end()
                 ->useAttributeAsKey('name')
                 ->prototype('array')
                 ->fixXmlConfig('plugin')
+                ->validate()
+                    ->ifTrue(function ($config) {
+                        // Make sure we only allow one of these to be true
+                        return (bool) $config['flexible_client'] + (bool) $config['http_methods_client'] + (bool) $config['batch_client'] >= 2;
+                    })
+                    ->thenInvalid('A http client can\'t be decorated with both FlexibleHttpClient and HttpMethodsClient. Only one of the following options can be true. ("flexible_client", "http_methods_client", "batch_client")')
+                ->end()
                 ->children()
                     ->scalarNode('factory')
                         ->isRequired()
