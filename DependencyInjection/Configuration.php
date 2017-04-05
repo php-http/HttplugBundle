@@ -163,7 +163,7 @@ class Configuration implements ConfigurationInterface
                         // Make sure we only allow one of these to be true
                         return (bool) $config['flexible_client'] + (bool) $config['http_methods_client'] + (bool) $config['batch_client'] >= 2;
                     })
-                    ->thenInvalid('A http client can\'t be decorated with both FlexibleHttpClient and HttpMethodsClient. Only one of the following options can be true. ("flexible_client", "http_methods_client", "batch_client")')
+                    ->thenInvalid('A http client can\'t be decorated with several of FlexibleHttpClient, HttpMethodsClient and BatchClient. Only one of the following options can be true. ("flexible_client", "http_methods_client", "batch_client")')
                 ->end()
                 ->children()
                     ->scalarNode('factory')
