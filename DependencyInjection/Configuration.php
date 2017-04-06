@@ -369,7 +369,7 @@ class Configuration implements ConfigurationInterface
                     ->arrayNode('config')
                         ->addDefaultsIfNotSet()
                         ->children()
-                            ->scalarNode('default_ttl')->defaultNull()->end()
+                            ->scalarNode('default_ttl')->defaultValue(0)->end()
                             ->scalarNode('respect_cache_headers')->defaultTrue()->end()
                         ->end()
                     ->end()
