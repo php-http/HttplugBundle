@@ -36,8 +36,7 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
                 'enabled' => false,
                 'stream_factory' => 'httplug.stream_factory',
                 'config' => [
-                    'default_ttl' => null,
-                    'respect_cache_headers' => null,
+                    'default_ttl' => 0,
                 ],
             ],
             'cookie' => [
@@ -196,7 +195,7 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
                     'stream_factory' => 'my_other_stream_factory',
                     'config' => [
                         'default_ttl' => 42,
-                        'respect_cache_headers' => false,
+                        'respect_response_cache_directives' => ['X-Foo', 'X-Bar'],
                     ],
                 ],
                 'cookie' => [
@@ -281,11 +280,22 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
 
     /**
      * @group legacy
+     * @expectedException \Symfony\Component\Config\Definition\Exception\InvalidConfigurationException
+     * @expectedExceptionMessage Invalid configuration for path "httplug.plugins.cache.config": You can't provide config option "respect_cache_headers" and "respect_response_cache_directives" simultaniously. Use "respect_response_cache_directives" instead.
+     */
+    public function testInvalidCacheConfig()
+    {
+        $file = __DIR__.'/../../Resources/Fixtures/config/invalid_cache_config.yml';
+        $this->assertProcessedConfigurationEquals([], [$file]);
+    }
+
+    /**
+     * @group legacy
      */
     public function testBackwardCompatibility()
     {
         $formats = array_map(function ($path) {
-            return __DIR__.'/../../Resources/Fixtures//'.$path;
+            return __DIR__.'/../../Resources/Fixtures/'.$path;
         }, [
             'config/bc/toolbar.yml',
             'config/bc/toolbar_auto.yml',
@@ -294,6 +304,24 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
         foreach ($formats as $format) {
             $this->assertProcessedConfigurationEquals($this->emptyConfig, [$format]);
         }
+    }
+
+    /**
+     * @group legacy
+     */
+    public function testCacheConfigDeprecationCompatibility()
+    {
+        $file = __DIR__.'/../../Resources/Fixtures/config/bc/cache_config.yml';
+        $config = $this->emptyConfig;
+        $config['plugins']['cache'] = array_merge($config['plugins']['cache'], [
+            'enabled' => true,
+            'cache_pool' => 'my_cache_pool',
+            'config' => [
+                'default_ttl' => 0,
+                'respect_cache_headers' => true,
+            ],
+        ]);
+        $this->assertProcessedConfigurationEquals($config, [$file]);
     }
 
     /**

@@ -7,6 +7,7 @@ use Symfony\Component\Config\Definition\Builder\NodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
+use Symfony\Component\Config\Definition\Exception\InvalidTypeException;
 
 /**
  * This class contains the configuration information for the bundle.
@@ -368,9 +369,35 @@ class Configuration implements ConfigurationInterface
                     ->end()
                     ->arrayNode('config')
                         ->addDefaultsIfNotSet()
+                        ->validate()
+                        ->ifTrue(function ($config) {
+                            // Cannot set both respect_cache_headers and respect_response_cache_directives
+                            return isset($config['respect_cache_headers'], $config['respect_response_cache_directives']);
+                        })
+                        ->thenInvalid('You can\'t provide config option "respect_cache_headers" and "respect_response_cache_directives" simultaniously. Use "respect_response_cache_directives" instead.')
+                        ->end()
                         ->children()
                             ->scalarNode('default_ttl')->defaultValue(0)->end()
-                            ->scalarNode('respect_cache_headers')->defaultNull()->end()
+                            ->enumNode('respect_cache_headers')
+                                ->values([null, true, false])
+                                ->beforeNormalization()
+                                ->always(function ($v) {
+                                    @trigger_error('The option "respect_cache_headers" is deprecated since version 1.3 and will be removed in 2.0. Use "respect_response_cache_directives" instead.', E_USER_DEPRECATED);
+
+                                    return $v;
+                                })
+                                ->end()
+                            ->end()
+                            ->variableNode('respect_response_cache_directives')
+                                ->validate()
+                                ->always(function ($v) {
+                                    if (is_null($v) || is_array($v)) {
+                                        return $v;
+                                    }
+                                    throw new InvalidTypeException();
+                                })
+                                ->end()
+                            ->end()
                         ->end()
                     ->end()
                 ->end()

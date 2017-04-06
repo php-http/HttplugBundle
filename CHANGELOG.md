@@ -5,10 +5,21 @@
 ### Added
 
 - The real request method and target url are now displayed in the profiler.
+- Support the cache plugin configuration for `respect_response_cache_directives`.
 
 ### Changed
 
 - The profiler design has been updated.
+
+### Deprecated
+
+- The configuration option `cache.config.respect_cache_headers` should no longer be used. Use `...respect_response_cache_directives` instead.
+
+## 1.4.1 - 2017-02-23
+
+### Fixed
+
+- Make sure we always have a stack
 
 ## 1.4.0 - 2017-02-21
 
