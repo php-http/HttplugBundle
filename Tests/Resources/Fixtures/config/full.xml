@@ -44,7 +44,10 @@
                 <my_service type="service" service="my_auth_service"/>
             </authentication>
             <cache cache-pool="my_cache_pool" stream-factory="my_other_stream_factory">
-                <config default-ttl="42" respect-cache-headers="false"/>
+                <config default-ttl="42" respect-cache-headers="false">
+                    <respect-response-cache-directives>X-Foo</respect-response-cache-directives>
+                    <respect-response-cache-directives>X-Bar</respect-response-cache-directives>
+                </config>
             </cache>
             <cookie cookie-jar="my_cookie_jar"/>
             <decoder enabled="false"/>

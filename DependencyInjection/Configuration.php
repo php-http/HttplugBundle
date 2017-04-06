@@ -7,6 +7,7 @@ use Symfony\Component\Config\Definition\Builder\NodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
+use Symfony\Component\Config\Definition\Exception\InvalidTypeException;
 
 /**
  * This class contains the configuration information for the bundle.
@@ -371,6 +372,17 @@ class Configuration implements ConfigurationInterface
                         ->children()
                             ->scalarNode('default_ttl')->defaultValue(0)->end()
                             ->scalarNode('respect_cache_headers')->defaultNull()->end()
+                            ->variableNode('respect_response_cache_directives')
+                                ->validate()
+                                ->always(function ($v) {
+                                    if (is_null($v) || is_array($v)) {
+                                        return $v;
+                                    }
+                                    throw new InvalidTypeException();
+                                })
+                                ->end()
+                            ->defaultNull()
+                            ->end()
                         ->end()
                     ->end()
                 ->end()

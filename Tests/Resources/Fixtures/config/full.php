@@ -82,6 +82,7 @@ $container->loadFromExtension('httplug', [
             'config' => [
                 'default_ttl' => 42,
                 'respect_cache_headers' => false,
+                'respect_response_cache_directives' => ['X-Foo', 'X-Bar'],
             ],
         ],
         'cookie' => [
