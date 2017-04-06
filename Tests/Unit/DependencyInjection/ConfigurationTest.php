@@ -37,7 +37,7 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
                 'stream_factory' => 'httplug.stream_factory',
                 'config' => [
                     'default_ttl' => null,
-                    'respect_cache_headers' => true,
+                    'respect_cache_headers' => null,
                 ],
             ],
             'cookie' => [
