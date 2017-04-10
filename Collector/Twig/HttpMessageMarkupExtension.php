@@ -39,7 +39,7 @@ class HttpMessageMarkupExtension extends \Twig_Extension
         // make header names bold
         $headers = preg_replace("|\n(.*?): |si", "\n<b>$1</b>: ", $parts[0]);
 
-        return sprintf("%s\n\n<div class='httplug-http-body'>%s</div>", $headers, $parts[1]);
+        return sprintf("%s\n\n<div class='httplug-http-body httplug-hidden'>%s</div>", $headers, $parts[1]);
     }
 
     public function getName()
