@@ -13,7 +13,7 @@ class BuzzFactoryTest extends \PHPUnit_Framework_TestCase
 {
     public function testCreateClient()
     {
-        $factory = new BuzzFactory($this->getMock(MessageFactory::class));
+        $factory = new BuzzFactory($this->getMockBuilder(MessageFactory::class)->getMock());
         $client = $factory->createClient();
 
         $this->assertInstanceOf(Client::class, $client);

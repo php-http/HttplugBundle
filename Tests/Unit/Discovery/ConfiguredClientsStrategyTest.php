@@ -10,8 +10,8 @@ class ConfiguredClientsStrategyTest extends \PHPUnit_Framework_TestCase
 {
     public function testGetCandidates()
     {
-        $httpClient = $this->getMock(HttpClient::class);
-        $httpAsyncClient = $this->getMock(HttpAsyncClient::class);
+        $httpClient = $this->getMockBuilder(HttpClient::class)->getMock();
+        $httpAsyncClient = $this->getMockBuilder(HttpAsyncClient::class)->getMock();
         $strategy = new ConfiguredClientsStrategy($httpClient, $httpAsyncClient);
 
         $candidates = $strategy::getCandidates(HttpClient::class);
@@ -36,7 +36,7 @@ class ConfiguredClientsStrategyTest extends \PHPUnit_Framework_TestCase
 
     public function testGetCandidatesEmptyAsync()
     {
-        $httpClient = $this->getMock(HttpClient::class);
+        $httpClient = $this->getMockBuilder(HttpClient::class)->getMock();
         $strategy = new ConfiguredClientsStrategy($httpClient, null);
 
         $candidates = $strategy::getCandidates(HttpClient::class);
@@ -49,7 +49,7 @@ class ConfiguredClientsStrategyTest extends \PHPUnit_Framework_TestCase
 
     public function testGetCandidatesEmptySync()
     {
-        $httpAsyncClient = $this->getMock(HttpAsyncClient::class);
+        $httpAsyncClient = $this->getMockBuilder(HttpAsyncClient::class)->getMock();
         $strategy = new ConfiguredClientsStrategy(null, $httpAsyncClient);
 
         $candidates = $strategy::getCandidates(HttpClient::class);
