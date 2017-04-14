@@ -14,7 +14,10 @@ class CurlFactoryTest extends \PHPUnit_Framework_TestCase
 {
     public function testCreateClient()
     {
-        $factory = new CurlFactory($this->getMock(MessageFactory::class), $this->getMock(StreamFactory::class));
+        $factory = new CurlFactory(
+            $this->getMockBuilder(MessageFactory::class)->getMock(),
+            $this->getMockBuilder(StreamFactory::class)->getMock()
+        );
         $client = $factory->createClient();
 
         $this->assertInstanceOf(Client::class, $client);

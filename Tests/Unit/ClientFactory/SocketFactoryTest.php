@@ -13,7 +13,7 @@ class SocketFactoryTest extends \PHPUnit_Framework_TestCase
 {
     public function testCreateClient()
     {
-        $factory = new SocketFactory($this->getMock(MessageFactory::class));
+        $factory = new SocketFactory($this->getMockBuilder(MessageFactory::class)->getMock());
         $client = $factory->createClient();
 
         $this->assertInstanceOf(Client::class, $client);

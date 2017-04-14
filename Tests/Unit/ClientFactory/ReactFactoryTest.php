@@ -13,7 +13,7 @@ class ReactFactoryTest extends \PHPUnit_Framework_TestCase
 {
     public function testCreateClient()
     {
-        $factory = new ReactFactory($this->getMock(MessageFactory::class));
+        $factory = new ReactFactory($this->getMockBuilder(MessageFactory::class)->getMock());
         $client = $factory->createClient();
 
         $this->assertInstanceOf(Client::class, $client);
