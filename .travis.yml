@@ -13,10 +13,8 @@ php:
     - 7.1
     - hhvm
 
-
 env:
-    - TEST_COMMAND="composer test"
-    - SYMFONY_VERSION=2.8.*
+    - TEST_COMMAND="composer test" SYMFONY_VERSION=2.8.*
 
 branches:
     except:
@@ -25,12 +23,12 @@ branches:
 matrix:
     fast_finish: true
     include:
+        - php: 5.5
+          env: COMPOSER_FLAGS="--prefer-stable --prefer-lowest" COVERAGE=true TEST_COMMAND="composer test-ci" SYMFONY_VERSION=2.8.*
         - php: 7.1
           env: SYMFONY_VERSION=3.2.* 
         - php: 7.1
           env: SYMFONY_VERSION=3.1.*
-        - php: 5.5
-          env: COMPOSER_FLAGS="--prefer-stable --prefer-lowest" COVERAGE=true TEST_COMMAND="composer test-ci" SYMFONY_VERSION=2.8.*
 
 install:
     - composer require symfony/symfony:${SYMFONY_VERSION} --no-update
