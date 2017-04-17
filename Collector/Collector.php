@@ -108,4 +108,14 @@ class Collector extends DataCollector
             return $stack->getClient() == $client;
         });
     }
+
+    /**
+     * @return int
+     */
+    public function getDurationSum()
+    {
+        return array_reduce($this->data['stacks'], function ($carry, Stack $stack) {
+            return $carry + $stack->getDuration();
+        }, 0);
+    }
 }

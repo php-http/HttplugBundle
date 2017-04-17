@@ -77,6 +77,11 @@ final class Stack
     private $responseCode;
 
     /**
+     * @var int
+     */
+    private $duration = 0;
+
+    /**
      * @param string $client
      * @param string $request
      */
@@ -276,5 +281,21 @@ final class Stack
     public function setRequestScheme($requestScheme)
     {
         $this->requestScheme = $requestScheme;
+    }
+
+    /**
+     * @return int
+     */
+    public function getDuration()
+    {
+        return $this->duration;
+    }
+
+    /**
+     * @param int $duration
+     */
+    public function setDuration($duration)
+    {
+        $this->duration = $duration;
     }
 }
