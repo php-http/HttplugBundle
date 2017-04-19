@@ -10,6 +10,7 @@ use Http\Discovery\HttpAsyncClientDiscovery;
 use Http\Discovery\HttpClientDiscovery;
 use Http\HttplugBundle\ClientFactory\DummyClient;
 use Http\HttplugBundle\ClientFactory\PluginClientFactory;
+use Http\HttplugBundle\Collector\ProfileClientFactory;
 use Http\HttplugBundle\Collector\ProfilePlugin;
 use Http\Message\Authentication\BasicAuth;
 use Http\Message\Authentication\Bearer;
@@ -272,16 +273,7 @@ class HttplugExtension extends Extension
             } elseif ('authentication' === $pluginName) {
                 $plugins = array_merge($plugins, $this->configureAuthentication($container, $pluginConfig, $serviceId.'.authentication'));
             } else {
-                $pluginServiceId = $serviceId.'.plugin.'.$pluginName;
-
-                $definition = class_exists(ChildDefinition::class)
-                    ? new ChildDefinition('httplug.plugin'.'.'.$pluginName)
-                    : new DefinitionDecorator('httplug.plugin'.'.'.$pluginName)
-                ;
-
-                $this->configurePluginByName($pluginName, $definition, $pluginConfig, $container, $pluginServiceId);
-                $container->setDefinition($pluginServiceId, $definition);
-                $plugins[] = $pluginServiceId;
+                $plugins[] = $this->configurePlugin($container, $serviceId, $pluginName, $pluginConfig);
             }
         }
 
@@ -294,27 +286,12 @@ class HttplugExtension extends Extension
 
             //Decorate each plugin with a ProfilePlugin instance.
             foreach ($plugins as $pluginServiceId) {
-                $container->register($pluginServiceId.'.debug', ProfilePlugin::class)
-                    ->setDecoratedService($pluginServiceId)
-                    ->setArguments([
-                        new Reference($pluginServiceId.'.debug.inner'),
-                        new Reference('httplug.collector.collector'),
-                        new Reference('httplug.collector.formatter'),
-                        $pluginServiceId,
-                    ])
-                    ->setPublic(false)
-                ;
+                $this->decoratePluginWithProfilePlugin($container, $pluginServiceId);
             }
 
-            // Add the newstack plugin
-            $definition = class_exists(ChildDefinition::class)
-                ? new ChildDefinition('httplug.plugin.stack')
-                : new DefinitionDecorator('httplug.plugin.stack')
-            ;
-
-            $definition->addArgument($clientName);
-            $container->setDefinition($serviceId.'.plugin.newstack', $definition);
-            array_unshift($plugins, $serviceId.'.plugin.newstack');
+            // To profile the requests, add a StackPlugin as first plugin in the chain.
+            $stackPluginId = $this->configureStackPlugin($container, $clientName, $serviceId);
+            array_unshift($plugins, $stackPluginId);
         }
 
         $container
@@ -397,7 +374,12 @@ class HttplugExtension extends Extension
                 $httpClient = $this->registerAutoDiscoverableClient(
                     $container,
                     'auto_discovered_client',
-                    [HttpClientDiscovery::class, 'find'],
+                    $this->configureAutoDiscoveryFactory(
+                        $container,
+                        HttpClientDiscovery::class,
+                        'auto_discovered_client',
+                        $config
+                    ),
                     $this->isConfigEnabled($container, $config['profiling'])
                 );
             }
@@ -412,7 +394,12 @@ class HttplugExtension extends Extension
                 $asyncHttpClient = $this->registerAutoDiscoverableClient(
                     $container,
                     'auto_discovered_async',
-                    [HttpAsyncClientDiscovery::class, 'find'],
+                    $this->configureAutoDiscoveryFactory(
+                        $container,
+                        HttpAsyncClientDiscovery::class,
+                        'auto_discovered_async',
+                        $config
+                    ),
                     $this->isConfigEnabled($container, $config['profiling'])
                 );
             }
@@ -430,10 +417,10 @@ class HttplugExtension extends Extension
     /**
      * Find a client with auto discovery and return a service Reference to it.
      *
-     * @param ContainerBuilder $container
-     * @param string           $name
-     * @param callable         $factory
-     * @param bool             $profiling
+     * @param ContainerBuilder   $container
+     * @param string             $name
+     * @param Reference|callable $factory
+     * @param bool               $profiling
      *
      * @return string service id
      */
@@ -441,21 +428,34 @@ class HttplugExtension extends Extension
     {
         $serviceId = 'httplug.auto_discovery.'.$name;
 
-        $pluginClientOptions = [];
-
+        $plugins = [];
         if ($profiling) {
-            // Tell the plugin journal what plugins we used
-            $container
-                ->getDefinition('httplug.collector.plugin_journal')
-                ->addMethodCall('setPlugins', [$name, ['httplug.plugin.stopwatch']])
-            ;
+            // To profile the requests, add a StackPlugin as first plugin in the chain.
+            $plugins[] = $this->configureStackPlugin($container, $name, $serviceId);
+
+            $this->decoratePluginWithProfilePlugin($container, 'httplug.plugin.stopwatch');
+            $plugins[] = 'httplug.plugin.stopwatch';
         }
 
         $container
             ->register($serviceId, DummyClient::class)
             ->setFactory([PluginClientFactory::class, 'createPluginClient'])
-            ->setArguments([[new Reference('httplug.plugin.stopwatch')], $factory, [], $pluginClientOptions])
+            ->setArguments([
+                array_map(
+                    function ($id) {
+                        return new Reference($id);
+                    },
+                    $plugins
+                ),
+                $factory,
+                [],
+            ])
         ;
+
+        if ($profiling) {
+            $collector = $container->getDefinition('httplug.collector.collector');
+            $collector->replaceArgument(0, array_merge($collector->getArgument(0), [$name]));
+        }
 
         return $serviceId;
     }
@@ -466,5 +466,99 @@ class HttplugExtension extends Extension
     public function getConfiguration(array $config, ContainerBuilder $container)
     {
         return new Configuration($container->getParameter('kernel.debug'));
+    }
+
+    /**
+     * Configure a plugin using the parent definition from plugins.xml.
+     *
+     * @param ContainerBuilder $container
+     * @param string           $serviceId
+     * @param string           $pluginName
+     * @param array            $pluginConfig
+     *
+     * @return string configured service id
+     */
+    private function configurePlugin(ContainerBuilder $container, $serviceId, $pluginName, array $pluginConfig)
+    {
+        $pluginServiceId = $serviceId.'.plugin.'.$pluginName;
+
+        $definition = class_exists(ChildDefinition::class)
+            ? new ChildDefinition('httplug.plugin.'.$pluginName)
+            : new DefinitionDecorator('httplug.plugin.'.$pluginName);
+
+        $this->configurePluginByName($pluginName, $definition, $pluginConfig, $container, $pluginServiceId);
+        $container->setDefinition($pluginServiceId, $definition);
+
+        return $pluginServiceId;
+    }
+
+    /**
+     * Decorate the plugin service with a ProfilePlugin service.
+     *
+     * @param ContainerBuilder $container
+     * @param string           $pluginServiceId
+     */
+    private function decoratePluginWithProfilePlugin(ContainerBuilder $container, $pluginServiceId)
+    {
+        $container->register($pluginServiceId.'.debug', ProfilePlugin::class)
+            ->setDecoratedService($pluginServiceId)
+            ->setArguments([
+                new Reference($pluginServiceId.'.debug.inner'),
+                new Reference('httplug.collector.collector'),
+                new Reference('httplug.collector.formatter'),
+                $pluginServiceId,
+            ])
+            ->setPublic(false);
+    }
+
+    /**
+     * Configure a StackPlugin for a client.
+     *
+     * @param ContainerBuilder $container
+     * @param string           $clientName Client name to display in the profiler.
+     * @param string           $serviceId  Client service id. Used as base for the StackPlugin service id.
+     *
+     * @return string configured StackPlugin service id
+     */
+    private function configureStackPlugin(ContainerBuilder $container, $clientName, $serviceId)
+    {
+        $pluginServiceId = $serviceId.'.plugin.stack';
+
+        $definition = class_exists(ChildDefinition::class)
+            ? new ChildDefinition('httplug.plugin.stack')
+            : new DefinitionDecorator('httplug.plugin.stack');
+
+        $definition->addArgument($clientName);
+        $container->setDefinition($pluginServiceId, $definition);
+
+        return $pluginServiceId;
+    }
+
+    /**
+     * Configure the discovery factory when profiling is enabled to get client decorated with a ProfileClient.
+     *
+     * @param ContainerBuilder $container
+     * @param string           $discovery
+     * @param string           $name
+     * @param array            $config
+     *
+     * @return callable|Reference
+     */
+    private function configureAutoDiscoveryFactory(ContainerBuilder $container, $discovery, $name, array $config)
+    {
+        $factory = [$discovery, 'find'];
+        if ($this->isConfigEnabled($container, $config['profiling'])) {
+            $factoryServiceId = 'httplug.auto_discovery.'.$name.'.factory';
+            $container->register($factoryServiceId, ProfileClientFactory::class)
+                ->setPublic(false)
+                ->setArguments([
+                    $factory,
+                    new Reference('httplug.collector.collector'),
+                    new Reference('httplug.collector.formatter'),
+                ]);
+            $factory = new Reference($factoryServiceId);
+        }
+
+        return $factory;
     }
 }
