@@ -63,7 +63,7 @@ class HttplugExtension extends Extension
             if (!empty($config['profiling']['formatter'])) {
                 // Add custom formatter
                 $container
-                    ->getDefinition('httplug.collector.debug_collector')
+                    ->getDefinition('httplug.collector.formatter')
                     ->replaceArgument(0, new Reference($config['profiling']['formatter']))
                 ;
             }

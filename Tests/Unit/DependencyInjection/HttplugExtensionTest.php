@@ -197,6 +197,20 @@ class HttplugExtensionTest extends AbstractExtensionTestCase
         $this->assertTrue(isset($arguments[3]));
     }
 
+    public function testOverrideProfillingFormatter()
+    {
+        $this->load(
+            [
+                'profiling' => [
+                    'formatter' => 'acme.formatter',
+                ],
+            ]
+        );
+
+        $def = $this->container->findDefinition('httplug.collector.formatter');
+        $this->assertEquals('acme.formatter', (string) $def->getArgument(0));
+    }
+
     private function verifyProfilingDisabled()
     {
         $def = $this->container->findDefinition('httplug.client');
