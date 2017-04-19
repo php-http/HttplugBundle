@@ -6,6 +6,10 @@
 
 - The real request method and target url are now displayed in the profiler.
 
+### Changed
+
+- The profiler design has been updated.
+
 ## 1.4.0 - 2017-02-21
 
 ### Changed
