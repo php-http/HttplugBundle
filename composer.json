@@ -37,7 +37,7 @@
         "php-http/guzzle6-adapter": "^1.1.1",
         "php-http/react-adapter": "^0.2.1",
         "php-http/buzz-adapter": "^0.3",
-        "symfony/symfony": "^2.8 || ^3.0",
+        "symfony/phpunit-bridge": "^3.2",
         "polishsymfonycommunity/symfony-mocker-container": "^1.0",
         "matthiasnoback/symfony-dependency-injection-test": "^1.0"
     },
