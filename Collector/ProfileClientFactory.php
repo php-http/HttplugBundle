@@ -51,7 +51,7 @@ class ProfileClientFactory implements ClientFactory
      */
     public function createClient(array $config = [])
     {
-        $client = is_callable($this->factory) ? $this->factory($config) : $this->factory->createClient($config);
+        $client = is_callable($this->factory) ? call_user_func($this->factory, $config) : $this->factory->createClient($config);
 
         if (!($client instanceof HttpClient && $client instanceof HttpAsyncClient)) {
             $client = new FlexibleHttpClient($client);
