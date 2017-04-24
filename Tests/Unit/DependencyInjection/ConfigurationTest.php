@@ -279,6 +279,9 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
         $this->assertProcessedConfigurationEquals([], [$file]);
     }
 
+    /**
+     * @group legacy
+     */
     public function testBackwardCompatibility()
     {
         $formats = array_map(function ($path) {

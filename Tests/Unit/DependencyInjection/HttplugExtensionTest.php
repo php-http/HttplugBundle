@@ -174,6 +174,9 @@ class HttplugExtensionTest extends AbstractExtensionTestCase
         $this->verifyProfilingDisabled();
     }
 
+    /**
+     * @group legacy
+     */
     public function testProfilingWhenToolbarIsSpecificallyOn()
     {
         $this->setParameter('kernel.debug', false);
@@ -197,6 +200,9 @@ class HttplugExtensionTest extends AbstractExtensionTestCase
         $this->assertTrue(isset($arguments[3]));
     }
 
+    /**
+     * @group legacy
+     */
     private function verifyProfilingDisabled()
     {
         $def = $this->container->findDefinition('httplug.client');
