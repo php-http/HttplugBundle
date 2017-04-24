@@ -138,6 +138,9 @@ class HttplugExtensionTest extends AbstractExtensionTestCase
         $this->assertContainerBuilderHasServiceDefinitionWithArgument('httplug.client.acme', 0, $pluginReferences);
     }
 
+    /**
+     * @group legacy
+     */
     public function testNoProfilingWhenToolbarIsDisabled()
     {
         $this->load(
@@ -174,6 +177,9 @@ class HttplugExtensionTest extends AbstractExtensionTestCase
         $this->verifyProfilingDisabled();
     }
 
+    /**
+     * @group legacy
+     */
     public function testProfilingWhenToolbarIsSpecificallyOn()
     {
         $this->setParameter('kernel.debug', false);

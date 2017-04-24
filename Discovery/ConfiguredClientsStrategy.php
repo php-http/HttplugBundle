@@ -6,10 +6,8 @@ use Http\Client\HttpClient;
 use Http\Client\HttpAsyncClient;
 use Http\Discovery\HttpClientDiscovery;
 use Http\Discovery\Strategy\DiscoveryStrategy;
-use Symfony\Component\Console\ConsoleEvents;
 use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\HttpKernel\KernelEvents;
 
 /**
  * A strategy that provide clients configured with HTTPlug bundle. With help from this strategy
@@ -77,8 +75,8 @@ class ConfiguredClientsStrategy implements DiscoveryStrategy, EventSubscriberInt
     public static function getSubscribedEvents()
     {
         return [
-            KernelEvents::REQUEST => ['onEvent', 1024],
-            ConsoleEvents::COMMAND => ['onEvent', 1024],
+            'kernel.request' => ['onEvent', 1024],
+            'console.command' => ['onEvent', 1024],
         ];
     }
 }
