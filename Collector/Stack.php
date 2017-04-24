@@ -47,6 +47,36 @@ final class Stack
     private $requestMethod;
 
     /**
+     * @var string
+     */
+    private $requestHost;
+
+    /**
+     * @var string
+     */
+    private $requestScheme;
+
+    /**
+     * @var string
+     */
+    private $clientRequest;
+
+    /**
+     * @var string
+     */
+    private $clientResponse;
+
+    /**
+     * @var string
+     */
+    private $clientException;
+
+    /**
+     * @var int
+     */
+    private $responseCode;
+
+    /**
      * @param string $client
      * @param string $request
      */
@@ -150,5 +180,101 @@ final class Stack
     public function setRequestMethod($requestMethod)
     {
         $this->requestMethod = $requestMethod;
+    }
+
+    /**
+     * @return string
+     */
+    public function getClientRequest()
+    {
+        return $this->clientRequest;
+    }
+
+    /**
+     * @param string $clientRequest
+     */
+    public function setClientRequest($clientRequest)
+    {
+        $this->clientRequest = $clientRequest;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getClientResponse()
+    {
+        return $this->clientResponse;
+    }
+
+    /**
+     * @param mixed $clientResponse
+     */
+    public function setClientResponse($clientResponse)
+    {
+        $this->clientResponse = $clientResponse;
+    }
+
+    /**
+     * @return string
+     */
+    public function getClientException()
+    {
+        return $this->clientException;
+    }
+
+    /**
+     * @param string $clientException
+     */
+    public function setClientException($clientException)
+    {
+        $this->clientException = $clientException;
+    }
+
+    /**
+     * @return int
+     */
+    public function getResponseCode()
+    {
+        return $this->responseCode;
+    }
+
+    /**
+     * @param int $responseCode
+     */
+    public function setResponseCode($responseCode)
+    {
+        $this->responseCode = $responseCode;
+    }
+
+    /**
+     * @return string
+     */
+    public function getRequestHost()
+    {
+        return $this->requestHost;
+    }
+
+    /**
+     * @param string $requestHost
+     */
+    public function setRequestHost($requestHost)
+    {
+        $this->requestHost = $requestHost;
+    }
+
+    /**
+     * @return string
+     */
+    public function getRequestScheme()
+    {
+        return $this->requestScheme;
+    }
+
+    /**
+     * @param string $requestScheme
+     */
+    public function setRequestScheme($requestScheme)
+    {
+        $this->requestScheme = $requestScheme;
     }
 }

@@ -1,7 +1,5 @@
 {% extends '@WebProfiler/Profiler/layout.html.twig' %}
 
-{% import _self as macro %}
-
 {% block toolbar %}
     {% if collector.stacks|length > 0 %}
         {% set icon %}
@@ -48,8 +46,6 @@
 
 {% block panel %}
     <h2>HTTPlug</h2>
-    <button class="btn push-right" onclick="httplug_toggleBody(this)" data-label="Hide message body">Show message body</button>
-
     <div class="sf-tabs">
         {% for client in collector.clients %}
         <div class="tab">
@@ -61,13 +57,66 @@
                 </p>
 
                 {% for stack in collector.clientStacks(client) %}
-                    <h3>
-                        Request #{{ loop.index }} - {{ stack.requestMethod }} {{ stack.requestTarget }}
-                        {% if stack.failed %}
-                            - <span class="httplug-error">Errored</span>
+                    <div class="httplug-stack-header httplug-toggle" data-toggle="#httplug-{{ client }}-{{ loop.index }}-details">
+                        <div>
+                            {% if stack.failed %}
+                                <span class="httplug-stack-failed">✘</span>
+                            {% else %}
+                                <span class="httplug-stack-success">✔</span>
+                            {% endif %}
+                            <span class="label httplug-method httplug-method-{{ stack.requestMethod|lower }}">{{ stack.requestMethod }}</span>
+                        </div>
+                        <div class="label httplug-stack-header-target">
+                            <span class="httplug-scheme">{{ stack.requestScheme }}://</span>
+                            <span class="httplug-host">{{ stack.requestHost }}</span>
+                            <span class="httplug-target">{{ stack.requestTarget }}</span>
+                        </div>
+                        <div>
+                            {% if stack.responseCode >= 400 and stack.responseCode <= 599 %}
+                                <span class="label status-error">{{ stack.responseCode }}</span>
+                            {% elseif stack.responseCode >= 300 and stack.responseCode <= 399 %}
+                                <span class="label status-warning">{{ stack.responseCode }}</span>
+                            {% else %}
+                                <span class="label status-success">{{ stack.responseCode }}</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div id="httplug-{{ client }}-{{ loop.index }}-details" class="httplug-hidden">
+                        <button data-toggle="#httplug-{{ client }}-{{ loop.index }}-details .httplug-http-body" class="httplug-toggle btn httplug-push-right">Toggle body</button>
+                        <div class="httplug-messages">
+                            <div class="httplug-message card">
+                                <h4>Request</h4>
+                                {{ stack.clientRequest|httplug_markup|nl2br }}
+                            </div>
+                            <div class="httplug-message card">
+                                <h4>Response</h4>
+                                {{ stack.clientResponse|httplug_markup|nl2br }}
+                            </div>
+                        </div>
+                        {% if stack.profiles %}
+                            <div class="httplug-center">
+                                <button class="btn httplug-toggle" data-toggle="#httplug-{{ client }}-{{ loop.index }}-stack">Toggle plugin stack</button>
+                            </div>
+                            <div id="httplug-{{ client }}-{{ loop.index }}-stack" class="httplug-hidden card">
+                                {% for profile in stack.profiles %}
+                                    <h3 class="httplug-plugin-name">{{ profile.plugin }}</h3>
+                                    <div class="httplug-messages">
+                                        <div class="httplug-message">
+                                            <h4>Request</h4>
+                                            {{ profile.request|httplug_markup|nl2br }}
+                                        </div>
+                                        <div class="httplug-message">
+                                            <h4>Response</h4>
+                                            {{ profile.response|httplug_markup|nl2br }}
+                                        </div>
+                                    </div>
+                                    {% if not loop.last %}
+                                        <hr />
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
                         {% endif %}
-                    </h3>
-                    {{ macro.printMessages(stack) }}
+                    </div>
                 {% endfor %}
             </div>
         </div>
@@ -76,58 +125,5 @@
                 <p>No request were sent.</p>
             </div>
         {% endfor %}
-
     </div>
-
 {% endblock %}
-
-{% macro printMessages(stack) %}
-    <table class="httplug-request-table">
-        <tr>
-            <th width="50%">Request</th>
-            <th width="50%">Response</th>
-        </tr>
-
-        <tr>
-            <td>{{ stack.request|httplug_markup|nl2br }}</td>
-            <td>{{ stack.response|httplug_markup|nl2br }}</td>
-        </tr>
-        {% if stack.profiles %}
-            <tr>
-                <td colspan="2" style="text-align:center">
-                    <button class="btn" onclick="httplug_togglePluginStack(this)" data-label="Hide plugin stack">See plugin stack</button>
-                </td>
-            </tr>
-            <tr class="httplug-request-stack">
-                <td class="httplug-plugin-name">&darr; Start </td>
-                <td class="httplug-plugin-name">- End
-                    {% if stack.failed %}
-                        <span class="httplug-error">&#9747;</span>
-                    {% endif %}
-                </td>
-            </tr>
-            {% for profile in stack.profiles %}
-                <tr class="httplug-request-stack">
-                    <td class="httplug-plugin-name">&darr; {{ profile.plugin }} </td>
-                    <td class="httplug-plugin-name">&uarr;
-                        {% if profile.failed %}
-                            <span class="httplug-error">&#9747;</span>
-                        {% endif %}
-                    </td>
-                </tr>
-                <tr class="httplug-request-stack">
-                    <td>{{ profile.request|httplug_markup|nl2br }}</td>
-                    <td>{{ profile.response|httplug_markup|nl2br }}</td>
-                </tr>
-            {% endfor %}
-            <tr class="httplug-request-stack">
-                <td class="httplug-plugin-name">&#10230; <span class="push-right">HTTP client</span></td>
-                <td class="httplug-plugin-name">&uarr;
-                    {#{% if profile.failed %}#}
-                        {#<span class="httplug-error">&#9747;</span>#}
-                    {#{% endif %}#}
-                </td>
-            </tr>
-        {% endif %}
-    </table>
-{% endmacro %}

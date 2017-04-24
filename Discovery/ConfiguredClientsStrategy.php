@@ -33,8 +33,8 @@ class ConfiguredClientsStrategy implements DiscoveryStrategy, EventSubscriberInt
      */
     public function __construct(HttpClient $httpClient = null, HttpAsyncClient $asyncClient = null)
     {
-        static::$client = $httpClient;
-        static::$asyncClient = $asyncClient;
+        self::$client = $httpClient;
+        self::$asyncClient = $asyncClient;
     }
 
     /**
@@ -42,15 +42,15 @@ class ConfiguredClientsStrategy implements DiscoveryStrategy, EventSubscriberInt
      */
     public static function getCandidates($type)
     {
-        if ($type === HttpClient::class && static::$client !== null) {
+        if ($type === HttpClient::class && self::$client !== null) {
             return [['class' => function () {
-                return static::$client;
+                return self::$client;
             }]];
         }
 
-        if ($type === HttpAsyncClient::class && static::$asyncClient !== null) {
+        if ($type === HttpAsyncClient::class && self::$asyncClient !== null) {
             return [['class' => function () {
-                return static::$asyncClient;
+                return self::$asyncClient;
             }]];
         }
 

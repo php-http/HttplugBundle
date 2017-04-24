@@ -16,9 +16,11 @@ use Http\Message\Authentication\Bearer;
 use Http\Message\Authentication\Wsse;
 use Psr\Http\Message\UriInterface;
 use Symfony\Component\Config\FileLocator;
+use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Definition;
+use Symfony\Component\DependencyInjection\DefinitionDecorator;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
@@ -61,7 +63,7 @@ class HttplugExtension extends Extension
             if (!empty($config['profiling']['formatter'])) {
                 // Add custom formatter
                 $container
-                    ->getDefinition('httplug.collector.debug_collector')
+                    ->getDefinition('httplug.collector.formatter')
                     ->replaceArgument(0, new Reference($config['profiling']['formatter']))
                 ;
             }
@@ -271,8 +273,12 @@ class HttplugExtension extends Extension
                 $plugins = array_merge($plugins, $this->configureAuthentication($container, $pluginConfig, $serviceId.'.authentication'));
             } else {
                 $pluginServiceId = $serviceId.'.plugin.'.$pluginName;
-                $definition = clone $container->getDefinition('httplug.plugin'.'.'.$pluginName);
-                $definition->setAbstract(false);
+
+                $definition = class_exists(ChildDefinition::class)
+                    ? new ChildDefinition('httplug.plugin'.'.'.$pluginName)
+                    : new DefinitionDecorator('httplug.plugin'.'.'.$pluginName)
+                ;
+
                 $this->configurePluginByName($pluginName, $definition, $pluginConfig, $container, $pluginServiceId);
                 $container->setDefinition($pluginServiceId, $definition);
                 $plugins[] = $pluginServiceId;
@@ -301,8 +307,11 @@ class HttplugExtension extends Extension
             }
 
             // Add the newstack plugin
-            $definition = clone $container->getDefinition('httplug.plugin.stack');
-            $definition->setAbstract(false);
+            $definition = class_exists(ChildDefinition::class)
+                ? new ChildDefinition('httplug.plugin.stack')
+                : new DefinitionDecorator('httplug.plugin.stack')
+            ;
+
             $definition->addArgument($clientName);
             $container->setDefinition($serviceId.'.plugin.newstack', $definition);
             array_unshift($plugins, $serviceId.'.plugin.newstack');
