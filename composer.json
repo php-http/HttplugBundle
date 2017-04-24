@@ -41,6 +41,7 @@
         "symfony/twig-bundle": "^2.8 || ^3.0",
         "symfony/twig-bridge": "^2.8 || ^3.0",
         "symfony/web-profiler-bundle": "^2.8 || ^3.0",
+        "symfony/finder": "^2.7 || ^3.0",
         "polishsymfonycommunity/symfony-mocker-container": "^1.0",
         "matthiasnoback/symfony-dependency-injection-test": "^1.0"
     },
