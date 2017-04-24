@@ -213,7 +213,10 @@ class HttplugExtensionTest extends AbstractExtensionTestCase
         $def = $this->container->findDefinition('httplug.collector.formatter');
         $this->assertEquals('acme.formatter', (string) $def->getArgument(0));
     }
- 
+
+    /**
+     * @group legacy
+     */
     private function verifyProfilingDisabled()
     {
         $def = $this->container->findDefinition('httplug.client');
