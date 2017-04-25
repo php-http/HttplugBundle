@@ -279,6 +279,7 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
     }
 
     /**
+     * @group legacy
      * @expectedException \Symfony\Component\Config\Definition\Exception\InvalidConfigurationException
      * @expectedExceptionMessage Invalid configuration for path "httplug.plugins.cache.config": You can't provide config option "respect_cache_headers" and "respect_response_cache_directives" simultaniously. Use "respect_response_cache_directives" instead.
      */
