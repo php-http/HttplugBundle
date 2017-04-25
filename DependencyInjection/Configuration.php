@@ -378,7 +378,16 @@ class Configuration implements ConfigurationInterface
                         ->end()
                         ->children()
                             ->scalarNode('default_ttl')->defaultValue(0)->end()
-                            ->enumNode('respect_cache_headers')->values([null, true, false])->end()
+                            ->enumNode('respect_cache_headers')
+                                ->values([null, true, false])
+                                ->beforeNormalization()
+                                ->always(function ($v) {
+                                    @trigger_error('The option "respect_cache_headers" is deprecated since version 1.3 and will be removed in 2.0. Use "respect_response_cache_directives" instead.', E_USER_DEPRECATED);
+
+                                    return $v;
+                                })
+                                ->end()
+                            ->end()
                             ->variableNode('respect_response_cache_directives')
                                 ->validate()
                                 ->always(function ($v) {
@@ -388,7 +397,6 @@ class Configuration implements ConfigurationInterface
                                     throw new InvalidTypeException();
                                 })
                                 ->end()
-                            ->defaultNull()
                             ->end()
                         ->end()
                     ->end()

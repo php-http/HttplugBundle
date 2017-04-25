@@ -37,7 +37,6 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
                 'stream_factory' => 'httplug.stream_factory',
                 'config' => [
                     'default_ttl' => 0,
-                    'respect_response_cache_directives' => null,
                 ],
             ],
             'cookie' => [
@@ -295,7 +294,7 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
     public function testBackwardCompatibility()
     {
         $formats = array_map(function ($path) {
-            return __DIR__.'/../../Resources/Fixtures//'.$path;
+            return __DIR__.'/../../Resources/Fixtures/'.$path;
         }, [
             'config/bc/toolbar.yml',
             'config/bc/toolbar_auto.yml',
@@ -304,6 +303,21 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
         foreach ($formats as $format) {
             $this->assertProcessedConfigurationEquals($this->emptyConfig, [$format]);
         }
+    }
+
+    /**
+     * @group legacy
+     */
+    public function testCacheConfigDeprecationCompatibility()
+    {
+        $file = __DIR__.'/../../Resources/Fixtures/config/bc/cache_config.yml';
+        $config = $this->emptyConfig;
+        $config['plugins']['cache'] = array_merge($config['plugins']['cache'], [
+            'enabled' => true,
+            'cache_pool' => 'my_cache_pool',
+            'config' => ['default_ttl' => 0, 'respect_cache_headers' => true]
+        ]);
+        $this->assertProcessedConfigurationEquals($config, [$file]);
     }
 
     /**
