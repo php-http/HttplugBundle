@@ -369,9 +369,16 @@ class Configuration implements ConfigurationInterface
                     ->end()
                     ->arrayNode('config')
                         ->addDefaultsIfNotSet()
+                        ->validate()
+                        ->ifTrue(function ($config) {
+                            // Cannot set both respect_cache_headers and respect_response_cache_directives
+                            return isset($config['respect_cache_headers'], $config['respect_response_cache_directives']);
+                        })
+                        ->thenInvalid('You can\'t provide config option "respect_cache_headers" and "respect_response_cache_directives" simultaniously. Use "respect_response_cache_directives" instead.')
+                        ->end()
                         ->children()
                             ->scalarNode('default_ttl')->defaultValue(0)->end()
-                            ->scalarNode('respect_cache_headers')->defaultNull()->end()
+                            ->enumNode('respect_cache_headers')->values([null, true, false])->end()
                             ->variableNode('respect_response_cache_directives')
                                 ->validate()
                                 ->always(function ($v) {

@@ -37,7 +37,6 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
                 'stream_factory' => 'httplug.stream_factory',
                 'config' => [
                     'default_ttl' => 0,
-                    'respect_cache_headers' => null,
                     'respect_response_cache_directives' => null,
                 ],
             ],
@@ -197,7 +196,6 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
                     'stream_factory' => 'my_other_stream_factory',
                     'config' => [
                         'default_ttl' => 42,
-                        'respect_cache_headers' => false,
                         'respect_response_cache_directives' => ['X-Foo', 'X-Bar'],
                     ],
                 ],
@@ -278,6 +276,16 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
     public function testInvalidAuthentication()
     {
         $file = __DIR__.'/../../Resources/Fixtures/config/invalid_auth.yml';
+        $this->assertProcessedConfigurationEquals([], [$file]);
+    }
+
+    /**
+     * @expectedException \Symfony\Component\Config\Definition\Exception\InvalidConfigurationException
+     * @expectedExceptionMessage Invalid configuration for path "httplug.plugins.cache.config": You can't provide config option "respect_cache_headers" and "respect_response_cache_directives" simultaniously. Use "respect_response_cache_directives" instead.
+     */
+    public function testInvalidCacheConfig()
+    {
+        $file = __DIR__.'/../../Resources/Fixtures/config/invalid_cache_config.yml';
         $this->assertProcessedConfigurationEquals([], [$file]);
     }
 
