@@ -13,7 +13,7 @@
 
 ### Deprecated
 
-- The configuration option `cache.config.respect_cache_headers` should no longer be used. Use `...respect_response_cache_directives` instead.
+- The configuration option `cache.config.respect_cache_headers` should no longer be used. Use `cache.config.respect_response_cache_directives` instead.
 
 ## 1.4.1 - 2017-02-23
 
