@@ -116,7 +116,7 @@ class HttplugExtensionTest extends AbstractExtensionTestCase
         ]);
 
         $plugins = [
-            'httplug.client.acme.plugin.newstack',
+            'httplug.client.acme.plugin.stack',
             'httplug.plugin.stopwatch',
             'httplug.client.acme.plugin.decoder',
             'httplug.plugin.redirect',
