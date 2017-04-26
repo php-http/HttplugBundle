@@ -420,6 +420,12 @@ class HttplugExtension extends Extension
             $asyncHttpClient = new Reference($asyncHttpClient);
         }
 
+        if (null === $httpClient && null === $asyncHttpClient) {
+            $container->removeDefinition('httplug.strategy');
+
+            return;
+        }
+
         $container
             ->getDefinition('httplug.strategy')
             ->addArgument($httpClient)
