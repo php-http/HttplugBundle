@@ -1,0 +1,9 @@
+httplug:
+    plugins:
+        cache:
+            cache_pool: my_cache_pool
+            config:
+                respect_cache_headers: true
+                respect_response_cache_directives:
+                  - X-Foo
+                  - X-Bar
