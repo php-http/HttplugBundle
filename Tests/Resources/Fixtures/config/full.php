@@ -80,8 +80,12 @@ $container->loadFromExtension('httplug', [
             'cache_pool' => 'my_cache_pool',
             'stream_factory' => 'my_other_stream_factory',
             'config' => [
+                'cache_lifetime' => 2592000,
                 'default_ttl' => 42,
-                'respect_response_cache_directives' => ['X-Foo', 'X-Bar'],
+                'hash_algo' => 'sha1',
+                'methods' => ['GET'],
+                'cache_key_generator' => null,
+                'respect_response_cache_directives' => ['X-Foo'],
             ],
         ],
         'cookie' => [

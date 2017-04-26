@@ -44,9 +44,9 @@
                 <my_service type="service" service="my_auth_service"/>
             </authentication>
             <cache cache-pool="my_cache_pool" stream-factory="my_other_stream_factory">
-                <config default-ttl="42">
-                    <respect-response-cache-directives>X-Foo</respect-response-cache-directives>
-                    <respect-response-cache-directives>X-Bar</respect-response-cache-directives>
+                <config default-ttl="42" cache-lifetime="2592000" hash-algo="sha1" cache-key-generator="null">
+                    <respect-response-cache-directive>X-Foo</respect-response-cache-directive>
+                    <method>GET</method>
                 </config>
             </cache>
             <cookie cookie-jar="my_cookie_jar"/>

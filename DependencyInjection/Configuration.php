@@ -2,6 +2,13 @@
 
 namespace Http\HttplugBundle\DependencyInjection;
 
+use Http\Client\Common\Plugin\Cache\Generator\CacheKeyGenerator;
+use Http\Client\Common\Plugin\Journal;
+use Http\Message\CookieJar;
+use Http\Message\Formatter;
+use Http\Message\StreamFactory;
+use Psr\Cache\CacheItemPoolInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\NodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
@@ -352,69 +359,33 @@ class Configuration implements ConfigurationInterface
         $children = $pluginNode->children();
 
         $children->append($this->createAuthenticationPluginNode());
+        $children->append($this->createCachePluginNode());
 
-        $children->arrayNode('cache')
-            ->canBeEnabled()
-            ->addDefaultsIfNotSet()
-                ->children()
-                    ->scalarNode('cache_pool')
-                        ->info('This must be a service id to a service implementing Psr\Cache\CacheItemPoolInterface')
-                        ->isRequired()
-                        ->cannotBeEmpty()
-                    ->end()
-                    ->scalarNode('stream_factory')
-                        ->info('This must be a service id to a service implementing Http\Message\StreamFactory')
-                        ->defaultValue('httplug.stream_factory')
-                        ->cannotBeEmpty()
-                    ->end()
-                    ->arrayNode('config')
-                        ->addDefaultsIfNotSet()
-                        ->validate()
-                        ->ifTrue(function ($config) {
-                            // Cannot set both respect_cache_headers and respect_response_cache_directives
-                            return isset($config['respect_cache_headers'], $config['respect_response_cache_directives']);
-                        })
-                        ->thenInvalid('You can\'t provide config option "respect_cache_headers" and "respect_response_cache_directives" simultaniously. Use "respect_response_cache_directives" instead.')
-                        ->end()
-                        ->children()
-                            ->scalarNode('default_ttl')->defaultValue(0)->end()
-                            ->enumNode('respect_cache_headers')
-                                ->values([null, true, false])
-                                ->beforeNormalization()
-                                ->always(function ($v) {
-                                    @trigger_error('The option "respect_cache_headers" is deprecated since version 1.3 and will be removed in 2.0. Use "respect_response_cache_directives" instead.', E_USER_DEPRECATED);
-
-                                    return $v;
-                                })
-                                ->end()
-                            ->end()
-                            ->variableNode('respect_response_cache_directives')
-                                ->validate()
-                                ->always(function ($v) {
-                                    if (is_null($v) || is_array($v)) {
-                                        return $v;
-                                    }
-                                    throw new InvalidTypeException();
-                                })
-                                ->end()
-                            ->end()
-                        ->end()
-                    ->end()
-                ->end()
-            ->end();
-        // End cache plugin
-
-        $children->arrayNode('cookie')
-            ->canBeEnabled()
+        $children
+            ->arrayNode('cookie')
+                ->canBeEnabled()
                 ->children()
                     ->scalarNode('cookie_jar')
-                        ->info('This must be a service id to a service implementing Http\Message\CookieJar')
+                        ->info('This must be a service id to a service implementing '.CookieJar::class)
                         ->isRequired()
                         ->cannotBeEmpty()
                     ->end()
                 ->end()
             ->end();
         // End cookie plugin
+
+        $children
+            ->arrayNode('history')
+                ->canBeEnabled()
+                ->children()
+                    ->scalarNode('journal')
+                        ->info('This must be a service id to a service implementing '.Journal::class)
+                        ->isRequired()
+                        ->cannotBeEmpty()
+                    ->end()
+                ->end()
+            ->end();
+        // End history plugin
 
         $decoder = $children->arrayNode('decoder');
         $disableAll ? $decoder->canBeEnabled() : $decoder->canBeDisabled();
@@ -425,29 +396,17 @@ class Configuration implements ConfigurationInterface
         ->end();
         // End decoder plugin
 
-        $children->arrayNode('history')
-            ->canBeEnabled()
-                ->children()
-                    ->scalarNode('journal')
-                        ->info('This must be a service id to a service implementing Http\Client\Plugin\Journal')
-                        ->isRequired()
-                        ->cannotBeEmpty()
-                    ->end()
-                ->end()
-            ->end();
-        // End history plugin
-
         $logger = $children->arrayNode('logger');
         $disableAll ? $logger->canBeEnabled() : $logger->canBeDisabled();
         $logger->addDefaultsIfNotSet()
             ->children()
                 ->scalarNode('logger')
-                    ->info('This must be a service id to a service implementing Psr\Log\LoggerInterface')
+                    ->info('This must be a service id to a service implementing '.LoggerInterface::class)
                     ->defaultValue('logger')
                     ->cannotBeEmpty()
                 ->end()
                 ->scalarNode('formatter')
-                    ->info('This must be a service id to a service implementing Http\Message\Formatter')
+                    ->info('This must be a service id to a service implementing '.Formatter::class)
                     ->defaultNull()
                 ->end()
             ->end()
@@ -563,5 +522,102 @@ class Configuration implements ConfigurationInterface
             implode(', ', $expected),
             implode(', ', $actual)
         ));
+    }
+
+    /**
+     * Create configuration for cache plugin.
+     *
+     * @return NodeDefinition Definition for the cache node in the plugins list.
+     */
+    private function createCachePluginNode()
+    {
+        $builder = new TreeBuilder();
+
+        $config = $builder->root('config');
+        $config
+            ->fixXmlConfig('method')
+            ->fixXmlConfig('respect_response_cache_directive')
+            ->addDefaultsIfNotSet()
+            ->validate()
+                ->ifTrue(function ($config) {
+                    // Cannot set both respect_cache_headers and respect_response_cache_directives
+                    return isset($config['respect_cache_headers'], $config['respect_response_cache_directives']);
+                })
+                ->thenInvalid('You can\'t provide config option "respect_cache_headers" and "respect_response_cache_directives" simultaniously. Use "respect_response_cache_directives" instead.')
+            ->end()
+            ->children()
+                ->scalarNode('cache_key_generator')
+                    ->info('This must be a service id to a service implementing '.CacheKeyGenerator::class)
+                ->end()
+                ->integerNode('cache_lifetime')
+                    ->info('The minimum time we should store a cache item')
+                ->end()
+                ->integerNode('default_ttl')
+                    ->info('The default max age of a Response')
+                ->end()
+                ->enumNode('hash_algo')
+                    ->info('Hashing algorithm to use')
+                    ->values(hash_algos())
+                    ->cannotBeEmpty()
+                ->end()
+                ->arrayNode('methods')
+                    ->info('Which request methods to cache')
+                    ->defaultValue(['GET', 'HEAD'])
+                    ->prototype('scalar')
+                        ->validate()
+                            ->ifTrue(function ($v) {
+                                /* RFC7230 sections 3.1.1 and 3.2.6 except limited to uppercase characters. */
+                                return preg_match('/[^A-Z0-9!#$%&\'*+\-.^_`|~]+/', $v);
+                            })
+                            ->thenInvalid('Invalid method: %s')
+                        ->end()
+                    ->end()
+                ->end()
+                ->enumNode('respect_cache_headers')
+                    ->info('Whether we should care about cache headers or not [DEPRECATED]')
+                    ->values([null, true, false])
+                    ->beforeNormalization()
+                        ->always(function ($v) {
+                            @trigger_error('The option "respect_cache_headers" is deprecated since version 1.3 and will be removed in 2.0. Use "respect_response_cache_directives" instead.', E_USER_DEPRECATED);
+
+                            return $v;
+                        })
+                    ->end()
+                ->end()
+                ->variableNode('respect_response_cache_directives')
+                    ->info('A list of cache directives to respect when caching responses')
+                    ->validate()
+                        ->always(function ($v) {
+                            if (is_null($v) || is_array($v)) {
+                                return $v;
+                            }
+
+                            throw new InvalidTypeException();
+                        })
+                    ->end()
+                ->end()
+            ->end()
+        ;
+
+        $cache = $builder->root('cache');
+        $cache
+            ->canBeEnabled()
+            ->addDefaultsIfNotSet()
+            ->children()
+                ->scalarNode('cache_pool')
+                    ->info('This must be a service id to a service implementing '.CacheItemPoolInterface::class)
+                    ->isRequired()
+                    ->cannotBeEmpty()
+                ->end()
+                ->scalarNode('stream_factory')
+                    ->info('This must be a service id to a service implementing '.StreamFactory::class)
+                    ->defaultValue('httplug.stream_factory')
+                    ->cannotBeEmpty()
+                ->end()
+            ->end()
+            ->append($config)
+        ;
+
+        return $cache;
     }
 }
