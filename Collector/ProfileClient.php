@@ -42,6 +42,11 @@ class ProfileClient implements HttpClient, HttpAsyncClient
     private $stopwatch;
 
     /**
+     * @var array
+     */
+    private $eventNames = [];
+
+    /**
      * @param HttpClient|HttpAsyncClient $client    The client to profile. Client must implement both HttpClient and
      *                                              HttpAsyncClient interfaces.
      * @param Collector                  $collector
@@ -81,6 +86,7 @@ class ProfileClient implements HttpClient, HttpAsyncClient
 
                 return $response;
             }, function (\Exception $exception) use ($event, $stack) {
+                $event->stop();
                 $this->collectExceptionInformations($exception, $event, $stack);
 
                 throw $exception;
@@ -173,6 +179,14 @@ class ProfileClient implements HttpClient, HttpAsyncClient
      */
     private function getStopwatchEventName(RequestInterface $request)
     {
-        return sprintf('%s %s', $request->getMethod(), $request->getUri()->__toString());
+        $name = sprintf('%s %s', $request->getMethod(), $request->getUri());
+
+        if (isset($this->eventNames[$name])) {
+            $name .= sprintf(' [#%d]', ++$this->eventNames[$name]);
+        } else {
+            $this->eventNames[$name] = 1;
+        }
+
+        return $name;
     }
 }

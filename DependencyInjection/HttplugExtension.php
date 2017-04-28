@@ -556,6 +556,7 @@ class HttplugExtension extends Extension
                     $factory,
                     new Reference('httplug.collector.collector'),
                     new Reference('httplug.collector.formatter'),
+                    new Reference('debug.stopwatch'),
                 ]);
             $factory = new Reference($factoryServiceId);
         }

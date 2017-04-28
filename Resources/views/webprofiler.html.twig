@@ -32,8 +32,8 @@
                                 <td>{{ stack.requestMethod }}</td>
                                 {% set target = stack.requestTarget %}
                                 <td title="{{ target }}">{{ target|length > 30 ? target[:30] ~ '...' : target }}</td>
-                                <td>{{ stack.duration|number_format ~ ' ms'}}</td>
-                                <td>{{ stack.failed ? 'FAILED' : stack.responseCode }}</td>
+                                <td>{{ stack.duration == 0 ? 'n/a' : stack.duration|number_format ~ ' ms'}}</td>
+                                <td>{{ stack.failed ? 'FAILED' : stack.responseCode|default('n/a') }}</td>
                             </tr>
                         {% endfor %}
                     </tbody>

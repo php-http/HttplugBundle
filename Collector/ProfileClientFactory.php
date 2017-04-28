@@ -41,6 +41,7 @@ class ProfileClientFactory implements ClientFactory
      * @param ClientFactory|callable $factory
      * @param Collector              $collector
      * @param Formatter              $formatter
+     * @param Stopwatch              $stopwatch
      */
     public function __construct($factory, Collector $collector, Formatter $formatter, Stopwatch $stopwatch)
     {
