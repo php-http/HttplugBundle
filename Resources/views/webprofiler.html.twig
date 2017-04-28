@@ -6,7 +6,7 @@
             {{ include('@Httplug/Icon/httplug.svg') }}
             <span class="sf-toolbar-value">{{ collector.stacks|length }}</span>
             <span class="sf-toolbar-label">in</span>
-            <span class="sf-toolbar-value">{{ collector.durationSum|number_format }}</span>
+            <span class="sf-toolbar-value">{{ collector.totalDuration|number_format }}</span>
             <span class="sf-toolbar-label">ms</span>
         {% endset %}
 

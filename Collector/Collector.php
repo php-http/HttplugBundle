@@ -112,7 +112,7 @@ class Collector extends DataCollector
     /**
      * @return int
      */
-    public function getDurationSum()
+    public function getTotalDuration()
     {
         return array_reduce($this->data['stacks'], function ($carry, Stack $stack) {
             return $carry + $stack->getDuration();
