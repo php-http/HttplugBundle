@@ -8,6 +8,7 @@ use Http\HttplugBundle\Collector\Collector;
 use Http\HttplugBundle\Collector\Formatter;
 use Http\HttplugBundle\Collector\ProfileClient;
 use Http\HttplugBundle\Collector\ProfileClientFactory;
+use Symfony\Component\Stopwatch\Stopwatch;
 
 class ProfileClientFactoryTest extends \PHPUnit_Framework_TestCase
 {
@@ -22,6 +23,11 @@ class ProfileClientFactoryTest extends \PHPUnit_Framework_TestCase
     private $formatter;
 
     /**
+     * @var Stopwatch
+     */
+    private $stopwatch;
+
+    /**
      * @var HttpClient
      */
     private $client;
@@ -30,6 +36,7 @@ class ProfileClientFactoryTest extends \PHPUnit_Framework_TestCase
     {
         $this->collector = $this->getMockBuilder(Collector::class)->disableOriginalConstructor()->getMock();
         $this->formatter = $this->getMockBuilder(Formatter::class)->disableOriginalConstructor()->getMock();
+        $this->stopwatch = $this->getMockBuilder(Stopwatch::class)->getMock();
         $this->client = $this->getMockBuilder(HttpClient::class)->getMock();
     }
 
@@ -38,7 +45,7 @@ class ProfileClientFactoryTest extends \PHPUnit_Framework_TestCase
         $factory = $this->getMockBuilder(ClientFactory::class)->getMock();
         $factory->method('createClient')->willReturn($this->client);
 
-        $subject = new ProfileClientFactory($factory, $this->collector, $this->formatter);
+        $subject = new ProfileClientFactory($factory, $this->collector, $this->formatter, $this->stopwatch);
 
         $this->assertInstanceOf(ProfileClient::class, $subject->createClient());
     }
@@ -49,7 +56,7 @@ class ProfileClientFactoryTest extends \PHPUnit_Framework_TestCase
             return $this->client;
         };
 
-        $subject = new ProfileClientFactory($factory, $this->collector, $this->formatter);
+        $subject = new ProfileClientFactory($factory, $this->collector, $this->formatter, $this->stopwatch);
 
         $this->assertInstanceOf(ProfileClient::class, $subject->createClient());
     }

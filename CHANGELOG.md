@@ -6,10 +6,12 @@
 
 - The real request method and target url are now displayed in the profiler.
 - Support the cache plugin configuration for `respect_response_cache_directives`.
+- Extended WebProfilerToolbar item to list request with details.
 
 ### Changed
 
 - The profiler design has been updated.
+- Removed stopwatch-plugin in favor of `ProfileClient`.
 
 ### Deprecated
 

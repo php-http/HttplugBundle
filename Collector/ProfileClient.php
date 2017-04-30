@@ -8,6 +8,8 @@ use Http\Client\HttpAsyncClient;
 use Http\Client\HttpClient;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
+use Symfony\Component\Stopwatch\Stopwatch;
+use Symfony\Component\Stopwatch\StopwatchEvent;
 
 /**
  * The ProfileClient decorates any client that implement both HttpClient and HttpAsyncClient interfaces to gather target
@@ -35,12 +37,23 @@ class ProfileClient implements HttpClient, HttpAsyncClient
     private $formatter;
 
     /**
+     * @var Stopwatch
+     */
+    private $stopwatch;
+
+    /**
+     * @var array
+     */
+    private $eventNames = [];
+
+    /**
      * @param HttpClient|HttpAsyncClient $client    The client to profile. Client must implement both HttpClient and
      *                                              HttpAsyncClient interfaces.
      * @param Collector                  $collector
      * @param Formatter                  $formatter
+     * @param Stopwatch                  $stopwatch
      */
-    public function __construct($client, Collector $collector, Formatter $formatter)
+    public function __construct($client, Collector $collector, Formatter $formatter, Stopwatch $stopwatch)
     {
         if (!($client instanceof HttpClient && $client instanceof HttpAsyncClient)) {
             throw new \RuntimeException(sprintf(
@@ -54,6 +67,7 @@ class ProfileClient implements HttpClient, HttpAsyncClient
         $this->client = $client;
         $this->collector = $collector;
         $this->formatter = $formatter;
+        $this->stopwatch = $stopwatch;
     }
 
     /**
@@ -63,16 +77,21 @@ class ProfileClient implements HttpClient, HttpAsyncClient
     {
         $stack = $this->collector->getCurrentStack();
         $this->collectRequestInformations($request, $stack);
+        $event = $this->stopwatch->start($this->getStopwatchEventName($request));
 
-        return $this->client->sendAsyncRequest($request)->then(function (ResponseInterface $response) use ($stack) {
-            $this->collectResponseInformations($response, $stack);
+        return $this->client->sendAsyncRequest($request)->then(
+            function (ResponseInterface $response) use ($event, $stack) {
+                $event->stop();
+                $this->collectResponseInformations($response, $event, $stack);
 
-            return $response;
-        }, function (\Exception $exception) use ($stack) {
-            $this->collectExceptionInformations($exception, $stack);
+                return $response;
+            }, function (\Exception $exception) use ($event, $stack) {
+                $event->stop();
+                $this->collectExceptionInformations($exception, $event, $stack);
 
-            throw $exception;
-        });
+                throw $exception;
+            }
+        );
     }
 
     /**
@@ -82,15 +101,18 @@ class ProfileClient implements HttpClient, HttpAsyncClient
     {
         $stack = $this->collector->getCurrentStack();
         $this->collectRequestInformations($request, $stack);
+        $event = $this->stopwatch->start($this->getStopwatchEventName($request));
 
         try {
             $response = $this->client->sendRequest($request);
+            $event->stop();
 
-            $this->collectResponseInformations($response, $stack);
+            $this->collectResponseInformations($response, $event, $stack);
 
             return $response;
         } catch (\Exception $e) {
-            $this->collectExceptionInformations($e, $stack);
+            $event->stop();
+            $this->collectExceptionInformations($e, $event, $stack);
 
             throw $e;
         }
@@ -115,32 +137,56 @@ class ProfileClient implements HttpClient, HttpAsyncClient
 
     /**
      * @param ResponseInterface $response
+     * @param StopwatchEvent    $event
      * @param Stack|null        $stack
      */
-    private function collectResponseInformations(ResponseInterface $response, Stack $stack = null)
+    private function collectResponseInformations(ResponseInterface $response, StopwatchEvent $event, Stack $stack = null)
     {
         if (!$stack) {
             return;
         }
 
+        $stack->setDuration($event->getDuration());
         $stack->setResponseCode($response->getStatusCode());
         $stack->setClientResponse($this->formatter->formatResponse($response));
     }
 
     /**
-     * @param \Exception $exception
-     * @param Stack|null $stack
+     * @param \Exception     $exception
+     * @param StopwatchEvent $event
+     * @param Stack|null     $stack
      */
-    private function collectExceptionInformations(\Exception $exception, Stack $stack = null)
+    private function collectExceptionInformations(\Exception $exception, StopwatchEvent $event, Stack $stack = null)
     {
         if ($exception instanceof HttpException) {
-            $this->collectResponseInformations($exception->getResponse(), $stack);
+            $this->collectResponseInformations($exception->getResponse(), $event, $stack);
         }
 
         if (!$stack) {
             return;
         }
 
+        $stack->setDuration($event->getDuration());
         $stack->setClientException($this->formatter->formatException($exception));
+    }
+
+    /**
+     * Generates the event name.
+     *
+     * @param RequestInterface $request
+     *
+     * @return string
+     */
+    private function getStopwatchEventName(RequestInterface $request)
+    {
+        $name = sprintf('%s %s', $request->getMethod(), $request->getUri());
+
+        if (isset($this->eventNames[$name])) {
+            $name .= sprintf(' [#%d]', ++$this->eventNames[$name]);
+        } else {
+            $this->eventNames[$name] = 1;
+        }
+
+        return $name;
     }
 }

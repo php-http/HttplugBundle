@@ -12,6 +12,7 @@ use Http\Promise\Promise;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\UriInterface;
+use Symfony\Component\Stopwatch\Stopwatch;
 
 class ProfileClientTest extends \PHPUnit_Framework_TestCase
 {
@@ -41,6 +42,11 @@ class ProfileClientTest extends \PHPUnit_Framework_TestCase
     private $formatter;
 
     /**
+     * @var Stopwatch
+     */
+    private $stopwatch;
+
+    /**
      * @var ProfileClient
      */
     private $subject;
@@ -67,7 +73,8 @@ class ProfileClientTest extends \PHPUnit_Framework_TestCase
         $this->client = $this->getMockBuilder(ClientInterface::class)->getMock();
         $this->request = $this->getMockBuilder(RequestInterface::class)->getMock();
         $this->formatter = $this->getMockBuilder(Formatter::class)->disableOriginalConstructor()->getMock();
-        $this->subject = new ProfileClient($this->client, $this->collector, $this->formatter);
+        $this->stopwatch = new Stopwatch();
+        $this->subject = new ProfileClient($this->client, $this->collector, $this->formatter, $this->stopwatch);
         $this->response = $this->getMockBuilder(ResponseInterface::class)->getMock();
         $this->promise = $this->getMockBuilder(Promise::class)->getMock();
         $this->uri = $this->getMockBuilder(UriInterface::class)->getMock();

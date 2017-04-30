@@ -5,17 +5,39 @@
         {% set icon %}
             {{ include('@Httplug/Icon/httplug.svg') }}
             <span class="sf-toolbar-value">{{ collector.stacks|length }}</span>
-            <span class="sf-toolbar-label">req.</span>
+            <span class="sf-toolbar-label">in</span>
+            <span class="sf-toolbar-value">{{ collector.totalDuration|number_format }}</span>
+            <span class="sf-toolbar-label">ms</span>
         {% endset %}
 
         {% set text %}
             <div class="sf-toolbar-info-piece">
-                <b>Successful requests</b>
-                <span class="sf-toolbar-status">{{ collector.successfulStacks|length }}</span>
+                <b>{{ collector.stacks|length }} requests</b>
             </div>
             <div class="sf-toolbar-info-piece">
-                <b>Failed requests</b>
-                <span class="sf-toolbar-status {{ collector.failedStacks|length ? 'sf-toolbar-status-red' }}">{{ collector.failedStacks|length }}</span>
+                <table class="sf-toolbar-ajax-requests">
+                    <thead>
+                    <tr>
+                        <th>Client</th>
+                        <th>Method</th>
+                        <th>Target</th>
+                        <th>Time</th>
+                        <th>Status</th>
+                    </tr>
+                    </thead>
+                    <tbody class="sf-toolbar-ajax-request-list">
+                        {% for stack in collector.stacks %}
+                            <tr>
+                                <td>{{ stack.client }}</td>
+                                <td>{{ stack.requestMethod }}</td>
+                                {% set target = stack.requestTarget %}
+                                <td title="{{ target }}">{{ target|length > 30 ? target[:30] ~ '...' : target }}</td>
+                                <td>{{ stack.duration == 0 ? 'n/a' : stack.duration|number_format ~ ' ms'}}</td>
+                                <td>{{ stack.failed ? 'FAILED' : stack.responseCode|default('n/a') }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
             </div>
         {% endset %}
 
