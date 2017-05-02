@@ -94,6 +94,7 @@
                             <span class="httplug-target">{{ stack.requestTarget }}</span>
                         </div>
                         <div>
+                            <span class="label httplug-duration">{{ stack.duration|number_format }} ms</span>
                             {% if stack.responseCode >= 400 and stack.responseCode <= 599 %}
                                 <span class="label status-error">{{ stack.responseCode }}</span>
                             {% elseif stack.responseCode >= 300 and stack.responseCode <= 399 %}
