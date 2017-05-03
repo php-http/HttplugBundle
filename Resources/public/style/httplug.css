@@ -80,6 +80,11 @@
     font-size: 12px;
 }
 
+.httplug-duration {
+    min-width: 6ch;
+    text-align:center;
+}
+
 /**
  * HTTP method colors from swagger-ui.
  */
