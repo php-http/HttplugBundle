@@ -82,6 +82,11 @@ final class Stack
     private $duration = 0;
 
     /**
+     * @var string
+     */
+    private $curlCommand;
+
+    /**
      * @param string $client
      * @param string $request
      */
@@ -297,5 +302,21 @@ final class Stack
     public function setDuration($duration)
     {
         $this->duration = $duration;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCurlCommand()
+    {
+        return $this->curlCommand;
+    }
+
+    /**
+     * @param string $curlCommand
+     */
+    public function setCurlCommand($curlCommand)
+    {
+        $this->curlCommand = $curlCommand;
     }
 }

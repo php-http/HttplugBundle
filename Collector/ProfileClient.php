@@ -133,6 +133,7 @@ class ProfileClient implements HttpClient, HttpAsyncClient
         $stack->setRequestScheme($request->getUri()->getScheme());
         $stack->setRequestHost($request->getUri()->getHost());
         $stack->setClientRequest($this->formatter->formatRequest($request));
+        $stack->setCurlCommand($this->formatter->formatAsCurlCommand($request));
     }
 
     /**

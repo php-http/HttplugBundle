@@ -6,11 +6,13 @@ use Exception;
 use Http\Client\Exception\HttpException;
 use Http\Client\Exception\TransferException;
 use Http\Message\Formatter as MessageFormatter;
+use Http\Message\Formatter\CurlCommandFormatter;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
 /**
- * This class is a decorator for any Http\Message\Formatter with the the ability to format exceptions.
+ * This class is a decorator for any Http\Message\Formatter with the the ability to format exceptions and requests as
+ * cURL commands.
  *
  * @author Fabien Bourigault <bourigaultfabien@gmail.com>
  *
@@ -24,11 +26,18 @@ class Formatter implements MessageFormatter
     private $formatter;
 
     /**
-     * @param MessageFormatter $formatter
+     * @var CurlCommandFormatter
      */
-    public function __construct(MessageFormatter $formatter)
+    private $curlFormatter;
+
+    /**
+     * @param MessageFormatter     $formatter
+     * @param CurlCommandFormatter $curlFormatter
+     */
+    public function __construct(MessageFormatter $formatter, CurlCommandFormatter $curlFormatter)
     {
         $this->formatter = $formatter;
+        $this->curlFormatter = $curlFormatter;
     }
 
     /**
@@ -65,5 +74,17 @@ class Formatter implements MessageFormatter
     public function formatResponse(ResponseInterface $response)
     {
         return $this->formatter->formatResponse($response);
+    }
+
+    /**
+     * Format a RequestInterface as a cURL command.
+     *
+     * @param RequestInterface $request
+     *
+     * @return string
+     */
+    public function formatAsCurlCommand(RequestInterface $request)
+    {
+        return $this->curlFormatter->formatRequest($request);
     }
 }

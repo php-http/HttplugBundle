@@ -20,6 +20,46 @@
     text-align: center;
 }
 
+/**
+ * Toolbar
+ */
+.httplug-toolbar {
+    display: flex;
+    justify-content: space-between;
+}
+
+.httplug-toolbar>*:not(:last-child) {
+    margin-right:5px;
+}
+
+.httplug-toolbar .httplug-copy-as-curl {
+    flex: 1;
+}
+
+.httplug-copy-as-curl {
+    font-size: 0; /*hide line return spacings*/
+    display: flex;
+}
+
+.httplug-copy-as-curl>input {
+    padding: .5em .75em;
+    border-radius: 2px 0px 0px 2px;
+    border: 0;
+    line-height: inherit;
+    background-color: #eee;
+    opacity: 1;
+    font-size: 14px;
+    flex: 1;
+}
+
+.httplug-copy-as-curl>button {
+    font-size: 14px;
+    border-radius: 0px 2px 2px 0px;
+}
+
+/**
+ * Message
+ */
 .httplug-message {
     box-sizing: border-box;
     padding: 5px;
@@ -29,6 +69,14 @@
     white-space: nowrap;
 }
 
+.httplug-messages {
+    clear: both;
+    display: flex;
+}
+
+/**
+ * Stack header
+ */
 .httplug-stack-header {
     display: flex;
     justify-content: space-between;
@@ -56,11 +104,6 @@
     background: white;
     color: black;
     font-size: 0; /*hide line return spacings*/
-}
-
-.httplug-messages {
-    clear: both;
-    display: flex;
 }
 
 .httplug-scheme-http {

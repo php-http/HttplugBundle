@@ -10,3 +10,18 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     });
 });
+
+/**
+ * Copy as cURL.
+ */
+document.addEventListener("DOMContentLoaded", function () {
+    Array.prototype.forEach.call(document.getElementsByClassName('httplug-toolbar'), function (toolbar) {
+        var button = toolbar.querySelector('.httplug-copy-as-curl>button');
+        button.addEventListener('click', function() {
+            var input = toolbar.querySelector('.httplug-copy-as-curl>input');
+            input.select();
+            document.execCommand('copy');
+            input.setSelectionRange(0, 0);
+       });
+    });
+})

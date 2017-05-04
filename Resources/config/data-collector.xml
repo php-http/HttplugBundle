@@ -10,6 +10,9 @@
 
         <service id="httplug.collector.formatter" class="Http\HttplugBundle\Collector\Formatter" public="false">
             <argument type="service" id="httplug.formatter.full_http_message"/>
+            <argument type="service">
+                <service class="Http\Message\Formatter\CurlCommandFormatter" />
+            </argument>
         </service>
 
         <service id="httplug.collector.collector" class="Http\HttplugBundle\Collector\Collector" public="false">

@@ -105,7 +105,14 @@
                         </div>
                     </div>
                     <div id="httplug-{{ client }}-{{ loop.index }}-details" class="httplug-hidden">
-                        <button data-toggle="#httplug-{{ client }}-{{ loop.index }}-details .httplug-http-body" class="httplug-toggle btn httplug-push-right">Toggle body</button>
+                        <div class="httplug-toolbar">
+                            <div class="httplug-copy-as-curl">
+                                <input readonly="readonly" type="text" value="{{ stack.curlCommand }}" />
+                                <button class="btn tooltip-toggle" aria-label="Copy to clipboard">Copy to clipboard</button>
+                            </div>
+                            <button data-toggle="#httplug-{{ client }}-{{ loop.index }}-stack" class="httplug-toggle btn" >Toggle plugin stack</button>
+                            <button data-toggle="#httplug-{{ client }}-{{ loop.index }}-details .httplug-http-body" class="httplug-toggle btn">Toggle body</button>
+                        </div>
                         <div class="httplug-messages">
                             <div class="httplug-message card">
                                 <h4>Request</h4>
@@ -117,9 +124,6 @@
                             </div>
                         </div>
                         {% if stack.profiles %}
-                            <div class="httplug-center">
-                                <button class="btn httplug-toggle" data-toggle="#httplug-{{ client }}-{{ loop.index }}-stack">Toggle plugin stack</button>
-                            </div>
                             <div id="httplug-{{ client }}-{{ loop.index }}-stack" class="httplug-hidden card">
                                 {% for profile in stack.profiles %}
                                     <h3 class="httplug-plugin-name">{{ profile.plugin }}</h3>
