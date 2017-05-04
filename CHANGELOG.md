@@ -11,6 +11,7 @@ The change log describes what is "Added", "Removed", "Changed" or "Fixed" betwee
 - Extended WebProfilerToolbar item to list request with details.
 - You can now copy any request as cURL command in the profiler.
 - Support for autowring in Symfony 3.3
+- Improved configuration validation
 
 ### Changed
 
