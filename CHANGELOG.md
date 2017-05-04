@@ -1,6 +1,8 @@
 # Change Log
 
-## Unreleased
+The change log describes what is "Added", "Removed", "Changed" or "Fixed" between each release. 
+
+## 1.5.0 - 2017-05-05
 
 ### Added
 
@@ -8,6 +10,7 @@
 - Support the cache plugin configuration for `respect_response_cache_directives`.
 - Extended WebProfilerToolbar item to list request with details.
 - You can now copy any request as cURL command in the profiler.
+- Support for autowring in Symfony 3.3
 
 ### Changed
 
