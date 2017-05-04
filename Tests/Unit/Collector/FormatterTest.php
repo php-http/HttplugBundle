@@ -6,6 +6,7 @@ use Http\Client\Exception\HttpException;
 use Http\Client\Exception\TransferException;
 use Http\HttplugBundle\Collector\Formatter;
 use Http\Message\Formatter as MessageFormatter;
+use Http\Message\Formatter\CurlCommandFormatter;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
@@ -17,6 +18,11 @@ class FormatterTest extends \PHPUnit_Framework_TestCase
     private $formatter;
 
     /**
+     * @var MessageFormatter
+     */
+    private $curlFormatter;
+
+    /**
      * @var Formatter
      */
     private $subject;
@@ -24,8 +30,9 @@ class FormatterTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->formatter = $this->getMockBuilder(MessageFormatter::class)->getMock();
+        $this->curlFormatter = $this->getMockBuilder(CurlCommandFormatter::class)->getMock();
 
-        $this->subject = new Formatter($this->formatter);
+        $this->subject = new Formatter($this->formatter, $this->curlFormatter);
     }
 
     public function testFormatRequest()
@@ -87,5 +94,19 @@ class FormatterTest extends \PHPUnit_Framework_TestCase
     {
         $exception = new \RuntimeException('Unexpected error');
         $this->assertEquals('Unexpected exception of type "RuntimeException": Unexpected error', $this->subject->formatException($exception));
+    }
+
+    public function testFormatAsCurlCommand()
+    {
+        $request = $this->getMockBuilder(RequestInterface::class)->getMock();
+
+        $this->curlFormatter
+            ->expects($this->once())
+            ->method('formatRequest')
+            ->with($this->identicalTo($request))
+            ->willReturn('curl -L http://example.com')
+        ;
+
+        $this->assertEquals('curl -L http://example.com', $this->subject->formatAsCurlCommand($request));
     }
 }

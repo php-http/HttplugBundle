@@ -7,6 +7,7 @@
 - The real request method and target url are now displayed in the profiler.
 - Support the cache plugin configuration for `respect_response_cache_directives`.
 - Extended WebProfilerToolbar item to list request with details.
+- You can now copy any request as cURL command in the profiler.
 
 ### Changed
 
