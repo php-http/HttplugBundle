@@ -76,7 +76,7 @@ class HttplugExtension extends Extension
         }
 
         $this->configureClients($container, $config, $this->isConfigEnabled($container, $config['profiling']));
-        $this->configureSharedPlugins($container, $config['plugins']); // must be after clients, as clients.X.plugins might use plugins as templates that will be removed
+        $this->configurePlugins($container, $config['plugins']); // must be after clients, as clients.X.plugins might use plugins as templates that will be removed
         $this->configureAutoDiscoveryClients($container, $config);
     }
 
@@ -119,10 +119,12 @@ class HttplugExtension extends Extension
     }
 
     /**
+     * Configure all Httplug plugis or remove their service definition.
+     *
      * @param ContainerBuilder $container
      * @param array            $config
      */
-    private function configureSharedPlugins(ContainerBuilder $container, array $config)
+    private function configurePlugins(ContainerBuilder $container, array $config)
     {
         if (!empty($config['authentication'])) {
             $this->configureAuthentication($container, $config['authentication']);
