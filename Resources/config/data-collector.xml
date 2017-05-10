@@ -4,8 +4,6 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
-        <service id="httplug.collector.plugin_journal" class="Http\HttplugBundle\Collector\PluginJournal" public="false" />
-
         <service id="httplug.formatter.full_http_message" class="Http\Message\Formatter\FullHttpMessageFormatter" public="false" />
 
         <service id="httplug.collector.formatter" class="Http\HttplugBundle\Collector\Formatter" public="false">
