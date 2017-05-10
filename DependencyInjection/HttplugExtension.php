@@ -433,9 +433,6 @@ class HttplugExtension extends Extension
         if ($profiling) {
             // To profile the requests, add a StackPlugin as first plugin in the chain.
             $plugins[] = $this->configureStackPlugin($container, $name, $serviceId);
-
-            $this->decoratePluginWithProfilePlugin($container, 'httplug.plugin.stopwatch');
-            $plugins[] = 'httplug.plugin.stopwatch';
         }
 
         $container
