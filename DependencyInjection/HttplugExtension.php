@@ -58,7 +58,8 @@ class HttplugExtension extends Extension
         }
 
         // Configure toolbar
-        if ($this->isConfigEnabled($container, $config['profiling'])) {
+        $profilingEnabled = $this->isConfigEnabled($container, $config['profiling']);
+        if ($profilingEnabled) {
             $loader->load('data-collector.xml');
 
             if (!empty($config['profiling']['formatter'])) {
@@ -75,7 +76,7 @@ class HttplugExtension extends Extension
             ;
         }
 
-        $this->configureClients($container, $config, $this->isConfigEnabled($container, $config['profiling']));
+        $this->configureClients($container, $config, $profilingEnabled);
         $this->configureSharedPlugins($container, $config['plugins']); // must be after clients, as clients.X.plugins might use plugins as templates that will be removed
         $this->configureAutoDiscoveryClients($container, $config);
     }
