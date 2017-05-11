@@ -329,6 +329,24 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
     }
 
     /**
+     * @group legacy
+     */
+    public function testCacheConfigDeprecationCompatibilityIssue166()
+    {
+        $file = __DIR__.'/../../Resources/Fixtures/config/bc/issue-166.yml';
+        $config = $this->emptyConfig;
+        $config['plugins']['cache'] = array_merge($config['plugins']['cache'], [
+            'enabled' => true,
+            'cache_pool' => 'my_cache_pool',
+            'config' => [
+                'methods' => ['GET', 'HEAD'],
+                'respect_cache_headers' => false,
+            ],
+        ]);
+        $this->assertProcessedConfigurationEquals($config, [$file]);
+    }
+
+    /**
      * @expectedException \Symfony\Component\Config\Definition\Exception\InvalidConfigurationException
      * @expectedExceptionMessage Can't configure both "toolbar" and "profiling" section. The "toolbar" config is deprecated as of version 1.3.0, please only use "profiling".
      */
