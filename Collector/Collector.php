@@ -62,11 +62,15 @@ class Collector extends DataCollector
     }
 
     /**
-     * @return Stack|bool false if no current stack.
+     * @return Stack|null Return null there is no current stack.
      */
     public function getCurrentStack()
     {
-        return end($this->data['stacks']);
+        if (false === $stack = end($this->data['stacks'])) {
+            return null;
+        }
+
+        return $stack;
     }
 
     /**
