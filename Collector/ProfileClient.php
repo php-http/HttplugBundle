@@ -124,7 +124,7 @@ class ProfileClient implements HttpClient, HttpAsyncClient
      */
     private function collectRequestInformations(RequestInterface $request, Stack $stack = null)
     {
-        if (!$stack) {
+        if (null === $stack) {
             return;
         }
 
@@ -143,7 +143,7 @@ class ProfileClient implements HttpClient, HttpAsyncClient
      */
     private function collectResponseInformations(ResponseInterface $response, StopwatchEvent $event, Stack $stack = null)
     {
-        if (!$stack) {
+        if (null === $stack) {
             return;
         }
 
@@ -163,7 +163,7 @@ class ProfileClient implements HttpClient, HttpAsyncClient
             $this->collectResponseInformations($exception->getResponse(), $event, $stack);
         }
 
-        if (!$stack) {
+        if (null === $stack) {
             return;
         }
 
