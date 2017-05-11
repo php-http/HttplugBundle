@@ -19,7 +19,6 @@ use Psr\Http\Message\UriInterface;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\DefinitionDecorator;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
@@ -149,7 +148,7 @@ class HttplugExtension extends Extension
      * @param ContainerBuilder $container  In case we need to add additional services for this plugin
      * @param string           $serviceId  Service id of the plugin, in case we need to add additional services for this plugin.
      */
-    private function configurePluginByName($name, Definition $definition, array $config, ContainerInterface $container, $serviceId)
+    private function configurePluginByName($name, Definition $definition, array $config, ContainerBuilder $container, $serviceId)
     {
         switch ($name) {
             case 'cache':
