@@ -584,7 +584,7 @@ class Configuration implements ConfigurationInterface
                     ->end()
                     ->validate()
                         ->ifNotInArray([null, true, false])
-                            ->thenInvalid('Value for "respect_cache_headers" must be null or boolean')
+                        ->thenInvalid('Value for "respect_cache_headers" must be null or boolean')
                     ->end()
                 ->end()
                 ->variableNode('respect_response_cache_directives')
