@@ -573,15 +573,20 @@ class Configuration implements ConfigurationInterface
                         ->end()
                     ->end()
                 ->end()
-                ->enumNode('respect_cache_headers')
+                ->scalarNode('respect_cache_headers')
                     ->info('Whether we should care about cache headers or not [DEPRECATED]')
-                    ->values([null, true, false])
                     ->beforeNormalization()
                         ->always(function ($v) {
                             @trigger_error('The option "respect_cache_headers" is deprecated since version 1.3 and will be removed in 2.0. Use "respect_response_cache_directives" instead.', E_USER_DEPRECATED);
 
                             return $v;
                         })
+                    ->end()
+                    ->validate()
+                        ->ifTrue(function ($v) {
+                            return !in_array($v, [null, true, false]);
+                        })
+                        ->thenInvalid('Invalid value for respect_cache_headers: %s. Must be "null", "true" or "false"')
                     ->end()
                 ->end()
                 ->variableNode('respect_response_cache_directives')
