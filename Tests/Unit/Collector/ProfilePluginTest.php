@@ -77,7 +77,11 @@ class ProfilePluginTest extends \PHPUnit_Framework_TestCase
 
         $this->plugin
             ->method('handleRequest')
-            ->willReturn($this->promise)
+            ->willReturnCallback(function ($request, $next, $first) {
+                $next($request);
+
+                return $this->promise;
+            })
         ;
 
         $this->formatter
@@ -128,6 +132,15 @@ class ProfilePluginTest extends \PHPUnit_Framework_TestCase
         $this->assertCount(1, $this->currentStack->getProfiles());
         $profile = $this->currentStack->getProfiles()[0];
         $this->assertEquals('http.plugin.mock', $profile->getPlugin());
+    }
+
+    public function testCollectRequestInformations()
+    {
+        $this->subject->handleRequest($this->request, function () {
+        }, function () {
+        });
+
+        $profile = $this->currentStack->getProfiles()[0];
         $this->assertEquals('FormattedRequest', $profile->getRequest());
     }
 

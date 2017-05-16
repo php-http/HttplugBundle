@@ -33,12 +33,10 @@ final class Profile
 
     /**
      * @param string $plugin
-     * @param string $request
      */
-    public function __construct($plugin, $request)
+    public function __construct($plugin)
     {
         $this->plugin = $plugin;
-        $this->request = $request;
     }
 
     /**
@@ -55,6 +53,14 @@ final class Profile
     public function getRequest()
     {
         return $this->request;
+    }
+
+    /**
+     * @param string $request
+     */
+    public function setRequest($request)
+    {
+        $this->request = $request;
     }
 
     /**

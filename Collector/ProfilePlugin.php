@@ -56,14 +56,28 @@ class ProfilePlugin implements Plugin
      */
     public function handleRequest(RequestInterface $request, callable $next, callable $first)
     {
-        $profile = new Profile($this->pluginName, $this->formatter->formatRequest($request));
+        $profile = new Profile($this->pluginName);
 
         $stack = $this->collector->getCurrentStack();
         if (null !== $stack) {
             $stack->addProfile($profile);
         }
 
-        return $this->plugin->handleRequest($request, $next, $first)->then(function (ResponseInterface $response) use ($profile) {
+        // wrap the next callback to profile the plugin request changes
+        $wrappedNext = function (RequestInterface $request) use ($next, $profile) {
+            $profile->setRequest($this->formatter->formatRequest($request));
+
+            return $next($request);
+        };
+
+        // wrap the first callback to profile the plugin request changes
+        $wrappedFirst = function (RequestInterface $request) use ($first, $profile) {
+            $profile->setRequest($this->formatter->formatRequest($request));
+
+            return $first($request);
+        };
+
+        return $this->plugin->handleRequest($request, $wrappedNext, $wrappedFirst)->then(function (ResponseInterface $response) use ($profile) {
             $profile->setResponse($this->formatter->formatResponse($response));
 
             return $response;
