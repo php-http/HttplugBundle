@@ -177,7 +177,7 @@ class Configuration implements ConfigurationInterface
                     ->ifTrue(function ($config) {
                         return $config['factory'] === 'httplug.factory.auto' && !empty($config['config']);
                     })
-                    ->thenInvalid('You must specify a valid "factory" in order to use the "config"')
+                    ->thenInvalid('If you want to use the "config" key you must also specify a valid "factory".')
                 ->end()
                 ->children()
                     ->scalarNode('factory')
