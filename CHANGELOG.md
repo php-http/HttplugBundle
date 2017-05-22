@@ -2,6 +2,17 @@
 
 The change log describes what is "Added", "Removed", "Changed" or "Fixed" between each release. 
 
+## 1.6.0 - 2017-05-22
+
+### Added
+
+- Made the "factory" configuration key optional.
+
+### Changed
+
+- We do collect profiler data after the request is processed by a plugin. With this change we 
+will for example see the changes of `HeaderAppendPlugin` at that plugin instead of the next one. 
+
 ## 1.5.0 - 2017-05-05
 
 ### Added
