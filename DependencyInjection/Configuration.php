@@ -173,9 +173,15 @@ class Configuration implements ConfigurationInterface
                     })
                     ->thenInvalid('A http client can\'t be decorated with several of FlexibleHttpClient, HttpMethodsClient and BatchClient. Only one of the following options can be true. ("flexible_client", "http_methods_client", "batch_client")')
                 ->end()
+                ->validate()
+                    ->ifTrue(function ($config) {
+                        return $config['factory'] === 'httplug.factory.auto' && !empty($config['config']);
+                    })
+                    ->thenInvalid('If you want to use the "config" key you must also specify a valid "factory".')
+                ->end()
                 ->children()
                     ->scalarNode('factory')
-                        ->isRequired()
+                        ->defaultValue('httplug.factory.auto')
                         ->cannotBeEmpty()
                         ->info('The service id of a factory to use when creating the adapter.')
                     ->end()

@@ -12,6 +12,9 @@
         <service id="Http\Client\HttpClient" alias="httplug.client" public="false" />
 
         <!-- ClientFactories -->
+        <service id="httplug.factory.auto" class="Http\HttplugBundle\ClientFactory\AutoDiscoveryFactory" public="false">
+            <argument type="service" id="httplug.message_factory"/>
+        </service>
         <service id="httplug.factory.buzz" class="Http\HttplugBundle\ClientFactory\BuzzFactory" public="false">
             <argument type="service" id="httplug.message_factory"/>
         </service>
