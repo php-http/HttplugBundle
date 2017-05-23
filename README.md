@@ -15,9 +15,9 @@
 Via Composer
 
 ``` bash
-$ composer require php-http/httplug-bundle
+$ composer require php-http/httplug-bundle php-http/curl-client guzzlehttp/psr7
 ```
-Make sure to also require at least one [client](http://docs.php-http.org/en/latest/clients.html).
+HTTPlug works with any HTTP client implementation that provides a HTTPlug adapter. The command above installs the Guzzle client. For alternatives, see the [HTTPlug client list](http://docs.php-http.org/en/latest/clients.html).
 
 Enable the bundle in your kernel:
 
