@@ -2,8 +2,6 @@
 
 namespace Http\HttplugBundle;
 
-use Http\HttplugBundle\DependencyInjection\Compiler\DiscoveryPass;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
@@ -12,10 +10,4 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
  */
 class HttplugBundle extends Bundle
 {
-    public function build(ContainerBuilder $container)
-    {
-        parent::build($container);
-
-        $container->addCompilerPass(new DiscoveryPass());
-    }
 }
