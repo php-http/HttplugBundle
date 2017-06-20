@@ -6,6 +6,7 @@ use GuzzleHttp\Psr7\Request;
 use Http\Client\Common\Plugin;
 use Http\Client\Common\PluginClient;
 use Http\Discovery\StreamFactoryDiscovery;
+use Http\Discovery\UriFactoryDiscovery;
 use Http\HttplugBundle\Collector\Collector;
 use Http\HttplugBundle\Collector\Formatter;
 use Http\HttplugBundle\Collector\ProfileClient;
@@ -80,6 +81,25 @@ class ProfilingTest extends \PHPUnit_Framework_TestCase
             $this->assertEquals('/', $stack->getRequestTarget());
             $this->assertEquals('example.com', $stack->getRequestHost());
         }
+    }
+
+    public function testProfiling()
+    {
+        $client = $this->createClient([
+            new Plugin\AddHostPlugin(UriFactoryDiscovery::find()->createUri('https://example.com')),
+            new Plugin\RedirectPlugin(),
+            new Plugin\RetryPlugin(),
+        ]);
+
+        $client->sendRequest(new Request('GET', '/'));
+
+        $this->assertCount(1, $this->collector->getStacks());
+        $stack = $this->collector->getStacks()[0];
+        $this->assertCount(3, $stack->getProfiles());
+        $this->assertEquals('GET', $stack->getRequestMethod());
+        $this->assertEquals('https', $stack->getRequestScheme());
+        $this->assertEquals('/', $stack->getRequestTarget());
+        $this->assertEquals('example.com', $stack->getRequestHost());
     }
 
     private function createClient(array $plugins, $clientName = 'Acme', array $clientOptions = [])
