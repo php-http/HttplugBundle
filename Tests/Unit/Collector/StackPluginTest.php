@@ -3,11 +3,15 @@
 namespace Http\HttplugBundle\Tests\Unit\Collector;
 
 use Exception;
+use GuzzleHttp\Psr7\Request;
+use GuzzleHttp\Psr7\Response;
+use Http\Client\Exception\HttpException;
 use Http\HttplugBundle\Collector\Collector;
 use Http\HttplugBundle\Collector\Formatter;
 use Http\HttplugBundle\Collector\Stack;
 use Http\HttplugBundle\Collector\StackPlugin;
-use Http\Promise\Promise;
+use Http\Promise\FulfilledPromise;
+use Http\Promise\RejectedPromise;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
@@ -47,9 +51,9 @@ class StackPluginTest extends \PHPUnit_Framework_TestCase
     {
         $this->collector = $this->getMockBuilder(Collector::class)->disableOriginalConstructor()->getMock();
         $this->formatter = $this->getMockBuilder(Formatter::class)->disableOriginalConstructor()->getMock();
-        $this->request = $this->getMockBuilder(RequestInterface::class)->getMock();
-        $this->response = $this->getMockBuilder(ResponseInterface::class)->getMock();
-        $this->exception = $this->getMockBuilder(Exception::class)->disableOriginalConstructor()->getMock();
+        $this->request = new Request('GET', '/');
+        $this->response = new Response();
+        $this->exception = new HttpException('', $this->request, $this->response);
 
         $this->formatter
             ->method('formatRequest')
@@ -86,7 +90,7 @@ class StackPluginTest extends \PHPUnit_Framework_TestCase
         ;
 
         $next = function () {
-            return $this->getMockBuilder(Promise::class)->getMock();
+            return new FulfilledPromise($this->response);
         };
 
         $this->subject->handleRequest($this->request, $next, function () {
@@ -107,21 +111,7 @@ class StackPluginTest extends \PHPUnit_Framework_TestCase
         ;
 
         $next = function () {
-            $promise = $this->getMockBuilder(Promise::class)->getMock();
-            $promise->method('then')
-                ->will($this->returnCallback(function (callable $onFulfilled) {
-                    $fulfilled = $this->getMockBuilder(Promise::class)->getMock();
-                    $fulfilled
-                        ->method('wait')
-                        ->with(true)
-                        ->willReturn($onFulfilled($this->response))
-                    ;
-
-                    return $fulfilled;
-                }))
-            ;
-
-            return $promise;
+            return new FulfilledPromise($this->response);
         };
 
         $promise = $this->subject->handleRequest($this->request, $next, function () {
@@ -148,20 +138,7 @@ class StackPluginTest extends \PHPUnit_Framework_TestCase
         $this->setExpectedException(Exception::class);
 
         $next = function () {
-            $promise = $this->getMockBuilder(Promise::class)->getMock();
-            $promise
-                ->method('then')
-                ->will($this->returnCallback(function (callable $onFulfilled, callable $onRejected) {
-                    $rejected = $this->getMockBuilder(Promise::class)->getMock();
-                    $rejected
-                        ->method('wait')
-                        ->with(true)
-                        ->willReturn($onRejected($this->exception));
-
-                    return $rejected;
-                }));
-
-            return $promise;
+            return new RejectedPromise($this->exception);
         };
 
         $promise = $this->subject->handleRequest($this->request, $next, function () {
