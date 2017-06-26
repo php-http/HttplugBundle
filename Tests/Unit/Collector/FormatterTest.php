@@ -82,10 +82,7 @@ class FormatterTest extends \PHPUnit_Framework_TestCase
 
     public function testFormatTransferException()
     {
-        $exception = $this->getMockBuilder(TransferException::class)
-            ->setConstructorArgs(['ExceptionMessage'])
-            ->getMock()
-        ;
+        $exception = new TransferException('ExceptionMessage');
 
         $this->assertEquals('Transfer error: ExceptionMessage', $this->subject->formatException($exception));
     }
