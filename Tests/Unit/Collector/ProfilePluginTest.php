@@ -2,13 +2,15 @@
 
 namespace Http\HttplugBundle\Tests\Unit\Collector;
 
-use Exception;
+use GuzzleHttp\Psr7\Request;
+use GuzzleHttp\Psr7\Response;
 use Http\Client\Common\Plugin;
+use Http\Client\Exception\TransferException;
 use Http\HttplugBundle\Collector\Collector;
 use Http\HttplugBundle\Collector\Formatter;
 use Http\HttplugBundle\Collector\ProfilePlugin;
 use Http\HttplugBundle\Collector\Stack;
-use Http\Promise\Promise;
+use Http\Promise\FulfilledPromise;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
@@ -40,12 +42,7 @@ class ProfilePluginTest extends \PHPUnit_Framework_TestCase
     private $currentStack;
 
     /**
-     * @var Promise
-     */
-    private $promise;
-
-    /**
-     * @var Exception
+     * @var TransferException
      */
     private $exception;
 
@@ -63,11 +60,10 @@ class ProfilePluginTest extends \PHPUnit_Framework_TestCase
     {
         $this->plugin = $this->getMockBuilder(Plugin::class)->getMock();
         $this->collector = $this->getMockBuilder(Collector::class)->disableOriginalConstructor()->getMock();
-        $this->request = $this->getMockBuilder(RequestInterface::class)->getMock();
-        $this->response = $this->getMockBuilder(ResponseInterface::class)->getMock();
+        $this->request = new Request('GET', '/');
+        $this->response = new Response();
         $this->currentStack = new Stack('default', 'FormattedRequest');
-        $this->promise = $this->getMockBuilder(Promise::class)->getMock();
-        $this->exception = $this->getMockBuilder(Exception::class)->disableOriginalConstructor()->getMock();
+        $this->exception = new TransferException();
         $this->formatter = $this->getMockBuilder(Formatter::class)->disableOriginalConstructor()->getMock();
 
         $this->collector
@@ -80,7 +76,7 @@ class ProfilePluginTest extends \PHPUnit_Framework_TestCase
             ->willReturnCallback(function ($request, $next, $first) {
                 $next($request);
 
-                return $this->promise;
+                return new FulfilledPromise($this->response);
             })
         ;
 
@@ -146,20 +142,6 @@ class ProfilePluginTest extends \PHPUnit_Framework_TestCase
 
     public function testOnFulfilled()
     {
-        $this->promise
-            ->method('then')
-            ->will($this->returnCallback(function (callable $onFulfilled) {
-                $fulfilled = $this->getMockBuilder(Promise::class)->getMock();
-                $fulfilled
-                    ->method('wait')
-                    ->with(true)
-                    ->willReturn($onFulfilled($this->response))
-                ;
-
-                return $fulfilled;
-            }))
-        ;
-
         $promise = $this->subject->handleRequest($this->request, function () {
         }, function () {
         });
@@ -171,23 +153,10 @@ class ProfilePluginTest extends \PHPUnit_Framework_TestCase
 
     public function testOnRejected()
     {
-        $this->setExpectedException(Exception::class);
-
-        $this->promise
-            ->method('then')
-            ->will($this->returnCallback(function (callable $onFulfilled, callable $onRejected) {
-                $rejected = $this->getMockBuilder(Promise::class)->getMock();
-                $rejected
-                    ->method('wait')
-                    ->with(true)
-                    ->willReturn($onRejected($this->exception))
-                ;
-
-                return $rejected;
-            }))
-        ;
+        $this->setExpectedException(TransferException::class);
 
         $promise = $this->subject->handleRequest($this->request, function () {
+            throw new TransferException();
         }, function () {
         });
 

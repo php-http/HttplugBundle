@@ -2,13 +2,13 @@
 
 namespace Http\HttplugBundle\Tests\Unit\Collector;
 
+use GuzzleHttp\Psr7\Request;
+use GuzzleHttp\Psr7\Response;
 use Http\Client\Exception\HttpException;
 use Http\Client\Exception\TransferException;
 use Http\HttplugBundle\Collector\Formatter;
 use Http\Message\Formatter as MessageFormatter;
 use Http\Message\Formatter\CurlCommandFormatter;
-use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ResponseInterface;
 
 class FormatterTest extends \PHPUnit_Framework_TestCase
 {
@@ -37,7 +37,7 @@ class FormatterTest extends \PHPUnit_Framework_TestCase
 
     public function testFormatRequest()
     {
-        $request = $this->getMockBuilder(RequestInterface::class)->getMock();
+        $request = new Request('GET', '/');
 
         $this->formatter
             ->expects($this->once())
@@ -50,7 +50,7 @@ class FormatterTest extends \PHPUnit_Framework_TestCase
 
     public function testFormatResponse()
     {
-        $response = $this->getMockBuilder(ResponseInterface::class)->getMock();
+        $response = new Response();
 
         $this->formatter
             ->expects($this->once())
@@ -63,12 +63,9 @@ class FormatterTest extends \PHPUnit_Framework_TestCase
 
     public function testFormatHttpException()
     {
-        $response = $this->getMockBuilder(ResponseInterface::class)->getMock();
-        $exception = $this->getMockBuilder(HttpException::class)->disableOriginalConstructor()->getMock();
-        $exception
-            ->method('getResponse')
-            ->willReturn($response)
-        ;
+        $request = new Request('GET', '/');
+        $response = new Response();
+        $exception = new HttpException('', $request, $response);
 
         $this->formatter
             ->expects($this->once())
@@ -95,7 +92,7 @@ class FormatterTest extends \PHPUnit_Framework_TestCase
 
     public function testFormatAsCurlCommand()
     {
-        $request = $this->getMockBuilder(RequestInterface::class)->getMock();
+        $request = new Request('GET', '/');
 
         $this->curlFormatter
             ->expects($this->once())
