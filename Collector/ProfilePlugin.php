@@ -77,15 +77,50 @@ class ProfilePlugin implements Plugin
             return $first($request);
         };
 
-        return $this->plugin->handleRequest($request, $wrappedNext, $wrappedFirst)->then(function (ResponseInterface $response) use ($profile) {
+        return $this->plugin->handleRequest($request, $wrappedNext, $wrappedFirst)->then(function (ResponseInterface $response) use ($profile, $request, $stack) {
             $profile->setResponse($this->formatter->formatResponse($response));
+            $this->collectRequestInformation($request, $stack);
 
             return $response;
-        }, function (Exception $exception) use ($profile) {
+        }, function (Exception $exception) use ($profile, $request, $stack) {
             $profile->setFailed(true);
             $profile->setResponse($this->formatter->formatException($exception));
+            $this->collectRequestInformation($request, $stack);
 
             throw $exception;
         });
+    }
+
+    /**
+     * Collect request information when not already done by the HTTP client. This happens when using the CachePlugin
+     * and the cache is hit without re-validation.
+     *
+     * @param RequestInterface $request
+     * @param Stack|null $stack
+     */
+    private function collectRequestInformation(RequestInterface $request, Stack $stack = null)
+    {
+        if (null === $stack) {
+            return;
+        }
+
+        if (empty($stack->getRequestTarget())) {
+            $stack->setRequestTarget($request->getRequestTarget());
+        }
+        if (empty($stack->getRequestMethod())) {
+            $stack->setRequestMethod($request->getMethod());
+        }
+        if (empty($stack->getRequestScheme())) {
+            $stack->setRequestScheme($request->getUri()->getScheme());
+        }
+        if (empty($stack->getRequestHost())) {
+            $stack->setRequestHost($request->getUri()->getHost());
+        }
+        if (empty($stack->getClientRequest())) {
+            $stack->setClientRequest($this->formatter->formatRequest($request));
+        }
+        if (empty($stack->getCurlCommand())) {
+            $stack->setCurlCommand($this->formatter->formatAsCurlCommand($request));
+        }
     }
 }
