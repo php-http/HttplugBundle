@@ -11,6 +11,8 @@ use Http\HttplugBundle\Collector\Formatter;
 use Http\HttplugBundle\Collector\ProfilePlugin;
 use Http\HttplugBundle\Collector\Stack;
 use Http\Promise\FulfilledPromise;
+use Http\Promise\Promise;
+use Http\Promise\RejectedPromise;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
@@ -37,6 +39,11 @@ class ProfilePluginTest extends \PHPUnit_Framework_TestCase
     private $response;
 
     /**
+     * @var Promise
+     */
+    private $fulfilledPromise;
+
+    /**
      * @var Stack
      */
     private $currentStack;
@@ -45,6 +52,11 @@ class ProfilePluginTest extends \PHPUnit_Framework_TestCase
      * @var TransferException
      */
     private $exception;
+
+    /**
+     * @var Promise
+     */
+    private $rejectedPromise;
 
     /**
      * @var Formatter
@@ -62,8 +74,10 @@ class ProfilePluginTest extends \PHPUnit_Framework_TestCase
         $this->collector = $this->getMockBuilder(Collector::class)->disableOriginalConstructor()->getMock();
         $this->request = new Request('GET', '/');
         $this->response = new Response();
+        $this->fulfilledPromise = new FulfilledPromise($this->response);
         $this->currentStack = new Stack('default', 'FormattedRequest');
         $this->exception = new TransferException();
+        $this->rejectedPromise = new RejectedPromise($this->exception);
         $this->formatter = $this->getMockBuilder(Formatter::class)->disableOriginalConstructor()->getMock();
 
         $this->collector
@@ -74,9 +88,7 @@ class ProfilePluginTest extends \PHPUnit_Framework_TestCase
         $this->plugin
             ->method('handleRequest')
             ->willReturnCallback(function ($request, $next, $first) {
-                $next($request);
-
-                return new FulfilledPromise($this->response);
+                return $next($request);
             })
         ;
 
@@ -115,6 +127,7 @@ class ProfilePluginTest extends \PHPUnit_Framework_TestCase
         ;
 
         $this->subject->handleRequest($this->request, function () {
+            return $this->fulfilledPromise;
         }, function () {
         });
     }
@@ -122,6 +135,7 @@ class ProfilePluginTest extends \PHPUnit_Framework_TestCase
     public function testProfileIsInitialized()
     {
         $this->subject->handleRequest($this->request, function () {
+            return $this->fulfilledPromise;
         }, function () {
         });
 
@@ -133,6 +147,7 @@ class ProfilePluginTest extends \PHPUnit_Framework_TestCase
     public function testCollectRequestInformations()
     {
         $this->subject->handleRequest($this->request, function () {
+            return $this->fulfilledPromise;
         }, function () {
         });
 
@@ -143,6 +158,7 @@ class ProfilePluginTest extends \PHPUnit_Framework_TestCase
     public function testOnFulfilled()
     {
         $promise = $this->subject->handleRequest($this->request, function () {
+            return $this->fulfilledPromise;
         }, function () {
         });
 
@@ -156,7 +172,7 @@ class ProfilePluginTest extends \PHPUnit_Framework_TestCase
         $this->setExpectedException(TransferException::class);
 
         $promise = $this->subject->handleRequest($this->request, function () {
-            throw new TransferException();
+            return $this->rejectedPromise;
         }, function () {
         });
 

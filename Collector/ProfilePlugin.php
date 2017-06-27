@@ -77,7 +77,17 @@ class ProfilePlugin implements Plugin
             return $first($request);
         };
 
-        return $this->plugin->handleRequest($request, $wrappedNext, $wrappedFirst)->then(function (ResponseInterface $response) use ($profile, $request, $stack) {
+        try {
+            $promise = $this->plugin->handleRequest($request, $wrappedNext, $wrappedFirst);
+        } catch (Exception $e) {
+            $profile->setFailed(true);
+            $profile->setResponse($this->formatter->formatException($e));
+            $this->collectRequestInformation($request, $stack);
+
+            throw $e;
+        }
+
+        return $promise->then(function (ResponseInterface $response) use ($profile, $request, $stack) {
             $profile->setResponse($this->formatter->formatResponse($response));
             $this->collectRequestInformation($request, $stack);
 
@@ -96,7 +106,7 @@ class ProfilePlugin implements Plugin
      * and the cache is hit without re-validation.
      *
      * @param RequestInterface $request
-     * @param Stack|null $stack
+     * @param Stack|null       $stack
      */
     private function collectRequestInformation(RequestInterface $request, Stack $stack = null)
     {
