@@ -65,14 +65,14 @@ class ProfilePlugin implements Plugin
 
         // wrap the next callback to profile the plugin request changes
         $wrappedNext = function (RequestInterface $request) use ($next, $profile) {
-            $profile->setRequest($this->formatter->formatRequest($request));
+            $this->onOutgoingRequest($request, $profile);
 
             return $next($request);
         };
 
         // wrap the first callback to profile the plugin request changes
         $wrappedFirst = function (RequestInterface $request) use ($first, $profile) {
-            $profile->setRequest($this->formatter->formatRequest($request));
+            $this->onOutgoingRequest($request, $profile);
 
             return $first($request);
         };
@@ -80,25 +80,58 @@ class ProfilePlugin implements Plugin
         try {
             $promise = $this->plugin->handleRequest($request, $wrappedNext, $wrappedFirst);
         } catch (Exception $e) {
-            $profile->setFailed(true);
-            $profile->setResponse($this->formatter->formatException($e));
-            $this->collectRequestInformation($request, $stack);
+            $this->onException($request, $profile, $e, $stack);
 
             throw $e;
         }
 
         return $promise->then(function (ResponseInterface $response) use ($profile, $request, $stack) {
-            $profile->setResponse($this->formatter->formatResponse($response));
-            $this->collectRequestInformation($request, $stack);
+            $this->onOutgoingResponse($response, $profile, $request, $stack);
 
             return $response;
         }, function (Exception $exception) use ($profile, $request, $stack) {
-            $profile->setFailed(true);
-            $profile->setResponse($this->formatter->formatException($exception));
-            $this->collectRequestInformation($request, $stack);
+            $this->onException($request, $profile, $exception, $stack);
 
             throw $exception;
         });
+    }
+
+    /**
+     * @param RequestInterface $request
+     * @param Profile          $profile
+     * @param Exception        $exception
+     * @param Stack            $stack
+     */
+    private function onException(
+        RequestInterface $request,
+        Profile $profile,
+        Exception $exception,
+        Stack $stack = null
+    ) {
+        $profile->setFailed(true);
+        $profile->setResponse($this->formatter->formatException($exception));
+        $this->collectRequestInformation($request, $stack);
+    }
+
+    /**
+     * @param RequestInterface $request
+     * @param Profile          $profile
+     */
+    private function onOutgoingRequest(RequestInterface $request, Profile $profile)
+    {
+        $profile->setRequest($this->formatter->formatRequest($request));
+    }
+
+    /**
+     * @param ResponseInterface $response
+     * @param Profile           $profile
+     * @param RequestInterface  $request
+     * @param Stack             $stack
+     */
+    private function onOutgoingResponse(ResponseInterface $response, Profile $profile, RequestInterface $request, Stack $stack = null)
+    {
+        $profile->setResponse($this->formatter->formatResponse($response));
+        $this->collectRequestInformation($request, $stack);
     }
 
     /**
