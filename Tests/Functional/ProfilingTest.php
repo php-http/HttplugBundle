@@ -14,6 +14,7 @@ use Http\HttplugBundle\Collector\StackPlugin;
 use Http\Message\Formatter\CurlCommandFormatter;
 use Http\Message\Formatter\FullHttpMessageFormatter;
 use Http\Mock\Client;
+use Psr\Http\Message\RequestInterface;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
 use Symfony\Component\Stopwatch\Stopwatch;
 
@@ -41,12 +42,10 @@ class ProfilingTest extends \PHPUnit_Framework_TestCase
         $this->stopwatch = new Stopwatch();
     }
 
-    public function testCachePluginProfiling()
+    public function testProfilingWithCachePlugin()
     {
-        $pool = new ArrayAdapter();
-
         $client = $this->createClient([
-            new Plugin\CachePlugin($pool, StreamFactoryDiscovery::find(), [
+            new Plugin\CachePlugin(new ArrayAdapter(), StreamFactoryDiscovery::find(), [
                 'respect_response_cache_directives' => [],
                 'default_ttl' => 86400,
             ]),
@@ -63,6 +62,26 @@ class ProfilingTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('example.com', $stack->getRequestHost());
     }
 
+    public function testProfilingWhenPluginThrowException()
+    {
+        $client = $this->createClient([
+            new ExceptionThrowerPlugin(),
+        ]);
+
+        $this->setExpectedException(\Exception::class);
+
+        try {
+            $client->sendRequest(new Request('GET', 'https://example.com'));
+        } finally {
+            $this->assertCount(1, $this->collector->getStacks());
+            $stack = $this->collector->getStacks()[0];
+            $this->assertEquals('GET', $stack->getRequestMethod());
+            $this->assertEquals('https', $stack->getRequestScheme());
+            $this->assertEquals('/', $stack->getRequestTarget());
+            $this->assertEquals('example.com', $stack->getRequestHost());
+        }
+    }
+
     private function createClient(array $plugins, $clientName = 'Acme', array $clientOptions = [])
     {
         $plugins = array_map(function (Plugin $plugin) {
@@ -76,5 +95,16 @@ class ProfilingTest extends \PHPUnit_Framework_TestCase
         $client = new PluginClient($client, $plugins, $clientOptions);
 
         return $client;
+    }
+}
+
+class ExceptionThrowerPlugin implements Plugin
+{
+    /**
+     * {@inheritdoc}
+     */
+    public function handleRequest(RequestInterface $request, callable $next, callable $first)
+    {
+        throw new \Exception();
     }
 }
