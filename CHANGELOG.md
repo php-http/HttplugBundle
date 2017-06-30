@@ -1,6 +1,12 @@
 # Change Log
 
-The change log describes what is "Added", "Removed", "Changed" or "Fixed" between each release. 
+The change log describes what is "Added", "Removed", "Changed" or "Fixed" between each release.
+
+## Unreleased
+
+### Changed
+
+- Plugins are now displayed with their FQCN instead of service id.
 
 ## 1.6.0 - 2017-05-22
 

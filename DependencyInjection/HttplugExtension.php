@@ -506,7 +506,6 @@ class HttplugExtension extends Extension
                 new Reference($pluginServiceId.'.debug.inner'),
                 new Reference('httplug.collector.collector'),
                 new Reference('httplug.collector.formatter'),
-                $pluginServiceId,
             ])
             ->setPublic(false);
     }

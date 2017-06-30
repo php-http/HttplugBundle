@@ -33,22 +33,15 @@ class ProfilePlugin implements Plugin
     private $formatter;
 
     /**
-     * @var string
-     */
-    private $pluginName;
-
-    /**
      * @param Plugin    $plugin
      * @param Collector $collector
      * @param Formatter $formatter
-     * @param string    $pluginName
      */
-    public function __construct(Plugin $plugin, Collector $collector, Formatter $formatter, $pluginName)
+    public function __construct(Plugin $plugin, Collector $collector, Formatter $formatter)
     {
         $this->plugin = $plugin;
         $this->collector = $collector;
         $this->formatter = $formatter;
-        $this->pluginName = $pluginName;
     }
 
     /**
@@ -56,7 +49,7 @@ class ProfilePlugin implements Plugin
      */
     public function handleRequest(RequestInterface $request, callable $next, callable $first)
     {
-        $profile = new Profile($this->pluginName);
+        $profile = new Profile(get_class($this->plugin));
 
         $stack = $this->collector->getCurrentStack();
         if (null !== $stack) {

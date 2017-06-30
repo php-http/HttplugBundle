@@ -141,7 +141,7 @@ class ProfilePluginTest extends \PHPUnit_Framework_TestCase
 
         $this->assertCount(1, $this->currentStack->getProfiles());
         $profile = $this->currentStack->getProfiles()[0];
-        $this->assertEquals('http.plugin.mock', $profile->getPlugin());
+        $this->assertEquals(get_class($this->plugin), $profile->getPlugin());
     }
 
     public function testCollectRequestInformations()
