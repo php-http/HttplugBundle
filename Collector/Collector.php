@@ -20,13 +20,9 @@ use Symfony\Component\HttpKernel\DataCollector\DataCollector;
  */
 class Collector extends DataCollector
 {
-    /**
-     * @param array $clients
-     */
-    public function __construct(array $clients)
+    public function __construct()
     {
         $this->data['stacks'] = [];
-        $this->data['clients'] = $clients;
     }
 
     /**
@@ -98,7 +94,9 @@ class Collector extends DataCollector
      */
     public function getClients()
     {
-        return $this->data['clients'];
+        return array_unique(array_map(function (Stack $stack) {
+            return $stack->getClient();
+        }, $this->data['stacks']));
     }
 
     /**

@@ -110,12 +110,6 @@ class HttplugExtension extends Extension
                 $container->setAlias('httplug.client.default', 'httplug.client.'.$first);
             }
         }
-
-        if ($profiling) {
-            $container->getDefinition('httplug.collector.collector')
-                ->setArguments([$clients])
-            ;
-        }
     }
 
     /**
@@ -451,11 +445,6 @@ class HttplugExtension extends Extension
                 [],
             ])
         ;
-
-        if ($profiling) {
-            $collector = $container->getDefinition('httplug.collector.collector');
-            $collector->replaceArgument(0, array_merge($collector->getArgument(0), [$name]));
-        }
 
         return $serviceId;
     }
