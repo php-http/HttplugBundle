@@ -17,6 +17,11 @@ final class Stack
     private $client;
 
     /**
+     * @var Stack
+     */
+    private $parent;
+
+    /**
      * @var Profile[]
      */
     private $profiles = [];
@@ -102,6 +107,22 @@ final class Stack
     public function getClient()
     {
         return $this->client;
+    }
+
+    /**
+     * @return Stack
+     */
+    public function getParent()
+    {
+        return $this->parent;
+    }
+
+    /**
+     * @param Stack $parent
+     */
+    public function setParent(Stack $parent)
+    {
+        $this->parent = $parent;
     }
 
     /**

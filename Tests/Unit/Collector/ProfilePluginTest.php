@@ -81,7 +81,7 @@ class ProfilePluginTest extends \PHPUnit_Framework_TestCase
         $this->formatter = $this->getMockBuilder(Formatter::class)->disableOriginalConstructor()->getMock();
 
         $this->collector
-            ->method('getCurrentStack')
+            ->method('getActiveStack')
             ->willReturn($this->currentStack)
         ;
 

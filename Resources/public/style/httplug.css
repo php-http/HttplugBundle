@@ -75,6 +75,13 @@
 }
 
 /**
+ * Stack
+ */
+.httplug-stack>.httplug-stack {
+    margin-left: 2.5em;
+}
+
+/**
  * Stack header
  */
 .httplug-stack-header {
