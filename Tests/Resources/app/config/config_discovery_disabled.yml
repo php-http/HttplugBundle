@@ -1,0 +1,7 @@
+imports:
+    - { resource: config_test.yml }
+
+httplug:
+    discovery:
+        client: ~
+        async_client: ~

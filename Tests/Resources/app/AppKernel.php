@@ -28,9 +28,10 @@ class AppKernel extends Kernel
      */
     public function registerContainerConfiguration(LoaderInterface $loader)
     {
-        $this->isDebug()
-            ? $loader->load(__DIR__.'/config/config_debug.yml')
-            : $loader->load(__DIR__.'/config/config.yml');
+        $loader->load(__DIR__.'/config/config_'.$this->getEnvironment().'.yml');
+        if ($this->isDebug()) {
+            $loader->load(__DIR__.'/config/config_debug.yml');
+        }
     }
 
     /**
