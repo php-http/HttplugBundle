@@ -3,6 +3,8 @@ framework:
   test: ~
 
 httplug:
+    discovery:
+        async_client: auto
     clients:
         acme:
             factory: httplug.factory.curl

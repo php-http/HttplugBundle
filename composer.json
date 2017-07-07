@@ -45,7 +45,8 @@
         "symfony/finder": "^2.7 || ^3.0",
         "symfony/cache": "^3.1",
         "polishsymfonycommunity/symfony-mocker-container": "^1.0",
-        "matthiasnoback/symfony-dependency-injection-test": "^1.0"
+        "matthiasnoback/symfony-dependency-injection-test": "^1.0",
+        "nyholm/nsa": "^1.1"
     },
     "conflict": {
         "php-http/guzzle6-adapter": "<1.1"
