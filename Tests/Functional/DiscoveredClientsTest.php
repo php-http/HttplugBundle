@@ -71,9 +71,32 @@ class DiscoveredClientsTest extends WebTestCase
         $this->assertEquals('auto_discovered_async', NSA::getProperty($plugins[0], 'client'));
     }
 
-    private function getContainer($debug)
+    public function testDisabledDiscovery()
     {
-        static::bootKernel(['debug' => $debug]);
+        $container = $this->getContainer(true, 'discovery_disabled');
+
+        $this->assertFalse($container->has('httplug.auto_discovery.auto_discovered_client'));
+        $this->assertFalse($container->has('httplug.auto_discovery.auto_discovered_async'));
+        $this->assertFalse($container->has('httplug.strategy'));
+    }
+
+    public function testForcedDiscovery()
+    {
+        $container = $this->getContainer(true, 'discovery_forced');
+
+        $this->assertFalse($container->has('httplug.auto_discovery.auto_discovered_client'));
+        $this->assertFalse($container->has('httplug.auto_discovery.auto_discovered_async'));
+        $this->assertTrue($container->has('httplug.strategy'));
+
+        $strategy = $container->get('httplug.strategy');
+
+        $this->assertEquals($container->get('httplug.client.acme'), NSA::getProperty($strategy, 'client'));
+        $this->assertEquals($container->get('httplug.client.acme'), NSA::getProperty($strategy, 'asyncClient'));
+    }
+
+    private function getContainer($debug, $environment = 'test')
+    {
+        static::bootKernel(['debug' => $debug, 'environment' => $environment]);
 
         return static::$kernel->getContainer();
     }
