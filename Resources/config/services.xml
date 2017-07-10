@@ -5,7 +5,25 @@
 
     <services>
         <service id="httplug.strategy" class="Http\HttplugBundle\Discovery\ConfiguredClientsStrategy">
+            <argument type="service" id="httplug.auto_discovery.auto_discovered_client" on-invalid="null"/>
+            <argument type="service" id="httplug.auto_discovery.auto_discovered_async" on-invalid="null"/>
             <tag name="kernel.event_subscriber"/>
+        </service>
+
+        <service id="httplug.auto_discovery.auto_discovered_client" class="Http\Client\HttpClient">
+            <factory class="Http\Discovery\HttpClientDiscovery" method="find" />
+        </service>
+
+        <service id="httplug.auto_discovery.auto_discovered_async" class="Http\Client\HttpAsyncClient">
+            <factory class="Http\Discovery\HttpAsyncClientDiscovery" method="find" />
+        </service>
+
+        <!-- Decorate discovered clients with PluginClient -->
+        <service id="httplug.auto_discovery.auto_discovered_client.plugin" class="Http\Client\Common\PluginClient" decorates="httplug.auto_discovery.auto_discovered_client" decoration-priority="1" public="false">
+            <argument type="service" id="httplug.auto_discovery.auto_discovered_client.plugin.inner"/>
+        </service>
+        <service id="httplug.auto_discovery.auto_discovered_async.plugin" class="Http\Client\Common\PluginClient" decorates="httplug.auto_discovery.auto_discovered_async" decoration-priority="1" public="false">
+            <argument type="service" id="httplug.auto_discovery.auto_discovered_async.plugin.inner"/>
         </service>
 
         <!-- Discovery with autowiring support for Symfony 3.3+ -->

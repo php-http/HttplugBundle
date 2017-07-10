@@ -6,11 +6,8 @@ use Http\Client\Common\BatchClient;
 use Http\Client\Common\FlexibleHttpClient;
 use Http\Client\Common\HttpMethodsClient;
 use Http\Client\Common\Plugin\AuthenticationPlugin;
-use Http\Discovery\HttpAsyncClientDiscovery;
-use Http\Discovery\HttpClientDiscovery;
 use Http\HttplugBundle\ClientFactory\DummyClient;
 use Http\HttplugBundle\ClientFactory\PluginClientFactory;
-use Http\HttplugBundle\Collector\ProfileClientFactory;
 use Http\HttplugBundle\Collector\ProfilePlugin;
 use Http\Message\Authentication\BasicAuth;
 use Http\Message\Authentication\Bearer;
@@ -359,43 +356,27 @@ class HttplugExtension extends Extension
     private function configureAutoDiscoveryClients(ContainerBuilder $container, array $config)
     {
         $httpClient = $config['discovery']['client'];
+        if ($httpClient !== 'auto') {
+            $container->removeDefinition('httplug.auto_discovery.auto_discovered_client');
+            $container->removeDefinition('httplug.collector.auto_discovered_client');
+            $container->removeDefinition('httplug.auto_discovery.auto_discovered_client.plugin');
 
-        if (!empty($httpClient)) {
-            if ($httpClient === 'auto') {
-                $httpClient = $this->registerAutoDiscoverableClient(
-                    $container,
-                    'auto_discovered_client',
-                    $this->configureAutoDiscoveryFactory(
-                        $container,
-                        HttpClientDiscovery::class,
-                        'auto_discovered_client',
-                        $config
-                    ),
-                    $this->isConfigEnabled($container, $config['profiling'])
-                );
+            if (!empty($httpClient)) {
+                $container->setAlias('httplug.auto_discovery.auto_discovered_client', $httpClient);
+                $container->getAlias('httplug.auto_discovery.auto_discovered_client')->setPublic(false);
             }
-
-            $httpClient = new Reference($httpClient);
         }
 
         $asyncHttpClient = $config['discovery']['async_client'];
+        if ($asyncHttpClient !== 'auto') {
+            $container->removeDefinition('httplug.auto_discovery.auto_discovered_async');
+            $container->removeDefinition('httplug.collector.auto_discovered_async');
+            $container->removeDefinition('httplug.auto_discovery.auto_discovered_async.plugin');
 
-        if (!empty($asyncHttpClient)) {
-            if ($asyncHttpClient === 'auto') {
-                $asyncHttpClient = $this->registerAutoDiscoverableClient(
-                    $container,
-                    'auto_discovered_async',
-                    $this->configureAutoDiscoveryFactory(
-                        $container,
-                        HttpAsyncClientDiscovery::class,
-                        'auto_discovered_async',
-                        $config
-                    ),
-                    $this->isConfigEnabled($container, $config['profiling'])
-                );
+            if (!empty($asyncHttpClient)) {
+                $container->setAlias('httplug.auto_discovery.auto_discovered_async', $asyncHttpClient);
+                $container->getAlias('httplug.auto_discovery.auto_discovered_async')->setPublic(false);
             }
-
-            $asyncHttpClient = new Reference($asyncHttpClient);
         }
 
         if (null === $httpClient && null === $asyncHttpClient) {
@@ -403,50 +384,6 @@ class HttplugExtension extends Extension
 
             return;
         }
-
-        $container
-            ->getDefinition('httplug.strategy')
-            ->addArgument($httpClient)
-            ->addArgument($asyncHttpClient)
-        ;
-    }
-
-    /**
-     * Find a client with auto discovery and return a service Reference to it.
-     *
-     * @param ContainerBuilder   $container
-     * @param string             $name
-     * @param Reference|callable $factory
-     * @param bool               $profiling
-     *
-     * @return string service id
-     */
-    private function registerAutoDiscoverableClient(ContainerBuilder $container, $name, $factory, $profiling)
-    {
-        $serviceId = 'httplug.auto_discovery.'.$name;
-
-        $plugins = [];
-        if ($profiling) {
-            // To profile the requests, add a StackPlugin as first plugin in the chain.
-            $plugins[] = $this->configureStackPlugin($container, $name, $serviceId);
-        }
-
-        $container
-            ->register($serviceId, DummyClient::class)
-            ->setFactory([PluginClientFactory::class, 'createPluginClient'])
-            ->setArguments([
-                array_map(
-                    function ($id) {
-                        return new Reference($id);
-                    },
-                    $plugins
-                ),
-                $factory,
-                [],
-            ])
-        ;
-
-        return $serviceId;
     }
 
     /**
@@ -520,34 +457,5 @@ class HttplugExtension extends Extension
         $container->setDefinition($pluginServiceId, $definition);
 
         return $pluginServiceId;
-    }
-
-    /**
-     * Configure the discovery factory when profiling is enabled to get client decorated with a ProfileClient.
-     *
-     * @param ContainerBuilder $container
-     * @param string           $discovery
-     * @param string           $name
-     * @param array            $config
-     *
-     * @return callable|Reference
-     */
-    private function configureAutoDiscoveryFactory(ContainerBuilder $container, $discovery, $name, array $config)
-    {
-        $factory = [$discovery, 'find'];
-        if ($this->isConfigEnabled($container, $config['profiling'])) {
-            $factoryServiceId = 'httplug.auto_discovery.'.$name.'.factory';
-            $container->register($factoryServiceId, ProfileClientFactory::class)
-                ->setPublic(false)
-                ->setArguments([
-                    $factory,
-                    new Reference('httplug.collector.collector'),
-                    new Reference('httplug.collector.formatter'),
-                    new Reference('debug.stopwatch'),
-                ]);
-            $factory = new Reference($factoryServiceId);
-        }
-
-        return $factory;
     }
 }

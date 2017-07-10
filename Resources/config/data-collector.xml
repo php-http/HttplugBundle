@@ -26,6 +26,42 @@
             <tag name="twig.extension" />
         </service>
 
+        <!-- Discovered clients -->
+        <service id="httplug.collector.auto_discovered_client" class="Http\HttplugBundle\Collector\ProfileClient" decorates="httplug.auto_discovery.auto_discovered_client" decoration-priority="2" public="false">
+            <argument type="service" id="httplug.collector.auto_discovered_client.inner"/>
+            <argument type="service" id="httplug.collector.collector"/>
+            <argument type="service" id="httplug.collector.formatter"/>
+            <argument type="service" id="debug.stopwatch"/>
+        </service>
+
+        <service id="httplug.collector.auto_discovered_async" class="Http\HttplugBundle\Collector\ProfileClient" decorates="httplug.auto_discovery.auto_discovered_async" decoration-priority="2" public="false">
+            <argument type="service" id="httplug.collector.auto_discovered_async.inner"/>
+            <argument type="service" id="httplug.collector.collector"/>
+            <argument type="service" id="httplug.collector.formatter"/>
+            <argument type="service" id="debug.stopwatch"/>
+        </service>
+
+        <service id="httplug.auto_discovery.auto_discovered_client.plugin" class="Http\Client\Common\PluginClient" decorates="httplug.auto_discovery.auto_discovered_client" public="false">
+            <argument type="service" id="httplug.auto_discovery.auto_discovered_client.plugin.inner"/>
+            <argument type="collection">
+                <argument type="service">
+                    <service parent="httplug.plugin.stack">
+                        <argument>auto_discovered_client</argument>
+                    </service>
+                </argument>
+            </argument>
+        </service>
+        <service id="httplug.auto_discovery.auto_discovered_async.plugin" class="Http\Client\Common\PluginClient" decorates="httplug.auto_discovery.auto_discovered_async" public="false">
+            <argument type="service" id="httplug.auto_discovery.auto_discovered_async.plugin.inner"/>
+            <argument type="collection">
+                <argument type="service">
+                    <service parent="httplug.plugin.stack">
+                        <argument>auto_discovered_async</argument>
+                    </service>
+                </argument>
+            </argument>
+        </service>
+
         <!-- ClientFactories -->
         <service id="httplug.collector.factory.auto" class="Http\HttplugBundle\Collector\ProfileClientFactory" decorates="httplug.factory.auto" public="false">
             <argument type="service" id="httplug.collector.factory.auto.inner"/>
