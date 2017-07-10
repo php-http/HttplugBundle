@@ -13,10 +13,12 @@ use Http\HttplugBundle\Collector\ProfileClient;
 use Http\HttplugBundle\Collector\Stack;
 use Http\Promise\FulfilledPromise;
 use Http\Promise\Promise;
+use Http\Promise\RejectedPromise;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\UriInterface;
 use Symfony\Component\Stopwatch\Stopwatch;
+use Symfony\Component\Stopwatch\StopwatchEvent;
 
 class ProfileClientTest extends \PHPUnit_Framework_TestCase
 {
@@ -28,7 +30,7 @@ class ProfileClientTest extends \PHPUnit_Framework_TestCase
     /**
      * @var Stack
      */
-    private $currentStack;
+    private $activeStack;
 
     /**
      * @var HttpClient
@@ -51,6 +53,11 @@ class ProfileClientTest extends \PHPUnit_Framework_TestCase
     private $stopwatch;
 
     /**
+     * @var StopwatchEvent
+     */
+    private $stopwatchEvent;
+
+    /**
      * @var ProfileClient
      */
     private $subject;
@@ -63,7 +70,17 @@ class ProfileClientTest extends \PHPUnit_Framework_TestCase
     /**
      * @var Promise
      */
-    private $promise;
+    private $fulfilledPromise;
+
+    /**
+     * @var \Exception
+     */
+    private $exception;
+
+    /**
+     * @var RejectedPromise
+     */
+    private $rejectedPromise;
 
     /**
      * @var UriInterface
@@ -73,60 +90,130 @@ class ProfileClientTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->collector = $this->getMockBuilder(Collector::class)->disableOriginalConstructor()->getMock();
-        $this->currentStack = new Stack('default', 'FormattedRequest');
+        $this->activeStack = new Stack('default', 'FormattedRequest');
         $this->client = $this->getMockBuilder(ClientInterface::class)->getMock();
         $this->uri = new Uri('https://example.com/target');
         $this->request = new Request('GET', $this->uri);
         $this->formatter = $this->getMockBuilder(Formatter::class)->disableOriginalConstructor()->getMock();
-        $this->stopwatch = new Stopwatch();
+        $this->stopwatch = $this->getMockBuilder(Stopwatch::class)->disableOriginalConstructor()->getMock();
+        $this->stopwatchEvent = $this->getMockBuilder(StopwatchEvent::class)->disableOriginalConstructor()->getMock();
         $this->subject = new ProfileClient($this->client, $this->collector, $this->formatter, $this->stopwatch);
         $this->response = new Response();
-        $this->promise = new FulfilledPromise($this->response);
+        $this->exception = new \Exception();
+        $this->fulfilledPromise = new FulfilledPromise($this->response);
+        $this->rejectedPromise = new RejectedPromise($this->exception);
 
-        $this->client->method('sendRequest')->willReturn($this->response);
-        $this->client->method('sendAsyncRequest')->will($this->returnCallback(function () {
-            return $this->promise;
-        }));
+        $this->collector->method('getActiveStack')->willReturn($this->activeStack);
+        $this->formatter
+            ->method('formatResponse')
+            ->with($this->response)
+            ->willReturn('FormattedResponse')
+        ;
+        $this->formatter
+            ->method('formatException')
+            ->with($this->exception)
+            ->willReturn('FormattedException')
+        ;
 
-        $this->collector->method('getCurrentStack')->willReturn($this->currentStack);
+        $this->stopwatch
+            ->method('start')
+            ->willReturn($this->stopwatchEvent)
+        ;
+
+        $this->stopwatchEvent
+            ->method('getDuration')
+            ->willReturn(42)
+        ;
     }
 
-    public function testCallDecoratedClient()
+    public function testSendRequest()
     {
         $this->client
             ->expects($this->once())
             ->method('sendRequest')
             ->with($this->identicalTo($this->request))
+            ->willReturn($this->response)
         ;
 
+        $response = $this->subject->sendRequest($this->request);
+
+        $this->assertEquals($this->response, $response);
+        $this->assertEquals('GET', $this->activeStack->getRequestMethod());
+        $this->assertEquals('/target', $this->activeStack->getRequestTarget());
+        $this->assertEquals('example.com', $this->activeStack->getRequestHost());
+        $this->assertEquals('https', $this->activeStack->getRequestScheme());
+    }
+
+    public function testSendAsyncRequest()
+    {
         $this->client
             ->expects($this->once())
             ->method('sendAsyncRequest')
             ->with($this->identicalTo($this->request))
+            ->willReturn($this->fulfilledPromise)
         ;
 
-        $this->assertEquals($this->response, $this->subject->sendRequest($this->request));
-        $this->assertEquals($this->promise, $this->subject->sendAsyncRequest($this->request));
+        $this->collector
+            ->expects($this->once())
+            ->method('deactivateStack')
+        ;
+
+        $promise = $this->subject->sendAsyncRequest($this->request);
+
+        $this->assertEquals($this->fulfilledPromise, $promise);
+        $this->assertEquals('GET', $this->activeStack->getRequestMethod());
+        $this->assertEquals('/target', $this->activeStack->getRequestTarget());
+        $this->assertEquals('example.com', $this->activeStack->getRequestHost());
+        $this->assertEquals('https', $this->activeStack->getRequestScheme());
     }
 
-    public function testCollectRequestInformations()
+    public function testOnFulfilled()
     {
-        $this->subject->sendRequest($this->request);
+        $this->collector
+            ->expects($this->once())
+            ->method('activateStack')
+            ->with($this->activeStack)
+        ;
 
-        $this->assertEquals('GET', $this->currentStack->getRequestMethod());
-        $this->assertEquals('/target', $this->currentStack->getRequestTarget());
-        $this->assertEquals('example.com', $this->currentStack->getRequestHost());
-        $this->assertEquals('https', $this->currentStack->getRequestScheme());
-    }
+        $this->stopwatchEvent
+            ->expects($this->once())
+            ->method('stop')
+        ;
 
-    public function testCollectAsyncRequestInformations()
-    {
+        $this->client
+            ->method('sendAsyncRequest')
+            ->willReturn($this->fulfilledPromise)
+        ;
+
         $this->subject->sendAsyncRequest($this->request);
 
-        $this->assertEquals('GET', $this->currentStack->getRequestMethod());
-        $this->assertEquals('/target', $this->currentStack->getRequestTarget());
-        $this->assertEquals('example.com', $this->currentStack->getRequestHost());
-        $this->assertEquals('https', $this->currentStack->getRequestScheme());
+        $this->assertEquals(42, $this->activeStack->getDuration());
+        $this->assertEquals(200, $this->activeStack->getResponseCode());
+        $this->assertEquals('FormattedResponse', $this->activeStack->getClientResponse());
+    }
+
+    public function testOnRejected()
+    {
+        $this->collector
+            ->expects($this->once())
+            ->method('activateStack')
+            ->with($this->activeStack)
+        ;
+
+        $this->stopwatchEvent
+            ->expects($this->once())
+            ->method('stop')
+        ;
+
+        $this->client
+            ->method('sendAsyncRequest')
+            ->willReturn($this->rejectedPromise)
+        ;
+
+        $this->subject->sendAsyncRequest($this->request);
+
+        $this->assertEquals(42, $this->activeStack->getDuration());
+        $this->assertEquals('FormattedException', $this->activeStack->getClientException());
     }
 }
 

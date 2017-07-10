@@ -75,23 +75,31 @@ class ProfileClient implements HttpClient, HttpAsyncClient
      */
     public function sendAsyncRequest(RequestInterface $request)
     {
-        $stack = $this->collector->getCurrentStack();
+        $stack = $this->collector->getActiveStack();
+
         $this->collectRequestInformations($request, $stack);
         $event = $this->stopwatch->start($this->getStopwatchEventName($request));
 
-        return $this->client->sendAsyncRequest($request)->then(
-            function (ResponseInterface $response) use ($event, $stack) {
-                $event->stop();
-                $this->collectResponseInformations($response, $event, $stack);
+        $onFulfilled = function (ResponseInterface $response) use ($event, $stack) {
+            $this->collectResponseInformations($response, $event, $stack);
 
-                return $response;
-            }, function (\Exception $exception) use ($event, $stack) {
-                $event->stop();
-                $this->collectExceptionInformations($exception, $event, $stack);
+            return $response;
+        };
 
-                throw $exception;
-            }
-        );
+        $onRejected = function (\Exception $exception) use ($event, $stack) {
+            $this->collectExceptionInformations($exception, $event, $stack);
+
+            throw $exception;
+        };
+
+        $this->collector->deactivateStack($stack);
+
+        try {
+            return $this->client->sendAsyncRequest($request)->then($onFulfilled, $onRejected);
+        } finally {
+            $event->stop();
+            $this->collector->activateStack($stack);
+        }
     }
 
     /**
@@ -99,35 +107,35 @@ class ProfileClient implements HttpClient, HttpAsyncClient
      */
     public function sendRequest(RequestInterface $request)
     {
-        $stack = $this->collector->getCurrentStack();
+        $stack = $this->collector->getActiveStack();
+
         $this->collectRequestInformations($request, $stack);
         $event = $this->stopwatch->start($this->getStopwatchEventName($request));
 
         try {
             $response = $this->client->sendRequest($request);
-            $event->stop();
-
             $this->collectResponseInformations($response, $event, $stack);
 
             return $response;
         } catch (\Exception $e) {
-            $event->stop();
             $this->collectExceptionInformations($e, $event, $stack);
 
             throw $e;
+        } catch (\Throwable $e) {
+            $this->collectExceptionInformations($e, $event, $stack);
+
+            throw $e;
+        } finally {
+            $event->stop();
         }
     }
 
     /**
      * @param RequestInterface $request
-     * @param Stack|null       $stack
+     * @param Stack            $stack
      */
-    private function collectRequestInformations(RequestInterface $request, Stack $stack = null)
+    private function collectRequestInformations(RequestInterface $request, Stack $stack)
     {
-        if (null === $stack) {
-            return;
-        }
-
         $stack->setRequestTarget($request->getRequestTarget());
         $stack->setRequestMethod($request->getMethod());
         $stack->setRequestScheme($request->getUri()->getScheme());
@@ -139,14 +147,10 @@ class ProfileClient implements HttpClient, HttpAsyncClient
     /**
      * @param ResponseInterface $response
      * @param StopwatchEvent    $event
-     * @param Stack|null        $stack
+     * @param Stack             $stack
      */
-    private function collectResponseInformations(ResponseInterface $response, StopwatchEvent $event, Stack $stack = null)
+    private function collectResponseInformations(ResponseInterface $response, StopwatchEvent $event, Stack $stack)
     {
-        if (null === $stack) {
-            return;
-        }
-
         $stack->setDuration($event->getDuration());
         $stack->setResponseCode($response->getStatusCode());
         $stack->setClientResponse($this->formatter->formatResponse($response));
@@ -155,16 +159,12 @@ class ProfileClient implements HttpClient, HttpAsyncClient
     /**
      * @param \Exception     $exception
      * @param StopwatchEvent $event
-     * @param Stack|null     $stack
+     * @param Stack          $stack
      */
-    private function collectExceptionInformations(\Exception $exception, StopwatchEvent $event, Stack $stack = null)
+    private function collectExceptionInformations(\Exception $exception, StopwatchEvent $event, Stack $stack)
     {
         if ($exception instanceof HttpException) {
             $this->collectResponseInformations($exception->getResponse(), $event, $stack);
-        }
-
-        if (null === $stack) {
-            return;
         }
 
         $stack->setDuration($event->getDuration());

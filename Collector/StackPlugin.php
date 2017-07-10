@@ -52,16 +52,25 @@ class StackPlugin implements Plugin
         $stack = new Stack($this->client, $this->formatter->formatRequest($request));
 
         $this->collector->addStack($stack);
+        $this->collector->activateStack($stack);
 
-        return $next($request)->then(function (ResponseInterface $response) use ($stack) {
+        $onFulfilled = function (ResponseInterface $response) use ($stack) {
             $stack->setResponse($this->formatter->formatResponse($response));
 
             return $response;
-        }, function (Exception $exception) use ($stack) {
+        };
+
+        $onRejected = function (Exception $exception) use ($stack) {
             $stack->setResponse($this->formatter->formatException($exception));
             $stack->setFailed(true);
 
             throw $exception;
-        });
+        };
+
+        try {
+            return $next($request)->then($onFulfilled, $onRejected);
+        } finally {
+            $this->collector->deactivateStack($stack);
+        }
     }
 }

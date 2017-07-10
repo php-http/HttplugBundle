@@ -88,6 +88,10 @@ class StackPluginTest extends \PHPUnit_Framework_TestCase
                 return true;
             }))
         ;
+        $this->collector
+            ->expects($this->once())
+            ->method('activateStack')
+        ;
 
         $next = function () {
             return new FulfilledPromise($this->response);
@@ -108,6 +112,10 @@ class StackPluginTest extends \PHPUnit_Framework_TestCase
 
                 return true;
             }))
+        ;
+        $this->collector
+            ->expects($this->once())
+            ->method('deactivateStack')
         ;
 
         $next = function () {
@@ -134,6 +142,10 @@ class StackPluginTest extends \PHPUnit_Framework_TestCase
                 return true;
             }))
         ;
+        $this->collector
+            ->expects($this->once())
+            ->method('deactivateStack')
+        ;
 
         $this->setExpectedException(Exception::class);
 
@@ -148,5 +160,44 @@ class StackPluginTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf(Stack::class, $currentStack);
         $this->assertEquals('FormattedException', $currentStack->getResponse());
         $this->assertTrue($currentStack->isFailed());
+    }
+
+    public function testOnException()
+    {
+        $this->collector
+            ->expects($this->once())
+            ->method('deactivateStack')
+        ;
+
+        $this->setExpectedException(\Exception::class);
+
+        $next = function () {
+            throw new \Exception();
+        };
+
+        $this->subject->handleRequest($this->request, $next, function () {
+        });
+    }
+
+    public function testOnError()
+    {
+        if (!interface_exists(\Throwable::class)) {
+            $this->markTestSkipped();
+        }
+
+        $this->collector
+            ->expects($this->once())
+            ->method('deactivateStack')
+        ;
+
+        //PHPUnit wrap any \Error into a \PHPUnit_Framework_Error. So we are expecting the
+        $this->setExpectedException(\PHPUnit_Framework_Error::class);
+
+        $next = function () {
+            return 2 / 0;
+        };
+
+        $this->subject->handleRequest($this->request, $next, function () {
+        });
     }
 }

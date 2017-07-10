@@ -17,4 +17,55 @@ class CollectorTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(['default', 'acme'], $collector->getClients());
     }
+
+    public function testActivateStack()
+    {
+        $parent = new Stack('acme', 'GET / HTTP/1.1');
+        $stack = new Stack('acme', 'GET / HTTP/1.1');
+
+        $collector = new Collector();
+
+        $collector->activateStack($parent);
+        $collector->activateStack($stack);
+
+        $this->assertEquals($parent, $stack->getParent());
+        $this->assertEquals($stack, $collector->getActiveStack());
+    }
+
+    public function testDeactivateStack()
+    {
+        $stack = new Stack('acme', 'GET / HTTP/1.1');
+        $collector = new Collector();
+
+        $collector->activateStack($stack);
+        $this->assertNotNull($collector->getActiveStack());
+
+        $collector->deactivateStack($stack);
+        $this->assertNull($collector->getActiveStack());
+    }
+
+    public function testDeactivateStackSetParentAsActiveStack()
+    {
+        $parent = new Stack('acme', 'GET / HTTP/1.1');
+        $stack = new Stack('acme', 'GET / HTTP/1.1');
+
+        $collector = new Collector();
+
+        $collector->activateStack($parent);
+        $collector->activateStack($stack);
+        $collector->deactivateStack($stack);
+
+        $this->assertEquals($parent, $collector->getActiveStack());
+    }
+
+    public function testAddStack()
+    {
+        $stack = new Stack('acme', 'GET / HTTP/1.1');
+        $collector = new Collector();
+
+        $collector->addStack($stack);
+
+        $this->assertEquals(['acme'], $collector->getClients());
+        $this->assertEquals([$stack], $collector->getClientStacks('acme'));
+    }
 }

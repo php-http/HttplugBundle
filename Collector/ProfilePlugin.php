@@ -51,10 +51,8 @@ class ProfilePlugin implements Plugin
     {
         $profile = new Profile(get_class($this->plugin));
 
-        $stack = $this->collector->getCurrentStack();
-        if (null !== $stack) {
-            $stack->addProfile($profile);
-        }
+        $stack = $this->collector->getActiveStack();
+        $stack->addProfile($profile);
 
         // wrap the next callback to profile the plugin request changes
         $wrappedNext = function (RequestInterface $request) use ($next, $profile) {
@@ -136,10 +134,6 @@ class ProfilePlugin implements Plugin
      */
     private function collectRequestInformation(RequestInterface $request, Stack $stack = null)
     {
-        if (null === $stack) {
-            return;
-        }
-
         if (empty($stack->getRequestTarget())) {
             $stack->setRequestTarget($request->getRequestTarget());
         }

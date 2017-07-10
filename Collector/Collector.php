@@ -20,6 +20,11 @@ use Symfony\Component\HttpKernel\DataCollector\DataCollector;
  */
 class Collector extends DataCollector
 {
+    /**
+     * @var Stack|null
+     */
+    private $activeStack;
+
     public function __construct()
     {
         $this->data['stacks'] = [];
@@ -42,6 +47,38 @@ class Collector extends DataCollector
     }
 
     /**
+     * Mark the stack as active. If a stack was already active, use it as parent for our stack.
+     *
+     * @param Stack $stack
+     */
+    public function activateStack(Stack $stack)
+    {
+        if ($this->activeStack !== null) {
+            $stack->setParent($this->activeStack);
+        }
+
+        $this->activeStack = $stack;
+    }
+
+    /**
+     * Mark the stack as inactive.
+     *
+     * @param Stack $stack
+     */
+    public function deactivateStack(Stack $stack)
+    {
+        $this->activeStack = $stack->getParent();
+    }
+
+    /**
+     * @return Stack|null
+     */
+    public function getActiveStack()
+    {
+        return $this->activeStack;
+    }
+
+    /**
      * @param Stack $stack
      */
     public function addStack(Stack $stack)
@@ -50,23 +87,23 @@ class Collector extends DataCollector
     }
 
     /**
+     * @param Stack $parent
+     *
+     * @return Stack[]
+     */
+    public function getChildrenStacks(Stack $parent)
+    {
+        return array_filter($this->data['stacks'], function (Stack $stack) use ($parent) {
+            return $stack->getParent() === $parent;
+        });
+    }
+
+    /**
      * @return Stack[]
      */
     public function getStacks()
     {
         return $this->data['stacks'];
-    }
-
-    /**
-     * @return Stack|null Return null there is no current stack.
-     */
-    public function getCurrentStack()
-    {
-        if (false === $stack = end($this->data['stacks'])) {
-            return null;
-        }
-
-        return $stack;
     }
 
     /**
