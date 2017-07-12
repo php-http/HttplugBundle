@@ -6,6 +6,8 @@ use Http\Client\HttpClient;
 use Http\Client\HttpAsyncClient;
 use Http\Discovery\HttpClientDiscovery;
 use Http\Discovery\Strategy\DiscoveryStrategy;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\DependencyInjection\ServiceLocator;
 use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -18,23 +20,30 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class ConfiguredClientsStrategy implements DiscoveryStrategy, EventSubscriberInterface
 {
     /**
-     * @var HttpClient
+     * @var ServiceLocator|ContainerInterface
+     */
+    private static $locator;
+
+    /**
+     * @var string
      */
     private static $client;
 
     /**
-     * @var HttpAsyncClient
+     * @var string
      */
     private static $asyncClient;
 
     /**
-     * @param HttpClient      $httpClient
-     * @param HttpAsyncClient $asyncClient
+     * @param ServiceLocator|ContainerInterface $locator
+     * @param string                            $client
+     * @param string                            $asyncClient
      */
-    public function __construct(HttpClient $httpClient = null, HttpAsyncClient $asyncClient = null)
+    public function __construct($locator, $client, $asyncClient)
     {
-        self::$client = $httpClient;
-        self::$asyncClient = $asyncClient;
+        static::$locator = $locator;
+        static::$client = $client;
+        static::$asyncClient = $asyncClient;
     }
 
     /**
@@ -42,15 +51,16 @@ class ConfiguredClientsStrategy implements DiscoveryStrategy, EventSubscriberInt
      */
     public static function getCandidates($type)
     {
-        if ($type === HttpClient::class && self::$client !== null) {
-            return [['class' => function () {
-                return self::$client;
+        $locator = static::$locator;
+        if ($type === HttpClient::class && $locator->has(static::$client)) {
+            return [['class' => function () use ($locator) {
+                return $locator->get(static::$client);
             }]];
         }
 
-        if ($type === HttpAsyncClient::class && self::$asyncClient !== null) {
-            return [['class' => function () {
-                return self::$asyncClient;
+        if ($type === HttpAsyncClient::class && $locator->has(static::$asyncClient)) {
+            return [['class' => function () use ($locator) {
+                return $locator->get(static::$asyncClient);
             }]];
         }
 

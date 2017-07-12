@@ -20,6 +20,7 @@ use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\DefinitionDecorator;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use Symfony\Component\DependencyInjection\Reference;
+use Symfony\Component\DependencyInjection\ServiceLocator;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 /**
@@ -383,6 +384,14 @@ class HttplugExtension extends Extension
             $container->removeDefinition('httplug.strategy');
 
             return;
+        }
+
+        if (!class_exists(ServiceLocator::class)) {
+            $container->getDefinition('httplug.strategy')->setArguments([
+                new Reference('service_container'),
+                in_array($httpClient, ['auto', null], true) ? 'httplug.auto_discovery.auto_discovered_client' : $httpClient,
+                in_array($asyncHttpClient, ['auto', null], true) ? 'httplug.auto_discovery.auto_discovered_async' : $asyncHttpClient,
+            ]);
         }
     }
 
