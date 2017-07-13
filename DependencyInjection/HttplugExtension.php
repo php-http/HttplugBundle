@@ -6,7 +6,7 @@ use Http\Client\Common\BatchClient;
 use Http\Client\Common\FlexibleHttpClient;
 use Http\Client\Common\HttpMethodsClient;
 use Http\Client\Common\Plugin\AuthenticationPlugin;
-use Http\HttplugBundle\ClientFactory\DummyClient;
+use Http\Client\Common\PluginClient;
 use Http\HttplugBundle\ClientFactory\PluginClientFactory;
 use Http\HttplugBundle\Collector\ProfilePlugin;
 use Http\Message\Authentication\BasicAuth;
@@ -284,7 +284,7 @@ class HttplugExtension extends Extension
         }
 
         $container
-            ->register($serviceId, DummyClient::class)
+            ->register($serviceId, PluginClient::class)
             ->setFactory([PluginClientFactory::class, 'createPluginClient'])
             ->addArgument(
                 array_map(

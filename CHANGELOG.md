@@ -8,6 +8,10 @@ The change log describes what is "Added", "Removed", "Changed" or "Fixed" betwee
 
 - Plugins are now displayed with their FQCN instead of service id.
 
+### Deprecated
+
+- The `DummyClient` interface.
+
 ## 1.6.0 - 2017-05-22
 
 ### Added
