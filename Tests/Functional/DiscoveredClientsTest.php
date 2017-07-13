@@ -6,6 +6,7 @@ use Http\Client\Common\PluginClient;
 use Http\Client\HttpAsyncClient;
 use Http\Client\HttpClient;
 use Http\HttplugBundle\Collector\StackPlugin;
+use Http\HttplugBundle\Discovery\ConfiguredClientsStrategy;
 use Nyholm\NSA;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
@@ -88,10 +89,13 @@ class DiscoveredClientsTest extends WebTestCase
         $this->assertFalse($container->has('httplug.auto_discovery.auto_discovered_async'));
         $this->assertTrue($container->has('httplug.strategy'));
 
-        $strategy = $container->get('httplug.strategy');
+        $container->get('httplug.strategy');
 
-        $this->assertEquals($container->get('httplug.client.acme'), NSA::getProperty($strategy, 'client'));
-        $this->assertEquals($container->get('httplug.client.acme'), NSA::getProperty($strategy, 'asyncClient'));
+        $httpClientCandidate = ConfiguredClientsStrategy::getCandidates(HttpClient::class)[0]['class'];
+        $httpAsyncClientCandidate = ConfiguredClientsStrategy::getCandidates(HttpAsyncClient::class)[0]['class'];
+
+        $this->assertEquals($container->get('httplug.client.acme'), $httpClientCandidate());
+        $this->assertEquals($container->get('httplug.client.acme'), $httpAsyncClientCandidate());
     }
 
     private function getContainer($debug, $environment = 'test')
