@@ -71,6 +71,28 @@ class DiscoveredClientsTest extends WebTestCase
         $this->assertEquals('auto_discovered_async', NSA::getProperty($plugins[0], 'client'));
     }
 
+    /**
+     * Test with httplug.discovery.client: "auto"
+     */
+    public function testDiscovery()
+    {
+        $container = $this->getContainer(true);
+
+        $this->assertTrue($container->has('httplug.auto_discovery.auto_discovered_client'));
+        $this->assertTrue($container->has('httplug.auto_discovery.auto_discovered_async'));
+        $this->assertTrue($container->has('httplug.strategy'));
+
+        $container->get('httplug.strategy');
+
+        $httpClient = $container->get('httplug.auto_discovery.auto_discovered_client');
+        $httpAsyncClient = $container->get('httplug.auto_discovery.auto_discovered_async');
+        $this->assertInstanceOf(PluginClient::class, $httpClient);
+        $this->assertInstanceOf(PluginClient::class, $httpAsyncClient);
+    }
+
+    /**
+     * Test with httplug.discovery.client: null
+     */
     public function testDisabledDiscovery()
     {
         $container = $this->getContainer(true, 'discovery_disabled');
@@ -80,6 +102,9 @@ class DiscoveredClientsTest extends WebTestCase
         $this->assertFalse($container->has('httplug.strategy'));
     }
 
+    /**
+     * Test with httplug.discovery.client: "httplug.client.acme"
+     */
     public function testForcedDiscovery()
     {
         $container = $this->getContainer(true, 'discovery_forced');
@@ -100,4 +125,14 @@ class DiscoveredClientsTest extends WebTestCase
 
         return static::$kernel->getContainer();
     }
+
+    protected function setUp()
+    {
+        parent::setUp();
+
+        // Reset values
+        new ConfiguredClientsStrategy(null, null, null);
+    }
+
+
 }
