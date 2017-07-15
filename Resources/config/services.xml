@@ -4,18 +4,9 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
-        <service id="httplug.strategy.locator" class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
-            <argument type="collection">
-                <argument key="httplug.auto_discovery.auto_discovered_client" type="service" id="httplug.auto_discovery.auto_discovered_client" />
-                <argument key="httplug.auto_discovery.auto_discovered_async" type="service" id="httplug.auto_discovery.auto_discovered_async" />
-            </argument>
-            <tag name="container.service_locator" />
-        </service>
         <service id="httplug.strategy" class="Http\HttplugBundle\Discovery\ConfiguredClientsStrategy">
-            <argument type="service" id="httplug.strategy.locator" />
-            <argument>httplug.auto_discovery.auto_discovered_client</argument>
-            <argument>httplug.auto_discovery.auto_discovered_async</argument>
-
+            <argument type="service" id="httplug.auto_discovery.auto_discovered_client" on-invalid="null"/>
+            <argument type="service" id="httplug.auto_discovery.auto_discovered_async" on-invalid="null"/>
             <tag name="kernel.event_subscriber"/>
         </service>
 
