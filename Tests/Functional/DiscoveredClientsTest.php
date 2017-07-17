@@ -7,9 +7,12 @@ use Http\Client\HttpAsyncClient;
 use Http\Client\HttpClient;
 use Http\Discovery\HttpAsyncClientDiscovery;
 use Http\Discovery\HttpClientDiscovery;
+use Http\Discovery\Strategy\CommonClassesStrategy;
 use Http\HttplugBundle\Collector\StackPlugin;
+use Http\HttplugBundle\Discovery\ConfiguredClientsStrategy;
 use Nyholm\NSA;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\EventDispatcher\Event;
 
 class DiscoveredClientsTest extends WebTestCase
 {
@@ -118,7 +121,7 @@ class DiscoveredClientsTest extends WebTestCase
         $this->assertFalse($container->has('httplug.auto_discovery.auto_discovered_async'));
         $this->assertTrue($container->has('httplug.strategy'));
 
-        $strategy = $container->get('httplug.strategy');
+        $container->get('httplug.strategy');
 
         $this->assertEquals($container->get('httplug.client.acme'), HttpClientDiscovery::find());
         $this->assertEquals($container->get('httplug.client.acme'), HttpAsyncClientDiscovery::find());
@@ -136,7 +139,9 @@ class DiscoveredClientsTest extends WebTestCase
         parent::setUp();
 
         // Reset values
-        new ConfiguredClientsStrategy(null, null, null);
+        $strategy = new ConfiguredClientsStrategy(null, null, null);
+        HttpClientDiscovery::setStrategies([CommonClassesStrategy::class]);
+        $strategy->onEvent(new Event());
     }
 
 
