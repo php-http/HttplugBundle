@@ -35,6 +35,7 @@ class ConfiguredClientsStrategy implements DiscoveryStrategy, EventSubscriberInt
     {
         self::$client = $httpClient;
         self::$asyncClient = $asyncClient;
+        HttpClientDiscovery::clearCache();
     }
 
     /**
