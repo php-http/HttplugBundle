@@ -77,7 +77,7 @@ class DiscoveredClientsTest extends WebTestCase
     }
 
     /**
-     * Test with httplug.discovery.client: "auto"
+     * Test with httplug.discovery.client: "auto".
      */
     public function testDiscovery()
     {
@@ -99,7 +99,7 @@ class DiscoveredClientsTest extends WebTestCase
     }
 
     /**
-     * Test with httplug.discovery.client: null
+     * Test with httplug.discovery.client: null.
      */
     public function testDisabledDiscovery()
     {
@@ -111,7 +111,7 @@ class DiscoveredClientsTest extends WebTestCase
     }
 
     /**
-     * Test with httplug.discovery.client: "httplug.client.acme"
+     * Test with httplug.discovery.client: "httplug.client.acme".
      */
     public function testForcedDiscovery()
     {
@@ -143,6 +143,4 @@ class DiscoveredClientsTest extends WebTestCase
         HttpClientDiscovery::setStrategies([CommonClassesStrategy::class]);
         $strategy->onEvent(new Event());
     }
-
-
 }
