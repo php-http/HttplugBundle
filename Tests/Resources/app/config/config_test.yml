@@ -12,7 +12,7 @@ httplug:
                 -
                     decoder:
                         use_content_encoding: false
-                - httplug.plugin.redirect
+                - app.http.plugin.custom
                 -
                     add_host:
                         host: "http://localhost:8000"
@@ -22,3 +22,7 @@ httplug:
                             type: basic
                             username: foo
                             password: bar
+
+services:
+    app.http.plugin.custom:
+        class: Http\Client\Common\Plugin\RedirectPlugin

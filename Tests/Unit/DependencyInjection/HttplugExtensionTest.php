@@ -117,14 +117,14 @@ class HttplugExtensionTest extends AbstractExtensionTestCase
 
         $plugins = [
             'httplug.client.acme.plugin.stack',
-            'httplug.client.acme.plugin.decoder',
-            'httplug.plugin.redirect',
-            'httplug.client.acme.plugin.add_host',
-            'httplug.client.acme.plugin.header_append',
-            'httplug.client.acme.plugin.header_defaults',
-            'httplug.client.acme.plugin.header_set',
-            'httplug.client.acme.plugin.header_remove',
-            'httplug.client.acme.authentication.my_basic',
+            'httplug.client.acme.plugin.decoder.debug',
+            'httplug.plugin.redirect.debug',
+            'httplug.client.acme.plugin.add_host.debug',
+            'httplug.client.acme.plugin.header_append.debug',
+            'httplug.client.acme.plugin.header_defaults.debug',
+            'httplug.client.acme.plugin.header_set.debug',
+            'httplug.client.acme.plugin.header_remove.debug',
+            'httplug.client.acme.authentication.my_basic.debug',
         ];
         $pluginReferences = array_map(function ($id) {
             return new Reference($id);
