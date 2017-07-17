@@ -273,9 +273,11 @@ class HttplugExtension extends Extension
         $pluginClientOptions = [];
         if ($profiling) {
             //Decorate each plugin with a ProfilePlugin instance.
-            foreach ($plugins as $pluginServiceId) {
+            $plugins = array_map(function ($pluginServiceId) use ($container) {
                 $this->decoratePluginWithProfilePlugin($container, $pluginServiceId);
-            }
+
+                return $pluginServiceId.'.debug';
+            }, $plugins);
 
             // To profile the requests, add a StackPlugin as first plugin in the chain.
             $stackPluginId = $this->configureStackPlugin($container, $clientName, $serviceId);
@@ -427,9 +429,8 @@ class HttplugExtension extends Extension
     private function decoratePluginWithProfilePlugin(ContainerBuilder $container, $pluginServiceId)
     {
         $container->register($pluginServiceId.'.debug', ProfilePlugin::class)
-            ->setDecoratedService($pluginServiceId)
             ->setArguments([
-                new Reference($pluginServiceId.'.debug.inner'),
+                new Reference($pluginServiceId),
                 new Reference('httplug.collector.collector'),
                 new Reference('httplug.collector.formatter'),
             ])
