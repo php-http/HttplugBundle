@@ -4,6 +4,12 @@ The change log describes what is "Added", "Removed", "Changed" or "Fixed" betwee
 
 ## Unreleased
 
+### Added
+
+- Add `Http\Message\MessageFactory`, `Http\Message\StreamFactory`, `Http\Message\UriFactory` and `Http\Client\HttpAsyncClient`
+services aliases for autowiring in Symfony 3.3.
+- Redirect requests are now displayed as nested.
+
 ### Changed
 
 - Plugins are now displayed with their FQCN instead of service id.
