@@ -14,7 +14,7 @@
         </service>
 
         <service id="httplug.collector.collector" class="Http\HttplugBundle\Collector\Collector" public="false">
-            <tag name="data_collector" template="HttplugBundle::webprofiler.html.twig" priority="200" id="httplug"/>
+            <tag name="data_collector" template="@Httplug/webprofiler.html.twig" priority="200" id="httplug"/>
         </service>
 
         <service id="httplug.plugin.stack" class="Http\HttplugBundle\Collector\StackPlugin" public="false" abstract="true">

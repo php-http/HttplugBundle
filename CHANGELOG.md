@@ -2,6 +2,12 @@
 
 The change log describes what is "Added", "Removed", "Changed" or "Fixed" between each release.
 
+## unreleased
+
+### Fixed
+
+- Display of the profiler panel when used in a symfony/flex project.
+
 ## 1.7.0 - 2017-07-25
 
 ### Added
