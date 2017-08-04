@@ -41,7 +41,7 @@
             </div>
         {% endset %}
 
-        {% include 'WebProfilerBundle:Profiler:toolbar_item.html.twig' with { 'link': profiler_url, 'status': collector.failedStacks|length ? 'red' : '' } %}
+        {% include '@WebProfiler/Profiler/toolbar_item.html.twig' with { 'link': profiler_url, 'status': collector.failedStacks|length ? 'red' : '' } %}
     {% endif %}
 {% endblock %}
 
@@ -80,7 +80,7 @@
 
                 {% for stack in collector.clientStacks(client) if not stack.parent %}
                     <div class="httplug-stack">
-                        {% include 'HttplugBundle::stack.html.twig' with {
+                        {% include '@Httplug/stack.html.twig' with {
                             'collector': collector,
                             'client': client,
                             'stack': stack,

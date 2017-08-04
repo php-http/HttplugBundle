@@ -65,7 +65,7 @@
 </div>
 {% for child in collector.childrenStacks(stack) %}
     <div class="httplug-stack">
-        {% include 'HttplugBundle::stack.html.twig' with {
+        {% include '@Httplug/stack.html.twig' with {
             'collector': collector,
             'client': client,
             'stack': child,
