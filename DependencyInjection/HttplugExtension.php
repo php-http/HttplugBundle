@@ -162,6 +162,9 @@ class HttplugExtension extends Extension
                 $definition->replaceArgument(0, new Reference($config['journal']));
                 break;
             case 'logger':
+                if (!$container->has($config['logger'])) {
+                    throw new \LogicException(sprintf('To use the LoggerPlugin you must specify a service that implements PSR3 at httplug.plugins.logger.logger. Current value "%s" is not a valid service.', $config['logger']));
+                }
                 $definition->replaceArgument(0, new Reference($config['logger']));
                 if (!empty($config['formatter'])) {
                     $definition->replaceArgument(1, new Reference($config['formatter']));
