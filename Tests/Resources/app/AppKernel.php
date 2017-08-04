@@ -1,10 +1,16 @@
 <?php
 
+use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 use Symfony\Component\Config\Loader\LoaderInterface;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Kernel;
+use Symfony\Component\Routing\RouteCollectionBuilder;
 
 class AppKernel extends Kernel
 {
+    use MicroKernelTrait;
+
     /**
      * {@inheritdoc}
      */
@@ -26,12 +32,22 @@ class AppKernel extends Kernel
     /**
      * {@inheritdoc}
      */
-    public function registerContainerConfiguration(LoaderInterface $loader)
+    protected function configureContainer(ContainerBuilder $container, LoaderInterface $loader)
     {
         $loader->load(__DIR__.'/config/config_'.$this->getEnvironment().'.yml');
         if ($this->isDebug()) {
             $loader->load(__DIR__.'/config/config_debug.yml');
         }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function configureRoutes(RouteCollectionBuilder $routes)
+    {
+        $routes->import('@WebProfilerBundle/Resources/config/routing/wdt.xml', '/_wdt');
+        $routes->import('@WebProfilerBundle/Resources/config/routing/profiler.xml', '/_profiler');
+        $routes->add('/', 'kernel:indexAction');
     }
 
     /**
@@ -56,5 +72,10 @@ class AppKernel extends Kernel
     protected function getContainerBaseClass()
     {
         return '\PSS\SymfonyMockerContainer\DependencyInjection\MockerContainer';
+    }
+
+    public function indexAction()
+    {
+        return new Response();
     }
 }
