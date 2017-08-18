@@ -2,13 +2,12 @@
 
 namespace Http\HttplugBundle\Tests\Functional;
 
-use Http\Client\Common\PluginClient;
 use Http\Client\HttpAsyncClient;
 use Http\Client\HttpClient;
 use Http\Discovery\HttpAsyncClientDiscovery;
 use Http\Discovery\HttpClientDiscovery;
 use Http\Discovery\Strategy\CommonClassesStrategy;
-use Http\HttplugBundle\Collector\StackPlugin;
+use Http\HttplugBundle\Collector\ProfileClient;
 use Http\HttplugBundle\Discovery\ConfiguredClientsStrategy;
 use Nyholm\NSA;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -24,9 +23,7 @@ class DiscoveredClientsTest extends WebTestCase
 
         $service = $container->get('httplug.auto_discovery.auto_discovered_client');
 
-        $this->assertInstanceOf(PluginClient::class, $service);
-        $this->assertInstanceOf(HttpClient::class, NSA::getProperty($service, 'client'));
-        $this->assertEmpty(NSA::getProperty($service, 'plugins'));
+        $this->assertInstanceOf(HttpClient::class, $service);
     }
 
     public function testDiscoveredAsyncClient()
@@ -37,9 +34,7 @@ class DiscoveredClientsTest extends WebTestCase
 
         $service = $container->get('httplug.auto_discovery.auto_discovered_async');
 
-        $this->assertInstanceOf(PluginClient::class, $service);
-        $this->assertInstanceOf(HttpAsyncClient::class, NSA::getProperty($service, 'client'));
-        $this->assertEmpty(NSA::getProperty($service, 'plugins'));
+        $this->assertInstanceOf(HttpAsyncClient::class, $service);
     }
 
     public function testDiscoveredClientWithProfilingEnabled()
@@ -50,13 +45,8 @@ class DiscoveredClientsTest extends WebTestCase
 
         $service = $container->get('httplug.auto_discovery.auto_discovered_client');
 
-        $this->assertInstanceOf(PluginClient::class, $service);
+        $this->assertInstanceOf(ProfileClient::class, $service);
         $this->assertInstanceOf(HttpClient::class, NSA::getProperty($service, 'client'));
-
-        $plugins = NSA::getProperty($service, 'plugins');
-        $this->assertCount(1, $plugins);
-        $this->assertInstanceOf(StackPlugin::class, $plugins[0]);
-        $this->assertEquals('auto_discovered_client', NSA::getProperty($plugins[0], 'client'));
     }
 
     public function testDiscoveredAsyncClientWithProfilingEnabled()
@@ -67,13 +57,8 @@ class DiscoveredClientsTest extends WebTestCase
 
         $service = $container->get('httplug.auto_discovery.auto_discovered_async');
 
-        $this->assertInstanceOf(PluginClient::class, $service);
+        $this->assertInstanceOf(ProfileClient::class, $service);
         $this->assertInstanceOf(HttpAsyncClient::class, NSA::getProperty($service, 'client'));
-
-        $plugins = NSA::getProperty($service, 'plugins');
-        $this->assertCount(1, $plugins);
-        $this->assertInstanceOf(StackPlugin::class, $plugins[0]);
-        $this->assertEquals('auto_discovered_async', NSA::getProperty($plugins[0], 'client'));
     }
 
     /**
@@ -92,9 +77,9 @@ class DiscoveredClientsTest extends WebTestCase
         $httpClient = $container->get('httplug.auto_discovery.auto_discovered_client');
         $httpAsyncClient = $container->get('httplug.auto_discovery.auto_discovered_async');
 
-        $this->assertInstanceOf(PluginClient::class, $httpClient);
+        $this->assertInstanceOf(ProfileClient::class, $httpClient);
         $this->assertSame(HttpClientDiscovery::find(), $httpClient);
-        $this->assertInstanceOf(PluginClient::class, $httpAsyncClient);
+        $this->assertInstanceOf(ProfileClient::class, $httpAsyncClient);
         $this->assertSame(HttpAsyncClientDiscovery::find(), $httpAsyncClient);
     }
 

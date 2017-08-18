@@ -361,7 +361,6 @@ class HttplugExtension extends Extension
         if ($httpClient !== 'auto') {
             $container->removeDefinition('httplug.auto_discovery.auto_discovered_client');
             $container->removeDefinition('httplug.collector.auto_discovered_client');
-            $container->removeDefinition('httplug.auto_discovery.auto_discovered_client.plugin');
 
             if (!empty($httpClient)) {
                 $container->setAlias('httplug.auto_discovery.auto_discovered_client', $httpClient);
@@ -373,7 +372,6 @@ class HttplugExtension extends Extension
         if ($asyncHttpClient !== 'auto') {
             $container->removeDefinition('httplug.auto_discovery.auto_discovered_async');
             $container->removeDefinition('httplug.collector.auto_discovered_async');
-            $container->removeDefinition('httplug.auto_discovery.auto_discovered_async.plugin');
 
             if (!empty($asyncHttpClient)) {
                 $container->setAlias('httplug.auto_discovery.auto_discovered_async', $asyncHttpClient);
