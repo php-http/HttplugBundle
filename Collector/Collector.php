@@ -131,9 +131,13 @@ class Collector extends DataCollector
      */
     public function getClients()
     {
+        $stacks = array_filter($this->data['stacks'], function (Stack $stack) {
+            return $stack->getParent() == null;
+        });
+
         return array_unique(array_map(function (Stack $stack) {
             return $stack->getClient();
-        }, $this->data['stacks']));
+        }, $stacks));
     }
 
     /**
@@ -141,11 +145,39 @@ class Collector extends DataCollector
      *
      * @return Stack[]
      */
-    public function getClientStacks($client)
+    public function getClientRootStacks($client)
     {
         return array_filter($this->data['stacks'], function (Stack $stack) use ($client) {
-            return $stack->getClient() == $client;
+            return $stack->getClient() == $client && $stack->getParent() == null;
         });
+    }
+
+    /**
+     * Count all messages for a client.
+     *
+     * @param $client
+     *
+     * @return int
+     */
+    public function countClientMessages($client)
+    {
+        return array_sum(array_map(function (Stack $stack) {
+            return $this->countStackMessages($stack);
+        }, $this->getClientRootStacks($client)));
+    }
+
+    /**
+     * Recursively count message in stack.
+     *
+     * @param Stack $stack
+     *
+     * @return int
+     */
+    private function countStackMessages(Stack $stack)
+    {
+        return 1 + array_sum(array_map(function (Stack $child) {
+            return $this->countStackMessages($child);
+        }, $this->getChildrenStacks($stack)));
     }
 
     /**
