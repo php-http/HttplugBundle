@@ -2,6 +2,8 @@
 
 namespace Http\HttplugBundle\ClientFactory;
 
+@trigger_error('The '.__NAMESPACE__.'\PluginClientFactory class is deprecated since version 1.8 and will be removed in 2.0.', E_USER_DEPRECATED);
+
 use Http\Client\Common\Plugin;
 use Http\Client\Common\PluginClient;
 

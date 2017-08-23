@@ -2,6 +2,12 @@
 
 The change log describes what is "Added", "Removed", "Changed" or "Fixed" between each release.
 
+## Unreleased
+
+### Deprecated
+
+- The `Http\HttplugBundle\ClientFactory\PluginClientFactory` class.
+
 ## 1.7.1 - 2017-08-04
 
 ### Fixed
