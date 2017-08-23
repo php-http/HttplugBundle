@@ -8,6 +8,14 @@ use Http\Client\HttpAsyncClient;
 use Http\Client\HttpClient;
 use Symfony\Component\Stopwatch\Stopwatch;
 
+/**
+ * This factory is used as a replacement for Http\Client\Common\PluginClientFactory when profiling is enabled. It create
+ * PluginClient instances with all profiling decorators and extra plugins.
+ *
+ * @author Fabien Bourigault <bourigaultfabien@gmail.com>
+ *
+ * @internal
+ */
 final class PluginClientFactory
 {
     /**
