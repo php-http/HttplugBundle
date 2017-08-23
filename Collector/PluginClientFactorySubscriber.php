@@ -8,8 +8,8 @@ use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
- * This subscriber ensure that every PluginClient created when using Http\Client\Common\PluginClientFactory without
- * using the Symfony dependency injection container use the Http\HttplugBundle\Collector\PluginClientFactory factory
+ * This subscriber ensures that every PluginClient created when using Http\Client\Common\PluginClientFactory without
+ * using the Symfony dependency injection container uses the Http\HttplugBundle\Collector\PluginClientFactory factory
  * when profiling is enabled. This allows 0 config profiling of third party libraries which use HTTPlug.
  *
  * @author Fabien Bourigault <bourigaultfabien@gmail.com>
