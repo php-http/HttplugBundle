@@ -149,37 +149,45 @@ class HttplugExtension extends Extension
                     ->replaceArgument(0, new Reference($config['cache_pool']))
                     ->replaceArgument(1, new Reference($config['stream_factory']))
                     ->replaceArgument(2, $config['config']);
+
                 break;
             case 'cookie':
                 $definition->replaceArgument(0, new Reference($config['cookie_jar']));
+
                 break;
             case 'decoder':
                 $definition->addArgument([
                     'use_content_encoding' => $config['use_content_encoding'],
                 ]);
+
                 break;
             case 'history':
                 $definition->replaceArgument(0, new Reference($config['journal']));
+
                 break;
             case 'logger':
                 $definition->replaceArgument(0, new Reference($config['logger']));
                 if (!empty($config['formatter'])) {
                     $definition->replaceArgument(1, new Reference($config['formatter']));
                 }
+
                 break;
             case 'redirect':
                 $definition->addArgument([
                     'preserve_header' => $config['preserve_header'],
                     'use_default_for_multiple' => $config['use_default_for_multiple'],
                 ]);
+
                 break;
             case 'retry':
                 $definition->addArgument([
                     'retries' => $config['retry'],
                 ]);
+
                 break;
             case 'stopwatch':
                 $definition->replaceArgument(0, new Reference($config['stopwatch']));
+
                 break;
 
             /* client specific plugins */
@@ -191,12 +199,14 @@ class HttplugExtension extends Extension
                 $definition->replaceArgument(1, [
                     'replace' => $config['replace'],
                 ]);
+
                 break;
             case 'header_append':
             case 'header_defaults':
             case 'header_set':
             case 'header_remove':
                 $definition->replaceArgument(0, $config['headers']);
+
                 break;
 
             default:
@@ -220,19 +230,23 @@ class HttplugExtension extends Extension
                 case 'bearer':
                     $container->register($authServiceKey, Bearer::class)
                         ->addArgument($values['token']);
+
                     break;
                 case 'basic':
                     $container->register($authServiceKey, BasicAuth::class)
                         ->addArgument($values['username'])
                         ->addArgument($values['password']);
+
                     break;
                 case 'wsse':
                     $container->register($authServiceKey, Wsse::class)
                         ->addArgument($values['username'])
                         ->addArgument($values['password']);
+
                     break;
                 case 'service':
                     $authServiceKey = $values['service'];
+
                     break;
                 default:
                     throw new \LogicException(sprintf('Unknown authentication type: "%s"', $values['type']));
@@ -361,7 +375,6 @@ class HttplugExtension extends Extension
         if ($httpClient !== 'auto') {
             $container->removeDefinition('httplug.auto_discovery.auto_discovered_client');
             $container->removeDefinition('httplug.collector.auto_discovered_client');
-            $container->removeDefinition('httplug.auto_discovery.auto_discovered_client.plugin');
 
             if (!empty($httpClient)) {
                 $container->setAlias('httplug.auto_discovery.auto_discovered_client', $httpClient);
@@ -373,7 +386,6 @@ class HttplugExtension extends Extension
         if ($asyncHttpClient !== 'auto') {
             $container->removeDefinition('httplug.auto_discovery.auto_discovered_async');
             $container->removeDefinition('httplug.collector.auto_discovered_async');
-            $container->removeDefinition('httplug.auto_discovery.auto_discovered_async.plugin');
 
             if (!empty($asyncHttpClient)) {
                 $container->setAlias('httplug.auto_discovery.auto_discovered_async', $asyncHttpClient);
