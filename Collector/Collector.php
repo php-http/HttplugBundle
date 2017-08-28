@@ -132,7 +132,7 @@ class Collector extends DataCollector
     public function getClients()
     {
         $stacks = array_filter($this->data['stacks'], function (Stack $stack) {
-            return $stack->getParent() == null;
+            return $stack->getParent() === null;
         });
 
         return array_unique(array_map(function (Stack $stack) {
