@@ -66,6 +66,6 @@ class CollectorTest extends \PHPUnit_Framework_TestCase
         $collector->addStack($stack);
 
         $this->assertEquals(['acme'], $collector->getClients());
-        $this->assertEquals([$stack], $collector->getClientStacks('acme'));
+        $this->assertEquals([$stack], $collector->getClientRootStacks('acme'));
     }
 }

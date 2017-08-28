@@ -71,14 +71,14 @@
     <div class="sf-tabs">
         {% for client in collector.clients %}
         <div class="tab">
-            <h3 class="tab-title">{{ client }} <span class="badge">{{ collector.clientStacks(client)|length }}</span></h3>
+            <h3 class="tab-title">{{ client }} <span class="badge">{{ collector.countClientMessages(client) }}</span></h3>
 
             <div class="tab-content">
                 <p class="help">
                     These messages are sent by client named "{{ client }}".
                 </p>
 
-                {% for stack in collector.clientStacks(client) if not stack.parent %}
+                {% for stack in collector.clientRootStacks(client) %}
                     <div class="httplug-stack">
                         {% include '@Httplug/stack.html.twig' with {
                             'collector': collector,
