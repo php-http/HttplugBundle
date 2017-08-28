@@ -55,6 +55,8 @@
     "conflict": {
         "php-http/guzzle6-adapter": "<1.1"
     },
+    "minimum-stability": "dev",
+    "prefer-dist": true,
     "autoload": {
         "psr-4": {
             "Http\\HttplugBundle\\": ""
@@ -71,7 +73,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "1.7-dev"
+            "dev-master": "1.8-dev"
         }
     }
 }
