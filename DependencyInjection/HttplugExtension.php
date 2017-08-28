@@ -302,6 +302,9 @@ class HttplugExtension extends Extension
                     $plugins
                 )
             )
+            ->addArgument([
+                'client_name' => $clientName,
+            ])
         ;
 
         /*
