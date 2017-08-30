@@ -82,15 +82,15 @@ class ServiceInstantiationTest extends WebTestCase
      */
     protected static function bootKernel(array $options = [])
     {
-        $kernel = parent::bootKernel($options);
+        parent::bootKernel($options);
 
         /** @var EventDispatcherInterface $dispatcher */
-        $dispatcher = $kernel->getContainer()->get('event_dispatcher');
+        $dispatcher = static::$kernel->getContainer()->get('event_dispatcher');
 
-        $event = new GetResponseEvent($kernel, new Request(), HttpKernelInterface::MASTER_REQUEST);
+        $event = new GetResponseEvent(static::$kernel, new Request(), HttpKernelInterface::MASTER_REQUEST);
 
         $dispatcher->dispatch(KernelEvents::REQUEST, $event);
 
-        return $kernel;
+        return static::$kernel;
     }
 }
