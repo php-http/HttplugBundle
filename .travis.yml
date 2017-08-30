@@ -14,7 +14,7 @@ php:
     - 7.2
 
 env:
-    global: 
+    global:
         - TEST_COMMAND="composer test"
 
 branches:
@@ -26,7 +26,7 @@ matrix:
     include:
         - php: 5.5
           env: COMPOSER_FLAGS="--prefer-stable --prefer-lowest" COVERAGE=true TEST_COMMAND="composer test-ci"
-        - php: 7.1
+        - php: 7.2
           env: DEPENDENCIES=dev
         - php: hhvm
           dist: trusty
