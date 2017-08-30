@@ -60,6 +60,11 @@
             "Http\\HttplugBundle\\": ""
         }
     },
+    "autoload-dev": {
+        "classmap": [
+            "Tests/Resources/app/AppKernel.php"
+        ]
+    },
     "scripts": {
         "test": "vendor/bin/phpunit",
         "test-ci": "vendor/bin/phpunit --coverage-text --coverage-clover=build/coverage.xml"

@@ -28,5 +28,6 @@
 
     <php>
         <server name="KERNEL_DIR" value="./Tests/Resources/app" />
+        <server name="KERNEL_CLASS" value="AppKernel" />
     </php>
 </phpunit>
