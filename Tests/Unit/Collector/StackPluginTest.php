@@ -2,7 +2,6 @@
 
 namespace Http\HttplugBundle\Tests\Unit\Collector;
 
-use Exception;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
 use Http\Client\Exception\HttpException;
@@ -12,10 +11,12 @@ use Http\HttplugBundle\Collector\Stack;
 use Http\HttplugBundle\Collector\StackPlugin;
 use Http\Promise\FulfilledPromise;
 use Http\Promise\RejectedPromise;
+use PHPUnit\Framework\Error\Warning;
+use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
-class StackPluginTest extends \PHPUnit_Framework_TestCase
+class StackPluginTest extends TestCase
 {
     /**
      * @var Collector
@@ -38,7 +39,7 @@ class StackPluginTest extends \PHPUnit_Framework_TestCase
     private $response;
 
     /**
-     * @var Exception
+     * @var \Exception
      */
     private $exception;
 
@@ -130,6 +131,9 @@ class StackPluginTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('FormattedResponse', $currentStack->getResponse());
     }
 
+    /**
+     * @expectedException \Exception
+     */
     public function testOnRejected()
     {
         //Capture the current stack
@@ -147,8 +151,6 @@ class StackPluginTest extends \PHPUnit_Framework_TestCase
             ->method('deactivateStack')
         ;
 
-        $this->setExpectedException(Exception::class);
-
         $next = function () {
             return new RejectedPromise($this->exception);
         };
@@ -162,14 +164,15 @@ class StackPluginTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($currentStack->isFailed());
     }
 
+    /**
+     * @expectedException \Exception
+     */
     public function testOnException()
     {
         $this->collector
             ->expects($this->once())
             ->method('deactivateStack')
         ;
-
-        $this->setExpectedException(\Exception::class);
 
         $next = function () {
             throw new \Exception();
@@ -185,13 +188,13 @@ class StackPluginTest extends \PHPUnit_Framework_TestCase
             $this->markTestSkipped();
         }
 
+        //PHPUnit wrap any \Error into a \PHPUnit\Framework\Error\Warning.
+        $this->expectException(Warning::class);
+
         $this->collector
             ->expects($this->once())
             ->method('deactivateStack')
         ;
-
-        //PHPUnit wrap any \Error into a \PHPUnit_Framework_Error. So we are expecting the
-        $this->setExpectedException(\PHPUnit_Framework_Error::class);
 
         $next = function () {
             return 2 / 0;

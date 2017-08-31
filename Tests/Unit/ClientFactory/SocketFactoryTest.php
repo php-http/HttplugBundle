@@ -5,11 +5,12 @@ namespace Http\HttplugBundle\Tests\Unit\ClientFactory;
 use Http\Client\Socket\Client;
 use Http\HttplugBundle\ClientFactory\SocketFactory;
 use Http\Message\MessageFactory;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @author Tobias Nyholm <tobias.nyholm@gmail.com>
  */
-class SocketFactoryTest extends \PHPUnit_Framework_TestCase
+class SocketFactoryTest extends TestCase
 {
     public function testCreateClient()
     {

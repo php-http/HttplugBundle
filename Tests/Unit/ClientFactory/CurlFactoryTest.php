@@ -6,11 +6,12 @@ use Http\HttplugBundle\ClientFactory\CurlFactory;
 use Http\Client\Curl\Client;
 use Http\Message\MessageFactory;
 use Http\Message\StreamFactory;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @author Tobias Nyholm <tobias.nyholm@gmail.com>
  */
-class CurlFactoryTest extends \PHPUnit_Framework_TestCase
+class CurlFactoryTest extends TestCase
 {
     public function testCreateClient()
     {

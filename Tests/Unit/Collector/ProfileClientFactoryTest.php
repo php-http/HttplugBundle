@@ -8,9 +8,10 @@ use Http\HttplugBundle\Collector\Collector;
 use Http\HttplugBundle\Collector\Formatter;
 use Http\HttplugBundle\Collector\ProfileClient;
 use Http\HttplugBundle\Collector\ProfileClientFactory;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Stopwatch\Stopwatch;
 
-class ProfileClientFactoryTest extends \PHPUnit_Framework_TestCase
+class ProfileClientFactoryTest extends TestCase
 {
     /**
      * @var Collector

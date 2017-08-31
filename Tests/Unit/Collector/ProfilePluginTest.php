@@ -13,10 +13,11 @@ use Http\HttplugBundle\Collector\Stack;
 use Http\Promise\FulfilledPromise;
 use Http\Promise\Promise;
 use Http\Promise\RejectedPromise;
+use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
-class ProfilePluginTest extends \PHPUnit_Framework_TestCase
+class ProfilePluginTest extends TestCase
 {
     /**
      * @var Plugin
@@ -167,10 +168,11 @@ class ProfilePluginTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('FormattedResponse', $profile->getResponse());
     }
 
+    /**
+     * @expectedException \Http\Client\Exception\TransferException
+     */
     public function testOnRejected()
     {
-        $this->setExpectedException(TransferException::class);
-
         $promise = $this->subject->handleRequest($this->request, function () {
             return $this->rejectedPromise;
         }, function () {

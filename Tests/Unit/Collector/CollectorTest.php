@@ -4,8 +4,9 @@ namespace Http\HttplugBundle\Tests\Unit\Collector;
 
 use Http\HttplugBundle\Collector\Collector;
 use Http\HttplugBundle\Collector\Stack;
+use PHPUnit\Framework\TestCase;
 
-class CollectorTest extends \PHPUnit_Framework_TestCase
+class CollectorTest extends TestCase
 {
     public function testCollectClientNames()
     {

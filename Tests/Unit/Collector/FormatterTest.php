@@ -9,8 +9,9 @@ use Http\Client\Exception\TransferException;
 use Http\HttplugBundle\Collector\Formatter;
 use Http\Message\Formatter as MessageFormatter;
 use Http\Message\Formatter\CurlCommandFormatter;
+use PHPUnit\Framework\TestCase;
 
-class FormatterTest extends \PHPUnit_Framework_TestCase
+class FormatterTest extends TestCase
 {
     /**
      * @var MessageFormatter
