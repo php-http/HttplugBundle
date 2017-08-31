@@ -184,7 +184,7 @@ class StackPluginTest extends TestCase
 
     public function testOnError()
     {
-        if (!interface_exists(\Throwable::class)) {
+        if (PHP_VERSION_ID <= 70000) {
             $this->markTestSkipped();
         }
 
