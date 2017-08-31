@@ -37,6 +37,7 @@ matrix:
 before_install:
     - if [ "$SYMFONY_VERSION" != "" ]; then composer require "symfony/symfony:${SYMFONY_VERSION}" --no-update; fi;
     - if [ "$DEPENDENCIES" = "dev" ]; then perl -pi -e 's/^}$/,"minimum-stability":"dev"}/' composer.json; fi;
+    - if [ $COVERAGE != true ]; then phpenv config-rm xdebug.ini; fi;
 
 install:
     - travis_retry composer update ${COMPOSER_FLAGS} --prefer-dist --no-interaction
