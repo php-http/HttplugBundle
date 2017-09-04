@@ -12,6 +12,11 @@ class AppKernel extends Kernel
     use MicroKernelTrait;
 
     /**
+     * @var string
+     */
+    private static $cacheDir;
+
+    /**
      * {@inheritdoc}
      */
     public function registerBundles()
@@ -55,7 +60,10 @@ class AppKernel extends Kernel
      */
     public function getCacheDir()
     {
-        return sys_get_temp_dir().'/httplug-bundle/cache';
+        if (null === self::$cacheDir) {
+            self::$cacheDir = uniqid('cache');
+        }
+        return sys_get_temp_dir().'/httplug-bundle/'.self::$cacheDir;
     }
 
     /**
