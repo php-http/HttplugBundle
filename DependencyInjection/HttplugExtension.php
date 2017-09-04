@@ -274,7 +274,8 @@ class HttplugExtension extends Extension
 
         $plugins = [];
         foreach ($arguments['plugins'] as $plugin) {
-            list($pluginName, $pluginConfig) = each($plugin);
+            $pluginName = key($plugin);
+            $pluginConfig = current($plugin);
             if ('reference' === $pluginName) {
                 $plugins[] = $pluginConfig['id'];
             } elseif ('authentication' === $pluginName) {

@@ -15,11 +15,12 @@ use Http\HttplugBundle\Collector\StackPlugin;
 use Http\Message\Formatter\CurlCommandFormatter;
 use Http\Message\Formatter\FullHttpMessageFormatter;
 use Http\Mock\Client;
+use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\RequestInterface;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
 use Symfony\Component\Stopwatch\Stopwatch;
 
-class ProfilingTest extends \PHPUnit_Framework_TestCase
+class ProfilingTest extends TestCase
 {
     /**
      * @var Collector
@@ -63,13 +64,14 @@ class ProfilingTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('example.com', $stack->getRequestHost());
     }
 
+    /**
+     * @expectedException \Exception
+     */
     public function testProfilingWhenPluginThrowException()
     {
         $client = $this->createClient([
             new ExceptionThrowerPlugin(),
         ]);
-
-        $this->setExpectedException(\Exception::class);
 
         try {
             $client->sendRequest(new Request('GET', 'https://example.com'));

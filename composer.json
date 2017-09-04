@@ -29,10 +29,11 @@
         "php-http/message": "^1.4",
         "php-http/discovery": "^1.0",
         "twig/twig": "^1.18 || ^2.0",
-        "symfony/asset": "^2.8 || ^3.0"
+        "symfony/asset": "^2.8 || ^3.0",
+        "symfony/symfony": "2.8.27"
     },
     "require-dev": {
-        "phpunit/phpunit": "^4.5 || ^5.4",
+        "phpunit/phpunit": "^4.8.35 || ^5.7 || ^6.1",
         "phpunit/php-token-stream": "^1.1.8",
         "php-http/curl-client": "^1.0",
         "php-http/socket-client": "^1.0",
@@ -49,7 +50,7 @@
         "symfony/browser-kit": "^2.8 || ^3.0",
         "symfony/dom-crawler": "^2.8 || ^3.0",
         "polishsymfonycommunity/symfony-mocker-container": "^1.0",
-        "matthiasnoback/symfony-dependency-injection-test": "^1.0",
+        "matthiasnoback/symfony-dependency-injection-test": "^1.0 || ^2.0",
         "nyholm/nsa": "^1.1"
     },
     "conflict": {
@@ -59,6 +60,11 @@
         "psr-4": {
             "Http\\HttplugBundle\\": ""
         }
+    },
+    "autoload-dev": {
+        "classmap": [
+            "Tests/Resources/app/AppKernel.php"
+        ]
     },
     "scripts": {
         "test": "vendor/bin/phpunit",

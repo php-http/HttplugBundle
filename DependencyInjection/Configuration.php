@@ -470,15 +470,19 @@ class Configuration implements ConfigurationInterface
                         switch ($config['type']) {
                             case 'basic':
                                 $this->validateAuthenticationType(['username', 'password'], $config, 'basic');
+
                                 break;
                             case 'bearer':
                                 $this->validateAuthenticationType(['token'], $config, 'bearer');
+
                                 break;
                             case 'service':
                                 $this->validateAuthenticationType(['service'], $config, 'service');
+
                                 break;
                             case 'wsse':
                                 $this->validateAuthenticationType(['username', 'password'], $config, 'wsse');
+
                                 break;
                         }
 

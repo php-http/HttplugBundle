@@ -14,13 +14,14 @@ use Http\HttplugBundle\Collector\Stack;
 use Http\Promise\FulfilledPromise;
 use Http\Promise\Promise;
 use Http\Promise\RejectedPromise;
+use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\UriInterface;
 use Symfony\Component\Stopwatch\Stopwatch;
 use Symfony\Component\Stopwatch\StopwatchEvent;
 
-class ProfileClientTest extends \PHPUnit_Framework_TestCase
+class ProfileClientTest extends TestCase
 {
     /**
      * @var Collector

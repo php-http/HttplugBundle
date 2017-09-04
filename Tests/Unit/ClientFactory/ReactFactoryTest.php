@@ -5,11 +5,12 @@ namespace Http\HttplugBundle\Tests\Unit\ClientFactory;
 use Http\Adapter\React\Client;
 use Http\HttplugBundle\ClientFactory\ReactFactory;
 use Http\Message\MessageFactory;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @author Tobias Nyholm <tobias.nyholm@gmail.com>
  */
-class ReactFactoryTest extends \PHPUnit_Framework_TestCase
+class ReactFactoryTest extends TestCase
 {
     public function testCreateClient()
     {

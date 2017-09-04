@@ -5,8 +5,9 @@ namespace Http\HttplugBundle\Tests\Unit\Discovery;
 use Http\Client\HttpAsyncClient;
 use Http\Client\HttpClient;
 use Http\HttplugBundle\Discovery\ConfiguredClientsStrategy;
+use PHPUnit\Framework\TestCase;
 
-class ConfiguredClientsStrategyTest extends \PHPUnit_Framework_TestCase
+class ConfiguredClientsStrategyTest extends TestCase
 {
     public function testGetCandidates()
     {

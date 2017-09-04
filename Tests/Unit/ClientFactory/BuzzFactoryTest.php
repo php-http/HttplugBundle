@@ -5,11 +5,12 @@ namespace Http\HttplugBundle\Tests\Unit\ClientFactory;
 use Http\Adapter\Buzz\Client;
 use Http\HttplugBundle\ClientFactory\BuzzFactory;
 use Http\Message\MessageFactory;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @author Tobias Nyholm <tobias.nyholm@gmail.com>
  */
-class BuzzFactoryTest extends \PHPUnit_Framework_TestCase
+class BuzzFactoryTest extends TestCase
 {
     public function testCreateClient()
     {
