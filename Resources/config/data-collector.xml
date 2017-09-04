@@ -91,7 +91,7 @@
             <argument type="service" id="debug.stopwatch"/>
         </service>
 
-        <service id="httplug.collector.plugin_client_factory_subscriber" class="Http\HttplugBundle\Collector\PluginClientFactorySubscriber">
+        <service id="Http\HttplugBundle\Collector\PluginClientFactoryListener" class="Http\HttplugBundle\Collector\PluginClientFactoryListener">
             <argument type="service" id="Http\Client\Common\PluginClientFactory" />
 
             <tag name="kernel.event_subscriber" />

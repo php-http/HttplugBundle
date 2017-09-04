@@ -3,6 +3,7 @@
 namespace Http\HttplugBundle\Tests\Unit\DependencyInjection;
 
 use Http\Client\Common\PluginClient;
+use Http\HttplugBundle\Collector\PluginClientFactoryListener;
 use Http\HttplugBundle\DependencyInjection\HttplugExtension;
 use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractExtensionTestCase;
 use Symfony\Component\DependencyInjection\Reference;
@@ -195,7 +196,7 @@ class HttplugExtensionTest extends AbstractExtensionTestCase
             ]
         );
 
-        $this->assertContainerBuilderHasService('httplug.collector.plugin_client_factory_subscriber');
+        $this->assertContainerBuilderHasService(PluginClientFactoryListener::class);
     }
 
     public function testOverrideProfillingFormatter()

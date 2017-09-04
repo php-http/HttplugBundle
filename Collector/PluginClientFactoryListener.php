@@ -16,7 +16,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  *
  * @internal
  */
-final class PluginClientFactorySubscriber implements EventSubscriberInterface
+final class PluginClientFactoryListener implements EventSubscriberInterface
 {
     /**
      * @var CollectorPluginClientFactory
