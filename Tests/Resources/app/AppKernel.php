@@ -14,7 +14,7 @@ class AppKernel extends Kernel
     /**
      * @var string
      */
-    private static $cachePrefix;
+    private static $cacheDir;
 
     /**
      * {@inheritdoc}
@@ -60,10 +60,10 @@ class AppKernel extends Kernel
      */
     public function getCacheDir()
     {
-        if (null === self::$cachePrefix) {
-            self::$cachePrefix = uniqid('cache');
+        if (null === self::$cacheDir) {
+            self::$cacheDir = uniqid('cache');
         }
-        return sys_get_temp_dir().'/httplug-bundle/'.self::$cachePrefix;
+        return sys_get_temp_dir().'/httplug-bundle/'.self::$cacheDir;
     }
 
     /**
