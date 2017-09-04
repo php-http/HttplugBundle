@@ -4,6 +4,17 @@ The change log describes what is "Added", "Removed", "Changed" or "Fixed" betwee
 
 ## Unreleased
 
+### Added
+
+- Any third party library using `Http\Client\Common\PluginClientFactory` to create `Http\Client\Common\PluginClient`
+instances now gets zero config profiling.
+- `Http\Client\Common\PluginClientFactory` factory service.
+
+### Changed
+
+- `ProfilePlugin` and `StackPlugin` are no longer registered as (private) services decorators. Those decorators are now
+created through the `Http\HttplugBundle\Collector\PluginClientFactory`.
+
 ### Deprecated
 
 - The `Http\HttplugBundle\ClientFactory\PluginClientFactory` class.
