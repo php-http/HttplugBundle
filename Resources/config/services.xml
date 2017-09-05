@@ -23,6 +23,8 @@
             <factory class="Http\Discovery\MessageFactoryDiscovery" method="find" />
         </service>
         <service id="Http\Message\MessageFactory" alias="httplug.message_factory" public="false" />
+        <service id="Http\Message\RequestFactory" alias="httplug.message_factory" public="false" />
+        <service id="Http\Message\ResponseFactory" alias="httplug.message_factory" public="false" />
 
         <service id="httplug.stream_factory.default" class="Http\Message\StreamFactory">
             <factory class="Http\Discovery\StreamFactoryDiscovery" method="find" />
