@@ -44,6 +44,9 @@
         </service>
         <service id="Http\Client\HttpClient" alias="httplug.client" public="false" />
 
+        <!-- PluginClientFactory -->
+        <service id="Http\Client\Common\PluginClientFactory" class="Http\Client\Common\PluginClientFactory" public="false" />
+
         <!-- ClientFactories -->
         <service id="httplug.factory.auto" class="Http\HttplugBundle\ClientFactory\AutoDiscoveryFactory" public="false" />
         <service id="httplug.factory.buzz" class="Http\HttplugBundle\ClientFactory\BuzzFactory" public="false">

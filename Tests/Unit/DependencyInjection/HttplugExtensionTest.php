@@ -3,6 +3,7 @@
 namespace Http\HttplugBundle\Tests\Unit\DependencyInjection;
 
 use Http\Client\Common\PluginClient;
+use Http\HttplugBundle\Collector\PluginClientFactoryListener;
 use Http\HttplugBundle\DependencyInjection\HttplugExtension;
 use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractExtensionTestCase;
 use Symfony\Component\DependencyInjection\Reference;
@@ -116,15 +117,14 @@ class HttplugExtensionTest extends AbstractExtensionTestCase
         ]);
 
         $plugins = [
-            'httplug.client.acme.plugin.stack',
-            'httplug.client.acme.plugin.decoder.debug',
-            'httplug.plugin.redirect.debug',
-            'httplug.client.acme.plugin.add_host.debug',
-            'httplug.client.acme.plugin.header_append.debug',
-            'httplug.client.acme.plugin.header_defaults.debug',
-            'httplug.client.acme.plugin.header_set.debug',
-            'httplug.client.acme.plugin.header_remove.debug',
-            'httplug.client.acme.authentication.my_basic.debug',
+            'httplug.client.acme.plugin.decoder',
+            'httplug.plugin.redirect',
+            'httplug.client.acme.plugin.add_host',
+            'httplug.client.acme.plugin.header_append',
+            'httplug.client.acme.plugin.header_defaults',
+            'httplug.client.acme.plugin.header_set',
+            'httplug.client.acme.plugin.header_remove',
+            'httplug.client.acme.authentication.my_basic',
         ];
         $pluginReferences = array_map(function ($id) {
             return new Reference($id);
@@ -134,7 +134,7 @@ class HttplugExtensionTest extends AbstractExtensionTestCase
         foreach ($plugins as $id) {
             $this->assertContainerBuilderHasService($id);
         }
-        $this->assertContainerBuilderHasServiceDefinitionWithArgument('httplug.client.acme', 0, $pluginReferences);
+        $this->assertContainerBuilderHasServiceDefinitionWithArgument('httplug.client.acme', 1, $pluginReferences);
     }
 
     /**
@@ -196,10 +196,7 @@ class HttplugExtensionTest extends AbstractExtensionTestCase
             ]
         );
 
-        $def = $this->container->findDefinition('httplug.client');
-        $arguments = $def->getArguments();
-
-        $this->assertTrue(isset($arguments[3]));
+        $this->assertContainerBuilderHasService(PluginClientFactoryListener::class);
     }
 
     public function testOverrideProfillingFormatter()

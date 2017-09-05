@@ -19,7 +19,7 @@
         "php": "^5.5 || ^7.0",
         "php-http/client-implementation": "^1.0",
         "php-http/message-factory": "^1.0.2",
-        "php-http/client-common": "^1.2",
+        "php-http/client-common": "^1.6",
         "php-http/cache-plugin": "^1.4",
         "php-http/logger-plugin": "^1.0",
         "php-http/stopwatch-plugin": "^1.0",
@@ -29,7 +29,8 @@
         "php-http/message": "^1.4",
         "php-http/discovery": "^1.0",
         "twig/twig": "^1.18 || ^2.0",
-        "symfony/asset": "^2.8 || ^3.0"
+        "symfony/asset": "^2.8 || ^3.0",
+        "symfony/dependency-injection": "^2.8.3 || ^3.0.3"
     },
     "require-dev": {
         "phpunit/phpunit": "^4.8.35 || ^5.7 || ^6.1",
@@ -55,6 +56,8 @@
     "conflict": {
         "php-http/guzzle6-adapter": "<1.1"
     },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
     "autoload": {
         "psr-4": {
             "Http\\HttplugBundle\\": ""
@@ -71,7 +74,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "1.7-dev"
+            "dev-master": "1.8-dev"
         }
     }
 }

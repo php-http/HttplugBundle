@@ -84,5 +84,17 @@
             <argument type="service" id="httplug.collector.formatter"/>
             <argument type="service" id="debug.stopwatch"/>
         </service>
+
+        <service id="Http\Client\Common\PluginClientFactory" class="Http\HttplugBundle\Collector\PluginClientFactory" public="false">
+            <argument type="service" id="httplug.collector.collector"/>
+            <argument type="service" id="httplug.collector.formatter"/>
+            <argument type="service" id="debug.stopwatch"/>
+        </service>
+
+        <service id="Http\HttplugBundle\Collector\PluginClientFactoryListener" class="Http\HttplugBundle\Collector\PluginClientFactoryListener">
+            <argument type="service" id="Http\Client\Common\PluginClientFactory" />
+
+            <tag name="kernel.event_subscriber" />
+        </service>
     </services>
 </container>

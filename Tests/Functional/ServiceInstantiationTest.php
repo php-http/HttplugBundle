@@ -11,6 +11,11 @@ use Http\HttplugBundle\Collector\ProfilePlugin;
 use Http\HttplugBundle\Collector\StackPlugin;
 use Nyholm\NSA;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\HttpKernel\Profiler\Profiler;
 
 class ServiceInstantiationTest extends WebTestCase
@@ -70,5 +75,22 @@ class ServiceInstantiationTest extends WebTestCase
         $this->assertInstanceOf(ProfilePlugin::class, $plugins[2]);
         $this->assertInstanceOf(ProfilePlugin::class, $plugins[3]);
         $this->assertInstanceOf(ProfilePlugin::class, $plugins[4]);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected static function bootKernel(array $options = [])
+    {
+        parent::bootKernel($options);
+
+        /** @var EventDispatcherInterface $dispatcher */
+        $dispatcher = static::$kernel->getContainer()->get('event_dispatcher');
+
+        $event = new GetResponseEvent(static::$kernel, new Request(), HttpKernelInterface::MASTER_REQUEST);
+
+        $dispatcher->dispatch(KernelEvents::REQUEST, $event);
+
+        return static::$kernel;
     }
 }
