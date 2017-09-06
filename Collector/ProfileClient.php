@@ -47,7 +47,7 @@ class ProfileClient implements HttpClient, HttpAsyncClient
     private $eventNames = [];
 
     /**
-     * @param HttpClient|HttpAsyncClient $client    The client to profile. Client must implement both HttpClient or
+     * @param HttpClient|HttpAsyncClient $client    The client to profile. Client must implement HttpClient or
      *                                              HttpAsyncClient interface.
      * @param Collector                  $collector
      * @param Formatter                  $formatter
