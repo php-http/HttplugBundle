@@ -77,7 +77,7 @@ class ProfileClient implements HttpClient, HttpAsyncClient
     {
         $activateStack = true;
         $stack = $this->collector->getActiveStack();
-        if ($stack === null) {
+        if (null === $stack) {
             //When using a discovered client not wrapped in a PluginClient, we don't have a stack from StackPlugin. So
             //we create our own stack and activate it!
             $stack = new Stack('Default', $this->formatter->formatRequest($request));
@@ -120,7 +120,7 @@ class ProfileClient implements HttpClient, HttpAsyncClient
     public function sendRequest(RequestInterface $request)
     {
         $stack = $this->collector->getActiveStack();
-        if ($stack === null) {
+        if (null === $stack) {
             //When using a discovered client not wrapped in a PluginClient, we don't have a stack from StackPlugin. So
             //we create our own stack but don't activate it.
             $stack = new Stack('Default', $this->formatter->formatRequest($request));
