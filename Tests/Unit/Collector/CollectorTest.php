@@ -69,4 +69,18 @@ class CollectorTest extends TestCase
         $this->assertEquals(['acme'], $collector->getClients());
         $this->assertEquals([$stack], $collector->getClientRootStacks('acme'));
     }
+
+    public function testResetAction()
+    {
+        $stack = new Stack('acme', 'GET / HTTP/1.1');
+
+        $collector = new Collector();
+        $collector->addStack($stack);
+        $collector->activateStack($stack);
+
+        $collector->reset();
+
+        $this->assertNull($collector->getActiveStack());
+        $this->assertEmpty($collector->getStacks());
+    }
 }

@@ -27,7 +27,7 @@ class Collector extends DataCollector
 
     public function __construct()
     {
-        $this->data['stacks'] = [];
+        $this->reset();
     }
 
     /**
@@ -36,6 +36,15 @@ class Collector extends DataCollector
     public function collect(Request $request, Response $response, Exception $exception = null)
     {
         // We do not need to collect any data from the Symfony Request and Response
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function reset()
+    {
+        $this->data['stacks'] = [];
+        $this->activeStack = null;
     }
 
     /**
