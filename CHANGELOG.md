@@ -19,6 +19,10 @@ created through the `Http\HttplugBundle\Collector\PluginClientFactory`.
 
 - The `Http\HttplugBundle\ClientFactory\PluginClientFactory` class.
 
+### Fixed
+
+- Added missing service reference for `CachePlugin`'s `cache_key_generator` configuration option. 
+
 ## 1.7.1 - 2017-08-04
 
 ### Fixed

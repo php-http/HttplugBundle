@@ -2,7 +2,6 @@
 
 namespace Http\HttplugBundle\Tests\Unit\DependencyInjection;
 
-use Http\Client\Common\PluginClient;
 use Http\HttplugBundle\Collector\PluginClientFactoryListener;
 use Http\HttplugBundle\DependencyInjection\HttplugExtension;
 use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractExtensionTestCase;
@@ -211,6 +210,27 @@ class HttplugExtensionTest extends AbstractExtensionTestCase
 
         $def = $this->container->findDefinition('httplug.collector.formatter');
         $this->assertEquals('acme.formatter', (string) $def->getArgument(0));
+    }
+
+    public function testCachePluginConfigCacheKeyGeneratorReference()
+    {
+        $this->load([
+            'plugins' => [
+                'cache' => [
+                    'cache_pool' => 'my_cache_pool',
+                    'config' => [
+                        'cache_key_generator' => 'header_cache_key_generator',
+                    ],
+                ],
+            ],
+        ]);
+
+        $cachePlugin = $this->container->findDefinition('httplug.plugin.cache');
+
+        $config = $cachePlugin->getArgument(2);
+        $this->assertArrayHasKey('cache_key_generator', $config);
+        $this->assertInstanceOf(Reference::class, $config['cache_key_generator']);
+        $this->assertSame('header_cache_key_generator', (string) $config['cache_key_generator']);
     }
 
     private function verifyProfilingDisabled()
