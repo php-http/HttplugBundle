@@ -144,11 +144,15 @@ class HttplugExtension extends Extension
     {
         switch ($name) {
             case 'cache':
+                $options = $config['config'];
+                if (!empty($options['cache_key_generator'])) {
+                    $options['cache_key_generator'] = new Reference($options['cache_key_generator']);
+                }
+
                 $definition
                     ->replaceArgument(0, new Reference($config['cache_pool']))
                     ->replaceArgument(1, new Reference($config['stream_factory']))
-                    ->replaceArgument(2, $config['config']);
-
+                    ->replaceArgument(2, $options);
                 break;
             case 'cookie':
                 $definition->replaceArgument(0, new Reference($config['cookie_jar']));
