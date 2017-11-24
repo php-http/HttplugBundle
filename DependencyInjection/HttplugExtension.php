@@ -297,6 +297,7 @@ class HttplugExtension extends Extension
 
         $container
             ->register($serviceId, PluginClient::class)
+            ->setPublic(true)
             ->setFactory([new Reference(PluginClientFactory::class), 'createClient'])
             ->addArgument(new Reference($serviceId.'.client'))
             ->addArgument(

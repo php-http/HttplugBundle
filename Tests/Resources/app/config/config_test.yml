@@ -26,3 +26,4 @@ httplug:
 services:
     app.http.plugin.custom:
         class: Http\Client\Common\Plugin\RedirectPlugin
+        public: true

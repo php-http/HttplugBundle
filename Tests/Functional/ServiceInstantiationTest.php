@@ -24,8 +24,8 @@ class ServiceInstantiationTest extends WebTestCase
     {
         static::bootKernel();
         $container = static::$kernel->getContainer();
-        $this->assertTrue($container->has('httplug.client'));
-        $client = $container->get('httplug.client');
+        $this->assertTrue($container->has('httplug.client.default'));
+        $client = $container->get('httplug.client.default');
         $this->assertInstanceOf(HttpClient::class, $client);
     }
 
@@ -33,8 +33,8 @@ class ServiceInstantiationTest extends WebTestCase
     {
         static::bootKernel(['debug' => false]);
         $container = static::$kernel->getContainer();
-        $this->assertTrue($container->has('httplug.client'));
-        $client = $container->get('httplug.client');
+        $this->assertTrue($container->has('httplug.client.default'));
+        $client = $container->get('httplug.client.default');
         $this->assertInstanceOf(HttpClient::class, $client);
     }
 
