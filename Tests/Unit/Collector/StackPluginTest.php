@@ -196,7 +196,7 @@ class StackPluginTest extends TestCase
             $this->setExpectedException(\PHPUnit_Framework_Error::class);
         } else {
             // PHPUnit 6.0 and above
-            $this->expectException(PHPUnit\Framework\Error\Warning::class);
+            $this->expectException(\PHPUnit\Framework\Error\Warning::class);
         }
 
         $this->collector
