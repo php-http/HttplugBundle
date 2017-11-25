@@ -8,7 +8,7 @@ cache:
 
 env:
     global:
-        - TEST_COMMAND="./vendor/bin/simple-phpunit"
+        - TEST_COMMAND="composer test"
 
 branches:
     except:
@@ -44,7 +44,6 @@ matrix:
           env: DEPENDENCIES="dev"
 
 before_install:
-    - composer require --no-update "symfony/phpunit-bridge:^3.3 || ^4"
     - if [[ $COVERAGE != true ]]; then phpenv config-rm xdebug.ini || true; fi
     - if [ "$DEPENDENCIES" = "minimum" ]; then COMPOSER_FLAGS="--prefer-stable --prefer-lowest"; fi;
     - if [ "$DEPENDENCIES" = "dev" ]; then composer config minimum-stability dev; fi;
