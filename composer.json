@@ -33,7 +33,6 @@
         "symfony/dependency-injection": "^2.8.3 || ^3.0.3"
     },
     "require-dev": {
-        "phpunit/phpunit": "^4.8.35 || ^5.7 || ^6.1",
         "phpunit/php-token-stream": "^1.1.8",
         "php-http/curl-client": "^1.0",
         "php-http/socket-client": "^1.0",

@@ -189,14 +189,14 @@ class StackPluginTest extends TestCase
 
         /*
          * Use the correct PHPUnit version
-         * PHPUnit wrap any \Error into a \PHPUnit_Framework_Error. So we are expecting the
+         * PHPUnit wrap any \Error into a \PHPUnit\Framework\Error\Warning.
          */
         if (class_exists('PHPUnit_Framework_Error')) {
             // PHPUnit 5.7
             $this->setExpectedException(\PHPUnit_Framework_Error::class);
         } else {
             // PHPUnit 6.0 and above
-            $this->expectException(\PHPUnit\Framework\Error\Warning::class);
+            $this->expectException(PHPUnit\Framework\Error\Warning::class);
         }
 
         $this->collector
