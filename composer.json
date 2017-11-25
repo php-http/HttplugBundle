@@ -50,6 +50,7 @@
         "symfony/dom-crawler": "^2.8 || ^3.0",
         "polishsymfonycommunity/symfony-mocker-container": "^1.0",
         "matthiasnoback/symfony-dependency-injection-test": "^1.0 || ^2.0",
+        "matthiasnoback/symfony-config-test": "^2.0",
         "nyholm/nsa": "^1.1"
     },
     "conflict": {
