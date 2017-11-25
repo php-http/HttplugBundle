@@ -120,7 +120,7 @@ final class Stack
     /**
      * @param Stack $parent
      */
-    public function setParent(Stack $parent)
+    public function setParent(self $parent)
     {
         $this->parent = $parent;
     }
