@@ -43,13 +43,13 @@ class ConfiguredClientsStrategy implements DiscoveryStrategy, EventSubscriberInt
      */
     public static function getCandidates($type)
     {
-        if ($type === HttpClient::class && self::$client !== null) {
+        if (HttpClient::class === $type && null !== self::$client) {
             return [['class' => function () {
                 return self::$client;
             }]];
         }
 
-        if ($type === HttpAsyncClient::class && self::$asyncClient !== null) {
+        if (HttpAsyncClient::class === $type && null !== self::$asyncClient) {
             return [['class' => function () {
                 return self::$asyncClient;
             }]];

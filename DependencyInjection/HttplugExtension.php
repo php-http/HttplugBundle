@@ -89,7 +89,7 @@ class HttplugExtension extends Extension
         $clients = [];
 
         foreach ($config['clients'] as $name => $arguments) {
-            if ($first === null) {
+            if (null === $first) {
                 // Save the name of the first configured client.
                 $first = $name;
             }
@@ -99,7 +99,7 @@ class HttplugExtension extends Extension
         }
 
         // If we have clients configured
-        if ($first !== null) {
+        if (null !== $first) {
             // If we do not have a client named 'default'
             if (!isset($config['clients']['default'])) {
                 // Alias the first client to httplug.client.default
@@ -153,6 +153,7 @@ class HttplugExtension extends Extension
                     ->replaceArgument(0, new Reference($config['cache_pool']))
                     ->replaceArgument(1, new Reference($config['stream_factory']))
                     ->replaceArgument(2, $options);
+
                 break;
             case 'cookie':
                 $definition->replaceArgument(0, new Reference($config['cookie_jar']));
@@ -369,7 +370,7 @@ class HttplugExtension extends Extension
     private function configureAutoDiscoveryClients(ContainerBuilder $container, array $config)
     {
         $httpClient = $config['discovery']['client'];
-        if ($httpClient !== 'auto') {
+        if ('auto' !== $httpClient) {
             $container->removeDefinition('httplug.auto_discovery.auto_discovered_client');
             $container->removeDefinition('httplug.collector.auto_discovered_client');
 
@@ -380,7 +381,7 @@ class HttplugExtension extends Extension
         }
 
         $asyncHttpClient = $config['discovery']['async_client'];
-        if ($asyncHttpClient !== 'auto') {
+        if ('auto' !== $asyncHttpClient) {
             $container->removeDefinition('httplug.auto_discovery.auto_discovered_async');
             $container->removeDefinition('httplug.collector.auto_discovered_async');
 

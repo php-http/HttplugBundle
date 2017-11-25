@@ -62,7 +62,7 @@ class Collector extends DataCollector
      */
     public function activateStack(Stack $stack)
     {
-        if ($this->activeStack !== null) {
+        if (null !== $this->activeStack) {
             $stack->setParent($this->activeStack);
         }
 
@@ -141,7 +141,7 @@ class Collector extends DataCollector
     public function getClients()
     {
         $stacks = array_filter($this->data['stacks'], function (Stack $stack) {
-            return $stack->getParent() === null;
+            return null === $stack->getParent();
         });
 
         return array_unique(array_map(function (Stack $stack) {
@@ -157,7 +157,7 @@ class Collector extends DataCollector
     public function getClientRootStacks($client)
     {
         return array_filter($this->data['stacks'], function (Stack $stack) use ($client) {
-            return $stack->getClient() == $client && $stack->getParent() == null;
+            return $stack->getClient() == $client && null == $stack->getParent();
         });
     }
 
