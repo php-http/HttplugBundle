@@ -42,7 +42,7 @@ matrix:
           env: DEPENDENCIES="dev"
 
     allow_failures:
-          # Latest beta is allowed to fail.
+          # dev-master is allowed to fail.
         - php: 7.1
           env: DEPENDENCIES="dev"
 
