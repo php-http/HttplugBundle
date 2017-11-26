@@ -40,7 +40,7 @@
         "php-http/react-adapter": "^0.2.1",
         "php-http/buzz-adapter": "^0.3",
         "php-http/mock-client": "^1.0",
-        "symfony/phpunit-bridge": "^3.4@rc || ^4.0",
+        "symfony/phpunit-bridge": "^3.3 || ^4.0",
         "symfony/twig-bundle": "^2.8 || ^3.0",
         "symfony/twig-bridge": "^2.8 || ^3.0",
         "symfony/web-profiler-bundle": "^2.8 || ^3.0",
