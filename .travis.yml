@@ -18,7 +18,7 @@ branches:
 matrix:
     fast_finish: true
     include:
-          # Minimum supported PHP and Symfony version
+          # Minimum supported Symfony version and latest PHP version
         - php: 7.1
           env: DEPENDENCIES="minimum" COVERAGE=true TEST_COMMAND="composer test-ci" SYMFONY_DEPRECATIONS_HELPER="weak" SYMFONY_PHPUNIT_VERSION="5.7"
 
