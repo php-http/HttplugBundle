@@ -5,11 +5,13 @@ sudo: false
 cache:
     directories:
         - $HOME/.composer/cache/files
+        - $HOME/symfony-bridge/.phpunit
 
 env:
     global:
         - TEST_COMMAND="composer test"
         - SYMFONY_PHPUNIT_VERSION="6.3"
+        - SYMFONY_PHPUNIT_DIR="$HOME/symfony-bridge/.phpunit"
 
 branches:
     except:
