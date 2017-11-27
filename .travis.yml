@@ -6,16 +6,10 @@ cache:
     directories:
         - $HOME/.composer/cache/files
 
-php:
-    - 5.5
-    - 5.6
-    - 7.0
-    - 7.1
-    - 7.2
-
 env:
     global:
         - TEST_COMMAND="composer test"
+        - SYMFONY_PHPUNIT_VERSION="6.3"
 
 branches:
     except:
@@ -24,26 +18,48 @@ branches:
 matrix:
     fast_finish: true
     include:
+          # Minimum supported Symfony version and latest PHP version
+        - php: 7.1
+          env: DEPENDENCIES="minimum" COVERAGE=true TEST_COMMAND="composer test-ci" SYMFONY_DEPRECATIONS_HELPER="weak" SYMFONY_PHPUNIT_VERSION="5.7"
+
+          # Test the latest stable release
         - php: 5.5
-          env: COMPOSER_FLAGS="--prefer-stable --prefer-lowest" COVERAGE=true TEST_COMMAND="composer test-ci"
-        - php: 7.2
-          env: DEPENDENCIES=dev
-        - php: hhvm
-          dist: trusty
-          # Test against LTS versions
+          env: SYMFONY_PHPUNIT_VERSION="5.7"
+        - php: 5.6
+          env: SYMFONY_PHPUNIT_VERSION="5.7"
         - php: 7.0
-          env: SYMFONY_VERSION=2.8.*
+        - php: 7.1
+        - php: 7.2
+
+          # Test LTS versions
+        - php: 5.5
+          env: DEPENDENCIES="symfony/lts:^2"
+        - php: 5.5
+          env: DEPENDENCIES="symfony/lts:^3"
+
+          # Latest commit to master
+        - php: 7.1
+          env: DEPENDENCIES="dev"
+
+    allow_failures:
+          # dev-master is allowed to fail.
+        - php: 7.1
+          env: DEPENDENCIES="dev"
 
 before_install:
-    - if [ "$SYMFONY_VERSION" != "" ]; then composer require "symfony/symfony:${SYMFONY_VERSION}" --no-update; fi;
-    - if [ "$DEPENDENCIES" = "dev" ]; then sed -i '/prefer-stable/d' composer.json; fi;
-    - if [ "$DEPENDENCIES" = "dev" ]; then perl -pi -e 's/^}$/,"minimum-stability":"dev"}/' composer.json; fi;
-    - if [ $COVERAGE != true ]; then phpenv config-rm xdebug.ini; fi;
+    - if [[ $COVERAGE != true ]]; then phpenv config-rm xdebug.ini || true; fi
+    - if [ "$DEPENDENCIES" = "minimum" ]; then COMPOSER_FLAGS="--prefer-stable --prefer-lowest"; fi;
+    - if [ "$DEPENDENCIES" = "dev" ]; then composer config minimum-stability dev; fi;
+    - if [[ $DEPENDENCIES == *"/"* ]]; then composer require --no-update $DEPENDENCIES; fi;
 
 install:
-    - travis_retry composer update ${COMPOSER_FLAGS} --prefer-dist --no-interaction
+    # To be removed when this issue will be resolved: https://github.com/composer/composer/issues/5355
+    - if [[ "$COMPOSER_FLAGS" == *"--prefer-lowest"* ]]; then composer update --prefer-dist --no-interaction --prefer-stable --quiet; fi
+    - composer update ${COMPOSER_FLAGS} --prefer-dist --no-interaction
+    - vendor/bin/simple-phpunit install
 
 script:
+    - composer validate --strict --no-check-lock
     - $TEST_COMMAND
 
 after_success:

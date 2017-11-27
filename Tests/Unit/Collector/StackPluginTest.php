@@ -11,7 +11,6 @@ use Http\HttplugBundle\Collector\Stack;
 use Http\HttplugBundle\Collector\StackPlugin;
 use Http\Promise\FulfilledPromise;
 use Http\Promise\RejectedPromise;
-use PHPUnit\Framework\Error\Warning;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -188,8 +187,17 @@ class StackPluginTest extends TestCase
             $this->markTestSkipped();
         }
 
-        //PHPUnit wrap any \Error into a \PHPUnit\Framework\Error\Warning.
-        $this->expectException(Warning::class);
+        /*
+         * Use the correct PHPUnit version
+         * PHPUnit wrap any \Error into a \PHPUnit\Framework\Error\Warning.
+         */
+        if (class_exists('PHPUnit_Framework_Error')) {
+            // PHPUnit 5.7
+            $this->setExpectedException(\PHPUnit_Framework_Error::class);
+        } else {
+            // PHPUnit 6.0 and above
+            $this->expectException(\PHPUnit\Framework\Error\Warning::class);
+        }
 
         $this->collector
             ->expects($this->once())
