@@ -23,8 +23,6 @@ matrix:
           env: DEPENDENCIES="minimum" COVERAGE=true TEST_COMMAND="composer test-ci" SYMFONY_DEPRECATIONS_HELPER="weak" SYMFONY_PHPUNIT_VERSION="5.7"
 
           # Test the latest stable release
-        - php: 5.5
-          env: SYMFONY_PHPUNIT_VERSION="5.7"
         - php: 5.6
           env: SYMFONY_PHPUNIT_VERSION="5.7"
         - php: 7.0
