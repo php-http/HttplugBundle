@@ -51,7 +51,7 @@ class HttplugExtension extends Extension
 
         // Set main aliases
         foreach ($config['main_alias'] as $type => $id) {
-            $container->setAlias(sprintf('httplug.%s', $type), $id);
+            $container->setAlias(sprintf('httplug.%s', $type), new Alias($id, true));
         }
 
         // Configure toolbar

@@ -44,7 +44,7 @@
         <service id="httplug.client.default" class="Http\Client\HttpClient" public="true">
             <factory class="Http\Discovery\HttpClientDiscovery" method="find" />
         </service>
-        <service id="Http\Client\HttpClient" alias="httplug.client" public="true" />
+        <service id="Http\Client\HttpClient" alias="httplug.client" public="false" />
 
         <!-- PluginClientFactory -->
         <service id="Http\Client\Common\PluginClientFactory" class="Http\Client\Common\PluginClientFactory" public="false" />
