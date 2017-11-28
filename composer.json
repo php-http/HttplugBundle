@@ -55,8 +55,6 @@
     "conflict": {
         "php-http/guzzle6-adapter": "<1.1"
     },
-    "minimum-stability": "dev",
-    "prefer-stable": true,
     "autoload": {
         "psr-4": {
             "Http\\HttplugBundle\\": ""
