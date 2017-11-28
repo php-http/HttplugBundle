@@ -4,44 +4,44 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
-        <service id="httplug.strategy" class="Http\HttplugBundle\Discovery\ConfiguredClientsStrategy" public="true">
+        <service id="httplug.strategy" class="Http\HttplugBundle\Discovery\ConfiguredClientsStrategy">
             <argument type="service" id="httplug.auto_discovery.auto_discovered_client" on-invalid="null"/>
             <argument type="service" id="httplug.auto_discovery.auto_discovered_async" on-invalid="null"/>
             <tag name="kernel.event_subscriber"/>
         </service>
 
-        <service id="httplug.auto_discovery.auto_discovered_client" class="Http\Client\HttpClient" public="true">
+        <service id="httplug.auto_discovery.auto_discovered_client" class="Http\Client\HttpClient">
             <factory class="Http\Discovery\HttpClientDiscovery" method="find" />
         </service>
 
-        <service id="httplug.auto_discovery.auto_discovered_async" class="Http\Client\HttpAsyncClient" public="true">
+        <service id="httplug.auto_discovery.auto_discovered_async" class="Http\Client\HttpAsyncClient">
             <factory class="Http\Discovery\HttpAsyncClientDiscovery" method="find" />
         </service>
 
         <!-- Discovery with autowiring support for Symfony 3.3+ -->
-        <service id="httplug.message_factory.default" class="Http\Message\MessageFactory" public="true">
+        <service id="httplug.message_factory.default" class="Http\Message\MessageFactory">
             <factory class="Http\Discovery\MessageFactoryDiscovery" method="find" />
         </service>
         <service id="Http\Message\MessageFactory" alias="httplug.message_factory" public="false" />
         <service id="Http\Message\RequestFactory" alias="httplug.message_factory" public="false" />
         <service id="Http\Message\ResponseFactory" alias="httplug.message_factory" public="false" />
 
-        <service id="httplug.stream_factory.default" class="Http\Message\StreamFactory" public="true">
+        <service id="httplug.stream_factory.default" class="Http\Message\StreamFactory">
             <factory class="Http\Discovery\StreamFactoryDiscovery" method="find" />
         </service>
         <service id="Http\Message\StreamFactory" alias="httplug.stream_factory" public="false" />
 
-        <service id="httplug.uri_factory.default" class="Http\Message\UriFactory" public="true">
+        <service id="httplug.uri_factory.default" class="Http\Message\UriFactory">
             <factory class="Http\Discovery\UriFactoryDiscovery" method="find" />
         </service>
         <service id="Http\Message\UriFactory" alias="httplug.uri_factory" public="false" />
 
-        <service id="httplug.async_client.default" class="Http\Client\HttpAsyncClient" public="true">
+        <service id="httplug.async_client.default" class="Http\Client\HttpAsyncClient">
             <factory class="Http\Discovery\HttpAsyncClientDiscovery" method="find" />
         </service>
         <service id="Http\Client\HttpAsyncClient" alias="httplug.async_client.default" public="false" />
 
-        <service id="httplug.client.default" class="Http\Client\HttpClient" public="true">
+        <service id="httplug.client.default" class="Http\Client\HttpClient">
             <factory class="Http\Discovery\HttpClientDiscovery" method="find" />
         </service>
         <service id="Http\Client\HttpClient" alias="httplug.client" public="false" />
