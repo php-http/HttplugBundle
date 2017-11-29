@@ -37,7 +37,7 @@
     },
     "require-dev": {
         "guzzlehttp/psr7": "^1.0",
-        "matthiasnoback/symfony-dependency-injection-test": "^1.1 || ^2.0",
+        "matthiasnoback/symfony-dependency-injection-test": "^1.1 || ^2.0 || dev-feature/symfony-4",
         "nyholm/nsa": "^1.1",
         "php-http/buzz-adapter": "^0.3",
         "php-http/curl-client": "^1.0",
