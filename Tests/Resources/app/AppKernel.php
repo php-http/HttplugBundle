@@ -2,6 +2,7 @@
 
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 use Symfony\Component\Config\Loader\LoaderInterface;
+use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Kernel;
@@ -85,5 +86,44 @@ class AppKernel extends Kernel
     public function indexAction()
     {
         return new Response();
+    }
+
+    protected function build(ContainerBuilder $container)
+    {
+        $container->addCompilerPass(new PublicServicesForFunctionalTestsPass());
+    }
+}
+
+class PublicServicesForFunctionalTestsPass implements CompilerPassInterface
+{
+    public function process(ContainerBuilder $container)
+    {
+        $services = [
+            'httplug.strategy',
+            'httplug.auto_discovery.auto_discovered_client',
+            'httplug.auto_discovery.auto_discovered_async',
+            'httplug.message_factory.default',
+            'httplug.stream_factory.default',
+            'httplug.uri_factory.default',
+            'httplug.async_client.default',
+            'httplug.client.default',
+            'app.http.plugin.custom',
+            'httplug.client.acme',
+        ];
+        foreach ($services as $service) {
+            if ($container->hasDefinition($service)) {
+                $container->getDefinition($service)->setPublic(true);
+            }
+
+        }
+
+        $aliases = [
+            'httplug.client',
+        ];
+        foreach ($aliases as $alias) {
+            if ($container->hasAlias($alias)) {
+                $container->getAlias($alias)->setPublic(true);
+            }
+        }
     }
 }
