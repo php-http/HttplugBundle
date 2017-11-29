@@ -26,3 +26,6 @@ httplug:
 services:
     app.http.plugin.custom:
         class: Http\Client\Common\Plugin\RedirectPlugin
+        public: true
+        # plugin services usually do not need to be public.
+        # this one is made public so that we can do functional tests on the service
