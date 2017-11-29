@@ -6,14 +6,18 @@ The change log describes what is "Added", "Removed", "Changed" or "Fixed" betwee
 
 ### Added
 
+- Service for`Http\Client\Common\PluginClientFactory`.
 - Any third party library using `Http\Client\Common\PluginClientFactory` to create `Http\Client\Common\PluginClient`
 instances now gets zero config profiling.
-- `Http\Client\Common\PluginClientFactory` factory service.
+- Add missing service reference for `cache_key_generator`
+- Symfony 4 support. 
+- `Http\HttplugBundle\Collector\Collector::reset()`
 
 ### Changed
 
 - `ProfilePlugin` and `StackPlugin` are no longer registered as (private) services decorators. Those decorators are now
 created through the `Http\HttplugBundle\Collector\PluginClientFactory`.
+- `PluginClient` is not used for discovered clients.
 
 ### Deprecated
 
