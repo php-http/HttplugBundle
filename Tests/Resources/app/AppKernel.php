@@ -108,10 +108,21 @@ class PublicServicesForFunctionalTestsPass implements CompilerPassInterface
             'httplug.async_client.default',
             'httplug.client.default',
             'app.http.plugin.custom',
+            'httplug.client.acme',
         ];
         foreach ($services as $service) {
             if ($container->hasDefinition($service)) {
                 $container->getDefinition($service)->setPublic(true);
+            }
+
+        }
+
+        $aliases = [
+            'httplug.client',
+        ];
+        foreach ($aliases as $alias) {
+            if ($container->hasAlias($alias)) {
+                $container->getAlias($alias)->setPublic(true);
             }
         }
     }

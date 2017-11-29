@@ -14,7 +14,6 @@ use Http\Message\Authentication\Bearer;
 use Http\Message\Authentication\Wsse;
 use Psr\Http\Message\UriInterface;
 use Symfony\Component\Config\FileLocator;
-use Symfony\Component\DependencyInjection\Alias;
 use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
@@ -51,7 +50,7 @@ class HttplugExtension extends Extension
 
         // Set main aliases
         foreach ($config['main_alias'] as $type => $id) {
-            $container->setAlias(sprintf('httplug.%s', $type), new Alias($id, true));
+            $container->setAlias(sprintf('httplug.%s', $type), $id);
         }
 
         // Configure toolbar
@@ -104,7 +103,7 @@ class HttplugExtension extends Extension
             // If we do not have a client named 'default'
             if (!isset($config['clients']['default'])) {
                 // Alias the first client to httplug.client.default
-                $container->setAlias('httplug.client.default', new Alias('httplug.client.'.$first, true));
+                $container->setAlias('httplug.client.default', 'httplug.client.'.$first);
             }
         }
     }
@@ -298,7 +297,6 @@ class HttplugExtension extends Extension
 
         $container
             ->register($serviceId, PluginClient::class)
-            ->setPublic(true)
             ->setFactory([new Reference(PluginClientFactory::class), 'createClient'])
             ->addArgument(new Reference($serviceId.'.client'))
             ->addArgument(
