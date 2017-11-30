@@ -6,18 +6,16 @@ The change log describes what is "Added", "Removed", "Changed" or "Fixed" betwee
 
 ### Added
 
-- Service for`Http\Client\Common\PluginClientFactory`.
+- Symfony 4 support. 
+- Support autowiring of `Http\Client\Common\PluginClientFactory`.
 - Any third party library using `Http\Client\Common\PluginClientFactory` to create `Http\Client\Common\PluginClient`
 instances now gets zero config profiling.
-- Add missing service reference for `cache_key_generator`
-- Symfony 4 support. 
 - `Http\HttplugBundle\Collector\Collector::reset()`
 
 ### Changed
 
 - `ProfilePlugin` and `StackPlugin` are no longer registered as (private) services decorators. Those decorators are now
 created through the `Http\HttplugBundle\Collector\PluginClientFactory`.
-- `PluginClient` is not used for discovered clients.
 
 ### Deprecated
 
@@ -25,7 +23,8 @@ created through the `Http\HttplugBundle\Collector\PluginClientFactory`.
 
 ### Fixed
 
-- Added missing service reference for `CachePlugin`'s `cache_key_generator` configuration option. 
+- Removed wrapping auto discovered clients in a `PluginClient`, prevent double profiling.
+- Added missing service reference for `CachePlugin`'s `cache_key_generator` configuration option so that the option now actually works.
 
 ## 1.7.1 - 2017-08-04
 
