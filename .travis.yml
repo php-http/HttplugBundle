@@ -47,9 +47,8 @@ matrix:
           env: STABILITY="dev"
 
     allow_failures:
-          # dev-master is allowed to fail.
-        - php: 7.2
-          env: STABILITY="dev"
+          # dev stability is allowed to fail.
+        - env: STABILITY="dev"
 
 before_install:
     - if [[ $COVERAGE != true ]]; then phpenv config-rm xdebug.ini || true; fi
