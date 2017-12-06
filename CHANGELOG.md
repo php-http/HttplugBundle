@@ -2,7 +2,13 @@
 
 The change log describes what is "Added", "Removed", "Changed" or "Fixed" between each release.
 
-## Unreleased
+## 1.8.1 - 2017-12-06
+
+### Fixed
+
+- `PluginClientFactory` name conflict with PHP 5.x.
+
+## 1.8.0 - 2017-11-30
 
 ### Added
 
