@@ -203,6 +203,13 @@ class HttplugExtension extends Extension
                 $definition->replaceArgument(1, [
                     'replace' => $config['replace'],
                 ]);
+            case 'base_uri':
+                $baseService = $serviceId.'.host_uri';
+                $this->createUri($container, $baseService, $config['host']);
+                $definition->replaceArgument(0, new Reference($uriService));
+                $definition->replaceArgument(1, [
+                    'replace' => $config['replace'],
+                ]);
 
                 break;
             case 'header_append':
