@@ -11,6 +11,7 @@ The change log describes what is "Added", "Removed", "Changed" or "Fixed" betwee
 - Any third party library using `Http\Client\Common\PluginClientFactory` to create `Http\Client\Common\PluginClient`
 instances now gets zero config profiling.
 - `Http\HttplugBundle\Collector\Collector::reset()`
+- BaseUriPlugin support
 
 ### Changed
 

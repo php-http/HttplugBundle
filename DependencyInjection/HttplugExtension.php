@@ -204,8 +204,8 @@ class HttplugExtension extends Extension
                     'replace' => $config['replace'],
                 ]);
             case 'base_uri':
-                $baseService = $serviceId.'.host_uri';
-                $this->createUri($container, $baseService, $config['host']);
+                $baseService = $serviceId.'.base_uri';
+                $this->createUri($container, $baseService, $config['uri']);
                 $definition->replaceArgument(0, new Reference($uriService));
                 $definition->replaceArgument(1, [
                     'replace' => $config['replace'],
