@@ -68,5 +68,6 @@
         <service id="httplug.factory.socket" class="Http\HttplugBundle\ClientFactory\SocketFactory" public="false">
             <argument type="service" id="httplug.message_factory"/>
         </service>
+        <service id="httplug.factory.mock" class="Http\HttplugBundle\ClientFactory\MockFactory" public="false" />
     </services>
 </container>

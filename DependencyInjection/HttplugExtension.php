@@ -106,6 +106,16 @@ class HttplugExtension extends Extension
                 $container->setAlias('httplug.client.default', 'httplug.client.'.$first);
             }
         }
+
+        $mockClass = 'Http\Mock\Client';
+        $mockServiceId = 'httplug.client.mock';
+
+        if (\class_exists($mockClass) && !$container->has($mockServiceId)) {
+            $container->register($mockServiceId, $mockClass)->setPublic($container->getParameter('kernel.debug'));
+
+            $container->findDefinition('httplug.factory.mock')
+                ->addMethodCall('setClient', [new Reference($mockServiceId)]);
+        }
     }
 
     /**
