@@ -5,8 +5,6 @@ namespace Http\HttplugBundle\ClientFactory;
 use Http\Mock\Client;
 
 /**
- * Class Http\HttplugBundle\ClientFactory\MockFactory
- *
  * @author Gary PEGEOT <garypegeot@gmail.com>
  */
 class MockFactory implements ClientFactory
