@@ -27,10 +27,14 @@ class MockFactory implements ClientFactory
      */
     public function createClient(array $config = [])
     {
-        if (!class_exists('Http\Mock\Client')) {
+        if (!class_exists(Client::class)) {
             throw new \LogicException('To use the mock adapter you need to install the "php-http/mock-client" package.');
         }
 
-        return $this->client ?: new Client();
+        if (!$this->client) {
+            $this->client = new Client();
+        }
+
+        return $this->client;
     }
 }
