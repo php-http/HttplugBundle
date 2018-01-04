@@ -12,6 +12,7 @@ use Http\Client\HttpClient;
 use Http\Message\Authentication\BasicAuth;
 use Http\Message\Authentication\Bearer;
 use Http\Message\Authentication\Wsse;
+use Http\Mock\Client as MockClient;
 use Psr\Http\Message\UriInterface;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ChildDefinition;
@@ -107,11 +108,14 @@ class HttplugExtension extends Extension
             }
         }
 
-        $mockClass = 'Http\Mock\Client';
         $mockServiceId = 'httplug.client.mock';
 
-        if (\class_exists($mockClass) && !$container->has($mockServiceId)) {
-            $container->register($mockServiceId, $mockClass)->setPublic($container->getParameter('kernel.debug'));
+        if (!\class_exists(MockClient::class)) {
+            $container->removeDefinition('httplug.factory.mock');
+        }
+
+        if ($container->has('httplug.factory.mock') && !$container->has($mockServiceId)) {
+            $container->register($mockServiceId, MockClient::class)->setPublic($container->getParameter('kernel.debug'));
 
             $container->findDefinition('httplug.factory.mock')
                 ->addMethodCall('setClient', [new Reference($mockServiceId)]);
