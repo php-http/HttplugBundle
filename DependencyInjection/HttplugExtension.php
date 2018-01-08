@@ -127,8 +127,6 @@ class HttplugExtension extends Extension
             if ($this->isConfigEnabled($container, $pluginConfig)) {
                 $def = $container->getDefinition($pluginId);
                 $this->configurePluginByName($name, $def, $pluginConfig, $container, $pluginId);
-            } else {
-                $container->removeDefinition($pluginId);
             }
         }
     }
