@@ -41,6 +41,9 @@ class HttplugExtension extends Extension
 
         $loader->load('services.xml');
         $loader->load('plugins.xml');
+        if (\class_exists(MockClient::class)) {
+            $loader->load('mock-client.xml');
+        }
 
         // Register default services
         foreach ($config['classes'] as $service => $class) {
@@ -106,19 +109,6 @@ class HttplugExtension extends Extension
                 // Alias the first client to httplug.client.default
                 $container->setAlias('httplug.client.default', 'httplug.client.'.$first);
             }
-        }
-
-        $mockServiceId = 'httplug.client.mock';
-
-        if (!\class_exists(MockClient::class)) {
-            $container->removeDefinition('httplug.factory.mock');
-        }
-
-        if ($container->has('httplug.factory.mock') && !$container->has($mockServiceId)) {
-            $container->register($mockServiceId, MockClient::class)->setPublic($container->getParameter('kernel.debug'));
-
-            $container->findDefinition('httplug.factory.mock')
-                ->addMethodCall('setClient', [new Reference($mockServiceId)]);
         }
     }
 

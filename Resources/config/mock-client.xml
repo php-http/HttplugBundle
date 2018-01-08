@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+        <service id="httplug.client.mock" class="Http\Mock\Client" public="true" />
+        <service id="httplug.factory.mock" class="Http\HttplugBundle\ClientFactory\MockFactory" public="false">
+            <call method="setClient">
+                <argument type="service" id="httplug.client.mock" />
+            </call>
+        </service>
+    </services>
+</container>
