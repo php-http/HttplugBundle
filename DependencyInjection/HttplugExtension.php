@@ -12,6 +12,7 @@ use Http\Client\HttpClient;
 use Http\Message\Authentication\BasicAuth;
 use Http\Message\Authentication\Bearer;
 use Http\Message\Authentication\Wsse;
+use Http\Mock\Client as MockClient;
 use Psr\Http\Message\UriInterface;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ChildDefinition;
@@ -40,6 +41,9 @@ class HttplugExtension extends Extension
 
         $loader->load('services.xml');
         $loader->load('plugins.xml');
+        if (\class_exists(MockClient::class)) {
+            $loader->load('mock-client.xml');
+        }
 
         // Register default services
         foreach ($config['classes'] as $service => $class) {
