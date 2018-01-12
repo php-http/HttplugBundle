@@ -1,0 +1,5 @@
+httplug:
+    clients:
+        test:
+            plugins:
+                - cache: ~

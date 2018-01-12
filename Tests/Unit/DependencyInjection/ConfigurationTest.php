@@ -355,4 +355,24 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
         $file = __DIR__.'/../../Resources/Fixtures/config/bc/profiling_toolbar.yml';
         $this->assertProcessedConfigurationEquals([], [$file]);
     }
+
+    /**
+     * @expectedException \Symfony\Component\Config\Definition\Exception\InvalidConfigurationException
+     * @expectedExceptionMessage The child node "cache_pool" at path "httplug.clients.test.plugins.0.cache" must be configured.
+     */
+    public function testClientCacheConfigMustHavePool()
+    {
+        $file = __DIR__.'/../../Resources/Fixtures/config/client_cache_config_with_no_pool.yml';
+        $this->assertProcessedConfigurationEquals([], [$file]);
+    }
+
+    /**
+     * @expectedException \Symfony\Component\Config\Definition\Exception\InvalidConfigurationException
+     * @expectedExceptionMessage The child node "cache_pool" at path "httplug.plugins.cache" must be configured.
+     */
+    public function testCacheConfigMustHavePool()
+    {
+        $file = __DIR__.'/../../Resources/Fixtures/config/cache_config_with_no_pool.yml';
+        $this->assertProcessedConfigurationEquals([], [$file]);
+    }
 }
