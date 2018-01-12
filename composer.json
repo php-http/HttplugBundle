@@ -60,6 +60,9 @@
     "conflict": {
         "php-http/guzzle6-adapter": "<1.1"
     },
+    "suggest": {
+        "php-http/mock-client": "Add this to your require-dev section to mock HTTP responses easily"
+    },
     "autoload": {
         "psr-4": {
             "Http\\HttplugBundle\\": ""

@@ -2,8 +2,7 @@
 
 namespace Http\HttplugBundle\Collector;
 
-use Http\Client\Common\PluginClientFactory;
-use Http\HttplugBundle\Collector\PluginClientFactory as CollectorPluginClientFactory;
+use Http\Client\Common\PluginClientFactory as DefaultPluginClientFactory;
 use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -19,14 +18,14 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 final class PluginClientFactoryListener implements EventSubscriberInterface
 {
     /**
-     * @var CollectorPluginClientFactory
+     * @var PluginClientFactory
      */
     private $factory;
 
     /**
-     * @param CollectorPluginClientFactory $factory
+     * @param PluginClientFactory $factory
      */
-    public function __construct(CollectorPluginClientFactory $factory)
+    public function __construct(PluginClientFactory $factory)
     {
         $this->factory = $factory;
     }
@@ -38,7 +37,7 @@ final class PluginClientFactoryListener implements EventSubscriberInterface
      */
     public function onEvent(Event $e)
     {
-        PluginClientFactory::setFactory([$this->factory, 'createClient']);
+        DefaultPluginClientFactory::setFactory([$this->factory, 'createClient']);
     }
 
     /**
