@@ -2,6 +2,9 @@
 
 The change log describes what is "Added", "Removed", "Changed" or "Fixed" between each release.
 
+## 1.9.0 - 2017-01-12 
+- Configured the `BaseUriPlugin` per client, under the `base_uri` configuration key.
+
 ## 1.8.1 - 2017-12-06
 
 ### Fixed
@@ -17,7 +20,6 @@ The change log describes what is "Added", "Removed", "Changed" or "Fixed" betwee
 - Any third party library using `Http\Client\Common\PluginClientFactory` to create `Http\Client\Common\PluginClient`
 instances now gets zero config profiling.
 - `Http\HttplugBundle\Collector\Collector::reset()`
-- BaseUriPlugin support
 
 ### Changed
 
