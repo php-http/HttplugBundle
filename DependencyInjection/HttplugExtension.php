@@ -199,20 +199,20 @@ class HttplugExtension extends Extension
             /* client specific plugins */
 
             case 'add_host':
-                $uriService = $serviceId.'.host_uri';
-                $this->createUri($container, $uriService, $config['host']);
-                $definition->replaceArgument(0, new Reference($uriService));
+                $hostUriService = $serviceId.'.host_uri';
+                $this->createUri($container, $hostUriService, $config['host']);
+                $definition->replaceArgument(0, new Reference($hostUriService));
                 $definition->replaceArgument(1, [
                     'replace' => $config['replace'],
                 ]);
+                break;
             case 'base_uri':
-                $baseService = $serviceId.'.base_uri';
-                $this->createUri($container, $baseService, $config['uri']);
-                $definition->replaceArgument(0, new Reference($uriService));
+                $baseUriService = $serviceId.'.base_uri';
+                $this->createUri($container, $baseUriService, $config['uri']);
+                $definition->replaceArgument(0, new Reference($baseUriService));
                 $definition->replaceArgument(1, [
                     'replace' => $config['replace'],
                 ]);
-
                 break;
             case 'header_append':
             case 'header_defaults':
