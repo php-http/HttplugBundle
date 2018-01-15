@@ -205,6 +205,7 @@ class HttplugExtension extends Extension
                 $definition->replaceArgument(1, [
                     'replace' => $config['replace'],
                 ]);
+
                 break;
             case 'base_uri':
                 $baseUriService = $serviceId.'.base_uri';
@@ -213,6 +214,7 @@ class HttplugExtension extends Extension
                 $definition->replaceArgument(1, [
                     'replace' => $config['replace'],
                 ]);
+
                 break;
             case 'header_append':
             case 'header_defaults':
