@@ -46,8 +46,12 @@
 {% endblock %}
 
 {% block head %}
-    <link rel="stylesheet" href="{{ asset('bundles/httplug/style/httplug.css') }}" />
-    <script type="text/javascript" src="{{ asset("bundles/httplug/script/httplug.js") }}"></script>
+    <style>
+        {{ include('@Httplug/style/httplug.css.twig') }}
+    </style>
+    <script type="text/javascript">
+        {{ include('@Httplug/script/httplug.js.twig') }}
+    </script>
     {{ parent() }}
 {% endblock %}
 
