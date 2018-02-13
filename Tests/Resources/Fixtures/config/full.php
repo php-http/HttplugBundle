@@ -25,6 +25,11 @@ $container->loadFromExtension('httplug', [
                     ],
                 ],
                 [
+                    'base_uri' => [
+                        'uri' => 'http://localhost',
+                    ],
+                ],
+                [
                     'header_set' => [
                         'headers' => [
                             'X-FOO' => 'bar',
