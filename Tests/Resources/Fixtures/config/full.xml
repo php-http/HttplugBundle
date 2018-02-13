@@ -20,6 +20,9 @@
                 <add-host host="http://localhost"/>
             </plugin>
             <plugin>
+                <base-uri uri="http://localhost"/>
+            </plugin>
+            <plugin>
                 <header-set>
                     <header name="X-FOO">bar</header>
                 </header-set>
