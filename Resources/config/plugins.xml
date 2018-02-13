@@ -34,6 +34,10 @@
             <argument/>
             <argument/>
         </service>
+        <service id="httplug.plugin.base_uri" class="Http\Client\Common\Plugin\BaseUriPlugin" public="false" abstract="true">
+            <argument/>
+            <argument/>
+        </service>
         <service id="httplug.plugin.header_append" class="Http\Client\Common\Plugin\HeaderAppendPlugin" public="false" abstract="true">
             <argument/>
         </service>

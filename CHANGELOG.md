@@ -2,6 +2,9 @@
 
 The change log describes what is "Added", "Removed", "Changed" or "Fixed" between each release.
 
+## 1.9.0 (unreleased) - 2017-01-12 
+- Allow to configure the `BaseUriPlugin` per client, under the `base_uri` configuration key.
+
 ## 1.8.1 - 2017-12-06
 
 ### Fixed

@@ -19,6 +19,9 @@ httplug:
                     add_host:
                         host: http://localhost
                 -
+                    base_uri:
+                        uri: http://localhost
+                -
                     header_set:
                         headers:
                             X-FOO: bar

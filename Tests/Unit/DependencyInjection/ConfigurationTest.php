@@ -135,6 +135,13 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
                             ],
                         ],
                         [
+                            'base_uri' => [
+                                'enabled' => true,
+                                'uri' => 'http://localhost',
+                                'replace' => false,
+                            ],
+                        ],
+                        [
                             'header_set' => [
                                 'enabled' => true,
                                 'headers' => [
