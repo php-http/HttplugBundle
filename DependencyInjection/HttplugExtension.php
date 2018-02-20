@@ -15,6 +15,7 @@ use Http\Message\Authentication\Wsse;
 use Http\Mock\Client as MockClient;
 use Psr\Http\Message\UriInterface;
 use Symfony\Component\Config\FileLocator;
+use Symfony\Component\DependencyInjection\Alias;
 use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
@@ -54,7 +55,7 @@ class HttplugExtension extends Extension
 
         // Set main aliases
         foreach ($config['main_alias'] as $type => $id) {
-            $container->setAlias(sprintf('httplug.%s', $type), $id);
+            $container->setAlias(sprintf('httplug.%s', $type), new Alias($id, true));
         }
 
         // Configure toolbar
