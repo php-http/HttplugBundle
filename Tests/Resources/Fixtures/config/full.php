@@ -25,6 +25,11 @@ $container->loadFromExtension('httplug', [
                     ],
                 ],
                 [
+                    'add_path' => [
+                        'path' => '/api/v1',
+                    ],
+                ],
+                [
                     'base_uri' => [
                         'uri' => 'http://localhost',
                     ],

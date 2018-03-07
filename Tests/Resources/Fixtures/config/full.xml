@@ -20,6 +20,9 @@
                 <add-host host="http://localhost"/>
             </plugin>
             <plugin>
+                <add-path path="/api/v1"/>
+            </plugin>
+            <plugin>
                 <base-uri uri="http://localhost"/>
             </plugin>
             <plugin>
