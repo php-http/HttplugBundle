@@ -34,6 +34,9 @@
             <argument/>
             <argument/>
         </service>
+        <service id="httplug.plugin.add_path" class="Http\Client\Common\Plugin\AddPathPlugin" public="false" abstract="true">
+            <argument/>
+        </service>
         <service id="httplug.plugin.base_uri" class="Http\Client\Common\Plugin\BaseUriPlugin" public="false" abstract="true">
             <argument/>
             <argument/>

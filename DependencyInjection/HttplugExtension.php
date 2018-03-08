@@ -208,6 +208,12 @@ class HttplugExtension extends Extension
                 ]);
 
                 break;
+            case 'add_path':
+                $pathUriService = $serviceId.'.path_uri';
+                $this->createUri($container, $pathUriService, $config['path']);
+                $definition->replaceArgument(0, new Reference($pathUriService));
+
+                break;
             case 'base_uri':
                 $baseUriService = $serviceId.'.base_uri';
                 $this->createUri($container, $baseUriService, $config['uri']);
