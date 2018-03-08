@@ -138,7 +138,6 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
                             'add_path' => [
                                 'enabled' => true,
                                 'path' => '/api/v1',
-                                'replace' => false,
                             ],
                         ],
                         [

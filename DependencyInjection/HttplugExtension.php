@@ -212,9 +212,6 @@ class HttplugExtension extends Extension
                 $pathUriService = $serviceId.'.path_uri';
                 $this->createUri($container, $pathUriService, $config['path']);
                 $definition->replaceArgument(0, new Reference($pathUriService));
-                $definition->replaceArgument(1, [
-                    'replace' => $config['replace'],
-                ]);
 
                 break;
             case 'base_uri':
