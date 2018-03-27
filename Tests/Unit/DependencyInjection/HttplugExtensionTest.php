@@ -240,6 +240,21 @@ class HttplugExtensionTest extends AbstractExtensionTestCase
         $this->assertSame('header_cache_key_generator', (string) $config['cache_key_generator']);
     }
 
+    public function testUsingServiceKeyForClients()
+    {
+        $this->load([
+            'clients' => [
+                'acme' => [
+                    'service' => 'my_custom_client',
+                ],
+            ],
+        ]);
+
+        $client = $this->container->getAlias('httplug.client.acme.client');
+        $this->assertEquals('my_custom_client', (string) $client);
+        $this->assertFalse($client->isPublic());
+    }
+
     private function verifyProfilingDisabled()
     {
         $def = $this->container->findDefinition('httplug.client');

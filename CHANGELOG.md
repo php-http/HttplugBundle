@@ -2,11 +2,12 @@
 
 The change log describes what is "Added", "Removed", "Changed" or "Fixed" between each release.
 
-## 1.10.0 (unreleased) - 2018-03-09
+## 1.10.0 - 2018-03-27
 
 ### Added
  
 - Allow to configure the `AddPathPlugin` per client, under the `add_path` configuration key.
+- Allow to configure clients with a `service` instead of a factory. 
 
 ## 1.9.0 - 2018-03-06
 
