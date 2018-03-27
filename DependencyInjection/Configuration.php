@@ -193,7 +193,7 @@ class Configuration implements ConfigurationInterface
                     ->end()
                     ->scalarNode('service')
                         ->defaultNull()
-                        ->info('The service id of for the client to use.')
+                        ->info('The service id of the client to use.')
                     ->end()
                     ->booleanNode('flexible_client')
                         ->defaultFalse()
