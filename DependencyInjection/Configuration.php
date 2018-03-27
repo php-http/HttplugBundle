@@ -181,7 +181,7 @@ class Configuration implements ConfigurationInterface
                 ->end()
                 ->validate()
                     ->ifTrue(function ($config) {
-                        return !empty($config['service']) && ('httplug.factory.auto' !== $config['factory'] || !empty($config['config'])) ;
+                        return !empty($config['service']) && ('httplug.factory.auto' !== $config['factory'] || !empty($config['config']));
                     })
                     ->thenInvalid('If you want to use the "service" key you cannot specify "factory" or "config".')
                 ->end()
