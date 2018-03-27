@@ -250,8 +250,9 @@ class HttplugExtensionTest extends AbstractExtensionTestCase
             ],
         ]);
 
-        $client = $this->container->getAlias('httplug.acme.client');
+        $client = $this->container->getAlias('httplug.client.acme.client');
         $this->assertEquals('my_custom_client', (string) $client);
+        $this->assertFalse($client->isPublic());
         $this->assertTrue($client->isPrivate());
     }
 
