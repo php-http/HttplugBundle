@@ -306,12 +306,17 @@ class HttplugExtension extends Extension
             }
         }
 
-        $container
-            ->register($serviceId.'.client', HttpClient::class)
-            ->setFactory([new Reference($arguments['factory']), 'createClient'])
-            ->addArgument($arguments['config'])
-            ->setPublic(false)
-        ;
+        if (empty($arguments['service'])) {
+            $container
+                ->register($serviceId.'.client', HttpClient::class)
+                ->setFactory([new Reference($arguments['factory']), 'createClient'])
+                ->addArgument($arguments['config'])
+                ->setPublic(false);
+        } else {
+            $container
+                ->setAlias($serviceId.'.client', $arguments['service'])
+                ->setPublic(false);
+        }
 
         $container
             ->register($serviceId, PluginClient::class)
