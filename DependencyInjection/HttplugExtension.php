@@ -314,9 +314,7 @@ class HttplugExtension extends Extension
                 ->setPublic(false);
         } else {
             $container
-                ->setAlias($serviceId.'.client', $arguments['service'])
-                ->setPublic(false)
-                ->setPrivate(true);
+                ->setAlias($serviceId.'.client', new Alias($arguments['service'], false));
         }
 
         $container
