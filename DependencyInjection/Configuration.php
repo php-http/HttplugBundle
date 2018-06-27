@@ -522,6 +522,10 @@ class Configuration implements ConfigurationInterface
                                 $this->validateAuthenticationType(['username', 'password'], $config, 'wsse');
 
                                 break;
+                            case 'query_param':
+                                $this->validateAuthenticationType(['params'], $config, 'query_param');
+
+                                break;
                         }
 
                         return $config;
@@ -529,7 +533,7 @@ class Configuration implements ConfigurationInterface
                 ->end()
                 ->children()
                     ->enumNode('type')
-                        ->values(['basic', 'bearer', 'wsse', 'service'])
+                        ->values(['basic', 'bearer', 'wsse', 'service', 'query_param'])
                         ->isRequired()
                         ->cannotBeEmpty()
                     ->end()
@@ -537,6 +541,7 @@ class Configuration implements ConfigurationInterface
                     ->scalarNode('password')->end()
                     ->scalarNode('token')->end()
                     ->scalarNode('service')->end()
+                    ->arrayNode('params')->prototype('scalar')->end()
                     ->end()
                 ->end()
             ->end(); // End authentication plugin
@@ -556,6 +561,10 @@ class Configuration implements ConfigurationInterface
     private function validateAuthenticationType(array $expected, array $actual, $authName)
     {
         unset($actual['type']);
+        // Empty array is always provided, even if the config is not filled.
+        if (empty($actual['params'])) {
+            unset($actual['params']);
+        }
         $actual = array_keys($actual);
         sort($actual);
         sort($expected);

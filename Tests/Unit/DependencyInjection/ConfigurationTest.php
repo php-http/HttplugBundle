@@ -170,6 +170,7 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
                                     'type' => 'basic',
                                     'username' => 'foo',
                                     'password' => 'bar',
+                                    'params' => [],
                                 ],
                             ],
                         ],
@@ -188,19 +189,23 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
                         'type' => 'basic',
                         'username' => 'foo',
                         'password' => 'bar',
+                        'params' => [],
                     ],
                     'my_wsse' => [
                         'type' => 'wsse',
                         'username' => 'foo',
                         'password' => 'bar',
+                        'params' => [],
                     ],
                     'my_bearer' => [
                         'type' => 'bearer',
                         'token' => 'foo',
+                        'params' => [],
                     ],
                     'my_service' => [
                         'type' => 'service',
                         'service' => 'my_auth_service',
+                        'params' => [],
                     ],
                 ],
                 'cache' => [

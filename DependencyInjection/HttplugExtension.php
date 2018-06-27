@@ -11,6 +11,7 @@ use Http\Client\Common\PluginClientFactory;
 use Http\Client\HttpClient;
 use Http\Message\Authentication\BasicAuth;
 use Http\Message\Authentication\Bearer;
+use Http\Message\Authentication\QueryParam;
 use Http\Message\Authentication\Wsse;
 use Http\Mock\Client as MockClient;
 use Psr\Http\Message\UriInterface;
@@ -264,6 +265,11 @@ class HttplugExtension extends Extension
                     $container->register($authServiceKey, Wsse::class)
                         ->addArgument($values['username'])
                         ->addArgument($values['password']);
+
+                    break;
+                case 'query_param':
+                    $container->register($authServiceKey, QueryParam::class)
+                        ->addArgument($values['params']);
 
                     break;
                 case 'service':
