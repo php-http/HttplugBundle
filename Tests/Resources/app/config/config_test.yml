@@ -26,3 +26,6 @@ httplug:
 services:
     app.http.plugin.custom:
         class: Http\Client\Common\Plugin\RedirectPlugin
+
+twig:
+    strict_variables: '%kernel.debug%'
