@@ -53,7 +53,13 @@ class AppKernel extends Kernel
     {
         $routes->import('@WebProfilerBundle/Resources/config/routing/wdt.xml', '/_wdt');
         $routes->import('@WebProfilerBundle/Resources/config/routing/profiler.xml', '/_profiler');
-        $routes->add('/', 'kernel:indexAction');
+
+        if (Kernel::MAJOR_VERSION < 4 || (Kernel::MAJOR_VERSION === 4 && Kernel::MINOR_VERSION === 0)) {
+            $routes->add('/', 'kernel:indexAction');
+        } else {
+            // If 4.1+
+            $routes->add('/', 'kernel::indexAction');
+        }
     }
 
     /**
