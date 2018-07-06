@@ -2,6 +2,16 @@
 
 The change log describes what is "Added", "Removed", "Changed" or "Fixed" between each release.
 
+## 1.11.0 - 2018-07-8
+
+### Added
+
+- Add support for QueryParam in the AuthenticationPlugin
+
+### Fixed
+
+- Deprecation warnings on Symfony 4.1
+
 ## 1.10.0 - 2018-03-27
 
 ### Added
