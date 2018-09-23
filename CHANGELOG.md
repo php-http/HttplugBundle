@@ -2,6 +2,10 @@
 
 The change log describes what is "Added", "Removed", "Changed" or "Fixed" between each release.
 
+### Removed
+
+- Obsolete .php\_cs configuration for the abandoned styleci php-cs-fixer bridge.
+
 ## 1.11.0 - 2018-07-07
 
 ### Added
