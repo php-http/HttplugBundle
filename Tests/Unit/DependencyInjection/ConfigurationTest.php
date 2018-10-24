@@ -119,6 +119,7 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
                     'factory' => 'httplug.factory.guzzle6',
                     'http_methods_client' => true,
                     'service' => null,
+                    'public' => null,
                     'flexible_client' => false,
                     'batch_client' => false,
                     'plugins' => [

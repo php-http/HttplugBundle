@@ -323,7 +323,7 @@ class HttplugExtension extends Extension
                 ->setAlias($serviceId.'.client', new Alias($arguments['service'], false));
         }
 
-        $container
+        $definition = $container
             ->register($serviceId, PluginClient::class)
             ->setFactory([new Reference(PluginClientFactory::class), 'createClient'])
             ->addArgument(new Reference($serviceId.'.client'))
@@ -340,6 +340,10 @@ class HttplugExtension extends Extension
             ])
         ;
 
+        if (is_bool($arguments['public'])) {
+            $definition->setPublic($arguments['public']);
+        }
+
         /*
          * Decorate the client with clients from client-common
          */
@@ -347,7 +351,7 @@ class HttplugExtension extends Extension
             $container
                 ->register($serviceId.'.flexible', FlexibleHttpClient::class)
                 ->addArgument(new Reference($serviceId.'.flexible.inner'))
-                ->setPublic(false)
+                ->setPublic($arguments['public'] ? true : false)
                 ->setDecoratedService($serviceId)
             ;
         }
@@ -356,7 +360,7 @@ class HttplugExtension extends Extension
             $container
                 ->register($serviceId.'.http_methods', HttpMethodsClient::class)
                 ->setArguments([new Reference($serviceId.'.http_methods.inner'), new Reference('httplug.message_factory')])
-                ->setPublic(false)
+                ->setPublic($arguments['public'] ? true : false)
                 ->setDecoratedService($serviceId)
             ;
         }
@@ -365,7 +369,7 @@ class HttplugExtension extends Extension
             $container
                 ->register($serviceId.'.batch_client', BatchClient::class)
                 ->setArguments([new Reference($serviceId.'.batch_client.inner')])
-                ->setPublic(false)
+                ->setPublic($arguments['public'] ? true : false)
                 ->setDecoratedService($serviceId)
             ;
         }
