@@ -2,11 +2,11 @@
 
 The change log describes what is "Added", "Removed", "Changed" or "Fixed" between each release.
 
-## 1.12.0 - 2018-10-24
+## 1.12.0 - 2018-10-25
 
 ### Added
 
-- Add configuration option to create public clients
+- Add configuration option to allow making client services public if needed
 
 ## 1.11.0 - 2018-07-07
 
