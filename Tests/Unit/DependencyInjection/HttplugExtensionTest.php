@@ -103,6 +103,11 @@ class HttplugExtensionTest extends AbstractExtensionTestCase
                             ],
                         ],
                         [
+                            'query_defaults' => [
+                                'parameters' => ['locale' => 'en'],
+                            ],
+                        ],
+                        [
                             'authentication' => [
                                 'my_basic' => [
                                     'type' => 'basic',
@@ -129,6 +134,7 @@ class HttplugExtensionTest extends AbstractExtensionTestCase
             'httplug.client.acme.plugin.header_defaults',
             'httplug.client.acme.plugin.header_set',
             'httplug.client.acme.plugin.header_remove',
+            'httplug.client.acme.plugin.query_defaults',
             'httplug.client.acme.authentication.my_basic',
             'httplug.client.acme.plugin.cache',
         ];

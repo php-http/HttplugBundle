@@ -53,6 +53,9 @@
         <service id="httplug.plugin.header_remove" class="Http\Client\Common\Plugin\HeaderRemovePlugin" public="false" abstract="true">
             <argument/>
         </service>
+        <service id="httplug.plugin.query_defaults" class="Http\Client\Common\Plugin\QueryDefaultsPlugin" public="false" abstract="true">
+            <argument/>
+        </service>
 
     </services>
 </container>

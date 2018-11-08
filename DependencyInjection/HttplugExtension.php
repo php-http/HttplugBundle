@@ -232,6 +232,11 @@ class HttplugExtension extends Extension
 
                 break;
 
+            case 'query_defaults':
+                $definition->replaceArgument(0, $config['parameters']);
+
+                break;
+
             default:
                 throw new \InvalidArgumentException(sprintf('Internal exception: Plugin %s is not handled', $name));
         }
