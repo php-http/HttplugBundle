@@ -2,6 +2,12 @@
 
 The change log describes what is "Added", "Removed", "Changed" or "Fixed" between each release.
 
+## Unreleased
+
+### Added
+
+- Allow to configure the `QueryDefaultsPlugin`
+
 ## 1.12.0 - 2018-10-25
 
 ### Added
