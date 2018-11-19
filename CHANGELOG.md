@@ -2,6 +2,12 @@
 
 The change log describes what is "Added", "Removed", "Changed" or "Fixed" between each release.
 
+## Unreleased
+
+### Added
+
+- Make underlying http client (`httplug.client.acme.client`) also public when configured
+
 ## 1.13.0 - 2018-11-13
 
 ### Added

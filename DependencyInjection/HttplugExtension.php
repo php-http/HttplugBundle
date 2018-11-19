@@ -322,10 +322,10 @@ class HttplugExtension extends Extension
                 ->register($serviceId.'.client', HttpClient::class)
                 ->setFactory([new Reference($arguments['factory']), 'createClient'])
                 ->addArgument($arguments['config'])
-                ->setPublic(false);
+                ->setPublic($arguments['public'] ? true : false);
         } else {
             $container
-                ->setAlias($serviceId.'.client', new Alias($arguments['service'], false));
+                ->setAlias($serviceId.'.client', new Alias($arguments['service'], $arguments['public'] ? true : false));
         }
 
         $definition = $container
