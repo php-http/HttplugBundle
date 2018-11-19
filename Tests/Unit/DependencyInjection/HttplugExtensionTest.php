@@ -147,7 +147,31 @@ class HttplugExtensionTest extends AbstractExtensionTestCase
             $this->assertContainerBuilderHasService($id);
         }
         $this->assertContainerBuilderHasServiceDefinitionWithArgument('httplug.client.acme', 1, $pluginReferences);
-        $this->assertContainerBuilderHasService('httplug.client.mock');
+    }
+
+    public function testMocking()
+    {
+        $this->load([
+            'clients' => [
+                'ace' => [
+                    'factory' => 'httplug.factory.mock',
+                ],
+                'acme' => [
+                    'factory' => 'httplug.factory.mock',
+                ],
+            ],
+        ]);
+
+        $this->assertContainerBuilderHasService('httplug.client.ace');
+        $this->assertContainerBuilderHasService('httplug.client.ace.client');
+
+        $this->assertContainerBuilderHasService('httplug.client.acme');
+        $this->assertContainerBuilderHasService('httplug.client.acme.client');
+
+        $this->assertNotSame(
+            $this->container->get('httplug.client.ace.client'),
+            $this->container->get('httplug.client.acme.client')
+        );
     }
 
     /**

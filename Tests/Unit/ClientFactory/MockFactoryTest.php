@@ -23,11 +23,5 @@ class MockFactoryTest extends TestCase
         $client = $factory->createClient();
 
         $this->assertInstanceOf(Client::class, $client);
-
-        $client = new Client();
-
-        $factory->setClient($client);
-
-        $this->assertEquals($client, $factory->createClient());
     }
 }

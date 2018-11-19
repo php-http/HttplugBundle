@@ -10,19 +10,6 @@ use Http\Mock\Client;
 class MockFactory implements ClientFactory
 {
     /**
-     * @var Client
-     */
-    private $client;
-
-    /**
-     * @param Client $client
-     */
-    public function setClient(Client $client)
-    {
-        $this->client = $client;
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function createClient(array $config = [])
@@ -31,10 +18,6 @@ class MockFactory implements ClientFactory
             throw new \LogicException('To use the mock adapter you need to install the "php-http/mock-client" package.');
         }
 
-        if (!$this->client) {
-            $this->client = new Client();
-        }
-
-        return $this->client;
+        return new Client();
     }
 }
