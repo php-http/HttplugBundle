@@ -86,12 +86,14 @@ class ProfileClient implements HttpClient, HttpAsyncClient
 
         $onFulfilled = function (ResponseInterface $response) use ($event, $stack) {
             $this->collectResponseInformations($response, $event, $stack);
+            $event->stop();
 
             return $response;
         };
 
         $onRejected = function (\Exception $exception) use ($event, $stack) {
             $this->collectExceptionInformations($exception, $event, $stack);
+            $event->stop();
 
             throw $exception;
         };
@@ -100,8 +102,11 @@ class ProfileClient implements HttpClient, HttpAsyncClient
 
         try {
             return $this->client->sendAsyncRequest($request)->then($onFulfilled, $onRejected);
-        } finally {
+        } catch (\Exception $e) {
             $event->stop();
+
+            throw $e;
+        } finally {
             if ($activateStack) {
                 //We only activate the stack when created by the StackPlugin.
                 $this->collector->activateStack($stack);
