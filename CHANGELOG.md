@@ -2,6 +2,12 @@
 
 The change log describes what is "Added", "Removed", "Changed" or "Fixed" between each release.
 
+## 1.13.1 - 2018-11-28
+
+### Fixed
+
+- Fix wrong duration calculation for asynchronous calls
+
 ## 1.13.0 - 2018-11-13
 
 ### Added
