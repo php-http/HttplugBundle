@@ -49,8 +49,13 @@ class Configuration implements ConfigurationInterface
      */
     public function getConfigTreeBuilder()
     {
-        $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('httplug');
+        $treeBuilder = new TreeBuilder('httplug');
+        // Keep compatibility with symfony/config < 4.2
+        if (!method_exists($treeBuilder, 'getRootNode')) {
+            $rootNode = $treeBuilder->root('httplug');
+        } else {
+            $rootNode = $treeBuilder->getRootNode();
+        }
 
         $this->configureClients($rootNode);
         $this->configureSharedPlugins($rootNode);
@@ -240,8 +245,13 @@ class Configuration implements ConfigurationInterface
      */
     private function createClientPluginNode()
     {
-        $builder = new TreeBuilder();
-        $node = $builder->root('plugins');
+        $treeBuilder = new TreeBuilder('plugins');
+        // Keep compatibility with symfony/config < 4.2
+        if (!method_exists($treeBuilder, 'getRootNode')) {
+            $node = $treeBuilder->root('plugins');
+        } else {
+            $node = $treeBuilder->getRootNode();
+        }
 
         /** @var ArrayNodeDefinition $pluginList */
         $pluginList = $node
@@ -514,8 +524,14 @@ class Configuration implements ConfigurationInterface
      */
     private function createAuthenticationPluginNode()
     {
-        $builder = new TreeBuilder();
-        $node = $builder->root('authentication');
+        $treeBuilder = new TreeBuilder('authentication');
+        // Keep compatibility with symfony/config < 4.2
+        if (!method_exists($treeBuilder, 'getRootNode')) {
+            $node = $treeBuilder->root('authentication');
+        } else {
+            $node = $treeBuilder->getRootNode();
+        }
+
         $node
             ->useAttributeAsKey('name')
             ->prototype('array')
@@ -605,9 +621,14 @@ class Configuration implements ConfigurationInterface
      */
     private function createCachePluginNode()
     {
-        $builder = new TreeBuilder();
+        $builder = new TreeBuilder('config');
+        // Keep compatibility with symfony/config < 4.2
+        if (!method_exists($builder, 'getRootNode')) {
+            $config = $builder->root('config');
+        } else {
+            $config = $builder->getRootNode();
+        }
 
-        $config = $builder->root('config');
         $config
             ->fixXmlConfig('method')
             ->fixXmlConfig('respect_response_cache_directive')
