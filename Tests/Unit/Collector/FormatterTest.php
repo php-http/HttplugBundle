@@ -14,12 +14,12 @@ use PHPUnit\Framework\TestCase;
 class FormatterTest extends TestCase
 {
     /**
-     * @var MessageFormatter
+     * @var MessageFormatter|\PHPUnit_Framework_MockObject_MockObject
      */
     private $formatter;
 
     /**
-     * @var MessageFormatter
+     * @var CurlCommandFormatter|\PHPUnit_Framework_MockObject_MockObject
      */
     private $curlFormatter;
 

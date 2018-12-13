@@ -2,6 +2,7 @@
 
 namespace Http\HttplugBundle\Tests\Unit\DependencyInjection;
 
+use Http\Client\HttpClient;
 use Http\HttplugBundle\Collector\PluginClientFactoryListener;
 use Http\HttplugBundle\DependencyInjection\HttplugExtension;
 use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractExtensionTestCase;
@@ -265,6 +266,7 @@ class HttplugExtensionTest extends AbstractExtensionTestCase
     private function verifyProfilingDisabled()
     {
         $def = $this->container->findDefinition('httplug.client');
+        $this->assertTrue(is_subclass_of($def->getClass(), HttpClient::class));
         $arguments = $def->getArguments();
 
         if (isset($arguments[3])) {
