@@ -2,6 +2,12 @@
 
 The change log describes what is "Added", "Removed", "Changed" or "Fixed" between each release.
 
+## Unreleased
+
+### Fixed
+
+- Fix deprecated notice when using symfony/config > 4.2
+
 ## 1.13.1 - 2018-11-28
 
 ### Fixed
