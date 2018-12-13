@@ -4,6 +4,7 @@ namespace Http\HttplugBundle\Tests\Unit\DependencyInjection\Compiler;
 
 use Http\Client\HttpAsyncClient;
 use Http\Client\HttpClient;
+use Http\Discovery\HttpClientDiscovery;
 use Http\HttplugBundle\DependencyInjection\HttplugExtension;
 use Http\Message\MessageFactory;
 use Http\Message\StreamFactory;
@@ -65,5 +66,9 @@ final class DiscoveryTest extends AbstractExtensionTestCase
         $this->setDefinition('httplug.async_client.default', new Definition(HttpAsyncClient::class));
 
         $this->load();
+
+        $this->assertContainerBuilderHasService('httplug.client.default', HttpClient::class);
+        $clientDefinition = $this->container->getDefinition('httplug.client.default');
+        $this->assertEquals([HttpClientDiscovery::class, 'find'], $clientDefinition->getFactory());
     }
 }
