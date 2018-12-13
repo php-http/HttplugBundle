@@ -4,6 +4,10 @@ The change log describes what is "Added", "Removed", "Changed" or "Fixed" betwee
 
 ## Unreleased
 
+### Changed
+
+- Allow version 2 of `php-http/client-common`
+
 ### Fixed
 
 - Fix deprecated notice when using symfony/config > 4.2
