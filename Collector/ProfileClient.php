@@ -3,6 +3,7 @@
 namespace Http\HttplugBundle\Collector;
 
 use Http\Client\Common\FlexibleHttpClient;
+use Http\Client\Common\VersionBridgeClient;
 use Http\Client\Exception\HttpException;
 use Http\Client\HttpAsyncClient;
 use Http\Client\HttpClient;
@@ -19,7 +20,7 @@ use Symfony\Component\Stopwatch\StopwatchEvent;
  *
  * @internal
  */
-class ProfileClient implements HttpClient, HttpAsyncClient
+class ProfileClient extends VersionBridgeClient implements HttpAsyncClient
 {
     /**
      * @var HttpClient|HttpAsyncClient
@@ -114,10 +115,7 @@ class ProfileClient implements HttpClient, HttpAsyncClient
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function sendRequest(RequestInterface $request)
+    protected function doSendRequest(RequestInterface $request)
     {
         $stack = $this->collector->getActiveStack();
         if (null === $stack) {
