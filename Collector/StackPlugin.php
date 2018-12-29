@@ -17,6 +17,8 @@ use Psr\Http\Message\ResponseInterface;
  */
 class StackPlugin implements Plugin
 {
+    use Plugin\VersionBridgePlugin;
+
     /**
      * @var Collector
      */
@@ -44,10 +46,7 @@ class StackPlugin implements Plugin
         $this->client = $client;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function handleRequest(RequestInterface $request, callable $next, callable $first)
+    protected function doHandleRequest(RequestInterface $request, callable $next, callable $first)
     {
         $stack = new Stack($this->client, $this->formatter->formatRequest($request));
 

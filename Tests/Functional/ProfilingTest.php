@@ -122,10 +122,9 @@ class ProfilingTest extends TestCase
 
 class ExceptionThrowerPlugin implements Plugin
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function handleRequest(RequestInterface $request, callable $next, callable $first)
+    use Plugin\VersionBridgePlugin;
+
+    protected function doHandleRequest(RequestInterface $request, callable $next, callable $first)
     {
         throw new \Exception();
     }

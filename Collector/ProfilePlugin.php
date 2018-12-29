@@ -17,6 +17,8 @@ use Psr\Http\Message\ResponseInterface;
  */
 class ProfilePlugin implements Plugin
 {
+    use Plugin\VersionBridgePlugin;
+
     /**
      * @var Plugin
      */
@@ -44,10 +46,7 @@ class ProfilePlugin implements Plugin
         $this->formatter = $formatter;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function handleRequest(RequestInterface $request, callable $next, callable $first)
+    protected function doHandleRequest(RequestInterface $request, callable $next, callable $first)
     {
         $profile = new Profile(get_class($this->plugin));
 
