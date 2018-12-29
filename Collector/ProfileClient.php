@@ -7,6 +7,7 @@ use Http\Client\Common\VersionBridgeClient;
 use Http\Client\Exception\HttpException;
 use Http\Client\HttpAsyncClient;
 use Http\Client\HttpClient;
+use Http\HttplugBundle\Tests\Unit\Collector\ClientInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Symfony\Component\Stopwatch\Stopwatch;
@@ -58,7 +59,7 @@ class ProfileClient implements HttpClient, HttpAsyncClient
      */
     public function __construct($client, Collector $collector, Formatter $formatter, Stopwatch $stopwatch)
     {
-        if (!($client instanceof HttpClient && $client instanceof HttpAsyncClient)) {
+        if (!(($client instanceof ClientInterface || $client instanceof HttpClient) && $client instanceof HttpAsyncClient)) {
             $client = new FlexibleHttpClient($client);
         }
 

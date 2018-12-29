@@ -6,6 +6,7 @@ use Http\Client\Common\Plugin;
 use Http\Client\Common\PluginClient;
 use Http\Client\HttpAsyncClient;
 use Http\Client\HttpClient;
+use Http\HttplugBundle\Tests\Unit\Collector\ClientInterface;
 use Symfony\Component\Stopwatch\Stopwatch;
 
 /**
@@ -46,9 +47,9 @@ final class PluginClientFactory
     }
 
     /**
-     * @param HttpClient|HttpAsyncClient $client
-     * @param Plugin[]                   $plugins
-     * @param array                      $options {
+     * @param HttpClient|ClientInterface|HttpAsyncClient $client
+     * @param Plugin[]                                   $plugins
+     * @param array                                      $options {
      *
      *     @var string $client_name to give client a name which may be used when displaying client information like in
      *         the HTTPlugBundle profiler.
