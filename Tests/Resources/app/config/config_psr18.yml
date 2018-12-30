@@ -1,0 +1,28 @@
+imports:
+    - { resource: config_test.yml }
+
+httplug:
+    discovery:
+        async_client: auto
+    clients:
+        my_psr18:
+            service: 'my_psr18_client'
+            public: true
+            plugins:
+                -
+                    decoder:
+                        use_content_encoding: false
+                - app.http.plugin.custom
+                -
+                    add_host:
+                        host: "http://localhost:8000"
+                -
+                    authentication:
+                        my_basic:
+                            type: basic
+                            username: foo
+                            password: bar
+
+services:
+    my_psr18_client:
+        class: Http\HttplugBundle\Tests\Resources\MyPsr18TestClient

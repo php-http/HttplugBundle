@@ -10,6 +10,8 @@ use Http\HttplugBundle\Collector\ProfileClient;
 use Http\HttplugBundle\Collector\ProfilePlugin;
 use Http\HttplugBundle\Collector\StackPlugin;
 use Nyholm\NSA;
+use Psr\Http\Client\ClientInterface;
+use Psr\Http\Message\ResponseInterface;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -75,6 +77,28 @@ class ServiceInstantiationTest extends WebTestCase
         $this->assertInstanceOf(ProfilePlugin::class, $plugins[2]);
         $this->assertInstanceOf(ProfilePlugin::class, $plugins[3]);
         $this->assertInstanceOf(ProfilePlugin::class, $plugins[4]);
+    }
+
+    public function testProfilingPsr18Decoration()
+    {
+        if (!interface_exists(ClientInterface::class)) {
+            $this->markTestSkipped('PSR-18 is not installed');
+        }
+
+        static::bootKernel(['debug' => true, 'environment' => 'psr18']);
+        $container = static::$kernel->getContainer();
+
+        $client = $container->get('httplug.client.my_psr18');
+        $this->assertInstanceOf(PluginClient::class, $client);
+        $profileClient = NSA::getProperty($client, 'client');
+        $this->assertInstanceOf(ProfileClient::class, $profileClient);
+
+        $flexibleClient = NSA::getProperty($profileClient, 'client');
+        $psr18Client = NSA::getProperty($flexibleClient, 'httpClient');
+        $this->assertInstanceOf(ClientInterface::class, $psr18Client);
+
+        $response = $client->sendRequest(new \GuzzleHttp\Psr7\Request('GET', 'https://example.com'));
+        $this->assertInstanceOf(ResponseInterface::class, $response);
     }
 
     /**
