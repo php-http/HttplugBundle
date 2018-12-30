@@ -6,7 +6,7 @@ use Http\Client\Common\Plugin;
 use Http\Client\Common\PluginClient;
 use Http\Client\HttpAsyncClient;
 use Http\Client\HttpClient;
-use Http\HttplugBundle\Tests\Unit\Collector\ClientInterface;
+use Psr\Http\Client\ClientInterface;
 use Symfony\Component\Stopwatch\Stopwatch;
 
 /**
