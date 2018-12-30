@@ -49,11 +49,11 @@ class Formatter implements MessageFormatter
      */
     public function formatException(Exception $exception)
     {
-        if ($exception instanceof HttpException) {
+        if ($exception instanceof HttpException || $exception instanceof \Psr\Http\Client\RequestExceptionInterface) {
             return $this->formatter->formatResponse($exception->getResponse());
         }
 
-        if ($exception instanceof TransferException) {
+        if ($exception instanceof TransferException || $exception instanceof \Psr\Http\Client\NetworkExceptionInterface) {
             return sprintf('Transfer error: %s', $exception->getMessage());
         }
 
