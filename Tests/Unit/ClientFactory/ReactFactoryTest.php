@@ -14,6 +14,10 @@ class ReactFactoryTest extends TestCase
 {
     public function testCreateClient()
     {
+        if (!class_exists(\Http\Adapter\React\Client::class)) {
+            $this->markTestSkipped('React adapter is not installed');
+        }
+
         $factory = new ReactFactory($this->getMockBuilder(MessageFactory::class)->getMock());
         $client = $factory->createClient();
 
