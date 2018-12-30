@@ -15,6 +15,10 @@ class CurlFactoryTest extends TestCase
 {
     public function testCreateClient()
     {
+        if (!class_exists(\Http\Client\Curl\Client::class)) {
+            $this->markTestSkipped('Curl client is not installed');
+        }
+
         $factory = new CurlFactory(
             $this->getMockBuilder(MessageFactory::class)->getMock(),
             $this->getMockBuilder(StreamFactory::class)->getMock()
