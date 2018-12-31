@@ -2,7 +2,11 @@
 
 The change log describes what is "Added", "Removed", "Changed" or "Fixed" between each release.
 
-## Unreleased
+## 1.14.0
+
+### Added
+
+- Support for any PSR-18 client. 
 
 ### Changed
 
