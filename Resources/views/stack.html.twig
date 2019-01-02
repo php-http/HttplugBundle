@@ -1,4 +1,4 @@
-<div class="httplug-stack-header httplug-toggle" data-toggle="#httplug-{{ client }}-{{ id }}-details">
+<div class="httplug-stack-header httplug-toggle" data-toggle="#httplug-{{ client|httplug_slugify }}-{{ id }}-details">
     <div>
         {% if stack.failed %}
             <span class="httplug-stack-failed">✘</span>
@@ -23,14 +23,14 @@
         {% endif %}
     </div>
 </div>
-<div id="httplug-{{ client }}-{{ id }}-details" class="httplug-hidden">
+<div id="httplug-{{ client|httplug_slugify }}-{{ id }}-details" class="httplug-hidden">
     <div class="httplug-toolbar">
         <div class="httplug-copy-as-curl">
             <input readonly="readonly" type="text" value="{{ stack.curlCommand }}" />
             <button class="btn tooltip-toggle" aria-label="Copy to clipboard">Copy to clipboard</button>
         </div>
-        <button data-toggle="#httplug-{{ client }}-{{ id }}-stack" class="httplug-toggle btn" >Toggle plugin stack</button>
-        <button data-toggle="#httplug-{{ client }}-{{ id }}-details .httplug-http-body" class="httplug-toggle btn">Toggle body</button>
+        <button data-toggle="#httplug-{{ client|httplug_slugify }}-{{ id }}-stack" class="httplug-toggle btn" >Toggle plugin stack</button>
+        <button data-toggle="#httplug-{{ client|httplug_slugify }}-{{ id }}-details .httplug-http-body" class="httplug-toggle btn">Toggle body</button>
     </div>
     <div class="httplug-messages">
         <div class="httplug-message card">
@@ -43,7 +43,7 @@
         </div>
     </div>
     {% if stack.profiles %}
-        <div id="httplug-{{ client }}-{{ id }}-stack" class="httplug-hidden card">
+        <div id="httplug-{{ client|httplug_slugify }}-{{ id }}-stack" class="httplug-hidden card">
             {% for profile in stack.profiles %}
                 <h3 class="httplug-plugin-name">{{ profile.plugin }}</h3>
                 <div class="httplug-messages">

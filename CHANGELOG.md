@@ -2,6 +2,12 @@
 
 The change log describes what is "Added", "Removed", "Changed" or "Fixed" between each release.
 
+## 1.14.1
+
+### Fixed
+
+- Profiler does not display stack when client name contains dots
+
 ## 1.14.0
 
 ### Added
