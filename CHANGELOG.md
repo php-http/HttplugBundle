@@ -2,12 +2,6 @@
 
 The change log describes what is "Added", "Removed", "Changed" or "Fixed" between each release.
 
-## 1.14.1
-
-### Fixed
-
-- Profiler does not display stack when client name contains dots
-
 ## 1.14.0
 
 ### Added
@@ -21,6 +15,7 @@ The change log describes what is "Added", "Removed", "Changed" or "Fixed" betwee
 ### Fixed
 
 - Fix deprecated notice when using symfony/config > 4.2
+- Profiler does not display stack when client name contains dots
 
 ## 1.13.1 - 2018-11-28
 

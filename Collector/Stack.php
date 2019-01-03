@@ -340,4 +340,12 @@ final class Stack
     {
         $this->curlCommand = $curlCommand;
     }
+
+    /**
+     * @return string
+     */
+    public function getClientSlug()
+    {
+        return preg_replace('/[^a-zA-Z0-9_-]/u', '_', $this->client);
+    }
 }
