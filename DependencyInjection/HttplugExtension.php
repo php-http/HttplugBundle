@@ -76,6 +76,10 @@ class HttplugExtension extends Extension
                 ->getDefinition('httplug.formatter.full_http_message')
                 ->addArgument($config['profiling']['captured_body_length'])
             ;
+
+            if (!class_exists(\Twig_Environment::class)) {
+                $container->removeDefinition('httplug.collector.twig.http_message');
+            }
         }
 
         $this->configureClients($container, $config);
