@@ -8,7 +8,6 @@ use Http\Client\Exception\TransferException;
 use Http\Message\Formatter as MessageFormatter;
 use Http\Message\Formatter\CurlCommandFormatter;
 use Psr\Http\Client\NetworkExceptionInterface;
-use Psr\Http\Client\RequestExceptionInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
@@ -51,7 +50,7 @@ class Formatter implements MessageFormatter
      */
     public function formatException(Exception $exception)
     {
-        if ($exception instanceof HttpException || $exception instanceof RequestExceptionInterface) {
+        if ($exception instanceof HttpException) {
             return $this->formatter->formatResponse($exception->getResponse());
         }
 
