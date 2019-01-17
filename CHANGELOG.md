@@ -2,6 +2,12 @@
 
 The change log describes what is "Added", "Removed", "Changed" or "Fixed" between each release.
 
+## 1.15.0 [unreleased]
+
+### Changed
+
+- Removed `twig/twig` dependency
+
 ## 1.14.0
 
 ### Added
