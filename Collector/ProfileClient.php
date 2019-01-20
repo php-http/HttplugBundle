@@ -8,7 +8,6 @@ use Http\Client\Exception\HttpException;
 use Http\Client\HttpAsyncClient;
 use Http\Client\HttpClient;
 use Psr\Http\Client\ClientInterface;
-use Psr\Http\Client\RequestExceptionInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Symfony\Component\Stopwatch\Stopwatch;
@@ -183,7 +182,7 @@ class ProfileClient implements HttpClient, HttpAsyncClient
      */
     private function collectExceptionInformations(\Exception $exception, StopwatchEvent $event, Stack $stack)
     {
-        if ($exception instanceof HttpException || $exception instanceof RequestExceptionInterface) {
+        if ($exception instanceof HttpException) {
             $this->collectResponseInformations($exception->getResponse(), $event, $stack);
         }
 
