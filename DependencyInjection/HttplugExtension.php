@@ -3,8 +3,10 @@
 namespace Http\HttplugBundle\DependencyInjection;
 
 use Http\Client\Common\BatchClient;
+use Http\Client\Common\BatchClientInterface;
 use Http\Client\Common\FlexibleHttpClient;
 use Http\Client\Common\HttpMethodsClient;
+use Http\Client\Common\HttpMethodsClientInterface;
 use Http\Client\Common\Plugin\AuthenticationPlugin;
 use Http\Client\Common\PluginClient;
 use Http\Client\Common\PluginClientFactory;
@@ -111,9 +113,30 @@ class HttplugExtension extends Extension
         // If we have clients configured
         if (null !== $first) {
             // If we do not have a client named 'default'
-            if (!isset($config['clients']['default'])) {
+            if (!array_key_exists('default', $config['clients'])) {
+                $serviceId = 'httplug.client.'.$first;
                 // Alias the first client to httplug.client.default
-                $container->setAlias('httplug.client.default', 'httplug.client.'.$first);
+                $container->setAlias('httplug.client.default', $serviceId);
+                $default = $first;
+            } else {
+                $default = 'default';
+            }
+
+            // Autowiring alias for special clients, if they are enabled on the default client
+            if ($config['clients'][$default]['flexible_client']) {
+                $container->setAlias(FlexibleHttpClient::class, $serviceId.'.flexible');
+            }
+            if ($config['clients'][$default]['http_methods_client']) {
+                if (\interface_exists(HttpMethodsClientInterface::class)) {
+                    // support for client-common 1.9
+                    $container->setAlias(HttpMethodsClientInterface::class, $serviceId.'.http_methods');
+                }
+            }
+            if ($config['clients'][$default]['batch_client']) {
+                if (\interface_exists(BatchClientInterface::class)) {
+                    // support for client-common 1.9
+                    $container->setAlias(BatchClientInterface::class, $serviceId.'.batch_client');
+                }
             }
         }
     }

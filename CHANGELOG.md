@@ -4,6 +4,12 @@ The change log describes what is "Added", "Removed", "Changed" or "Fixed" betwee
 
 ## 1.15.0 [unreleased]
 
+### Added
+
+- Autowiring support for FlexibleClient, HttpMethodsClientInterface and
+  BatchClientInterface if they are enabled on the default/first client.
+  (Only available with Httplug 2)
+
 ### Changed
 
 - Removed `twig/twig` dependency
