@@ -3,6 +3,7 @@
 namespace Http\HttplugBundle\DependencyInjection;
 
 use Http\Client\Common\Plugin\Cache\Generator\CacheKeyGenerator;
+use Http\Client\Common\Plugin\CachePlugin;
 use Http\Client\Common\Plugin\Journal;
 use Http\Message\CookieJar;
 use Http\Message\Formatter;
@@ -700,7 +701,14 @@ class Configuration implements ConfigurationInterface
         $cache = $builder->root('cache');
         $cache
             ->canBeEnabled()
+            ->info('Configure HTTP caching, requires the php-http/cache-plugin package')
             ->addDefaultsIfNotSet()
+            ->validate()
+                ->ifTrue(function ($v) {
+                    return !empty($v['enabled']) && !class_exists(CachePlugin::class);
+                })
+                ->thenInvalid('To use the cache plugin, you need to require php-http/cache-plugin in your project')
+            ->end()
             ->children()
                 ->scalarNode('cache_pool')
                     ->info('This must be a service id to a service implementing '.CacheItemPoolInterface::class)
