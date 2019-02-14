@@ -417,4 +417,21 @@ class HttplugExtensionTest extends AbstractExtensionTestCase
             $this->assertFalse($this->container->getDefinition('httplug.client.acme.batch_client')->isPrivate());
         }
     }
+
+    public function testClientCanBeDecoratedWith()
+    {
+        $this->load([
+            'clients' => [
+                'acme' => [
+                    'decorate_with' => 'MyHttpClient',
+                ],
+            ],
+        ]);
+
+        $this->assertContainerBuilderHasService('httplug.client.acme');
+
+        $definition = $this->container->getDefinition('httplug.client.acme');
+        $this->assertSame('MyHttpClient', $definition->getClass());
+        $this->assertSame('httplug.client.acme.plugin_client', $definition->getDecoratedService()[0]);
+    }
 }

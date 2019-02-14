@@ -1,0 +1,9 @@
+imports:
+    - { resource: config_test.yml }
+
+httplug:
+    clients:
+        decorated:
+            decorate_with: Http\HttplugBundle\Tests\Resources\MyDecoratedHttpClient
+            service: httplug.client.mock
+            public: true

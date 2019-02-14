@@ -355,8 +355,13 @@ class HttplugExtension extends Extension
                 ->setAlias($serviceId.'.client', new Alias($arguments['service'], false));
         }
 
+        $pluginClientId = $serviceId;
+        if ($arguments['decorate_with']) {
+            $pluginClientId = $serviceId.'.plugin_client';
+        }
+
         $definition = $container
-            ->register($serviceId, PluginClient::class)
+            ->register($pluginClientId, PluginClient::class)
             ->setFactory([new Reference(PluginClientFactory::class), 'createClient'])
             ->addArgument(new Reference($serviceId.'.client'))
             ->addArgument(
@@ -371,6 +376,14 @@ class HttplugExtension extends Extension
                 'client_name' => $clientName,
             ])
         ;
+
+        if ($arguments['decorate_with']) {
+            $definition = $container
+                ->register($serviceId, $arguments['decorate_with'])
+                ->setArguments([new Reference($serviceId.'.inner')])
+                ->setDecoratedService($pluginClientId)
+            ;
+        }
 
         if (is_bool($arguments['public'])) {
             $definition->setPublic($arguments['public']);

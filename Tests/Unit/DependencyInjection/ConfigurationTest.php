@@ -116,6 +116,7 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
             ],
             'clients' => [
                 'test' => [
+                    'decorate_with' => null,
                     'factory' => 'httplug.factory.guzzle6',
                     'http_methods_client' => true,
                     'service' => null,

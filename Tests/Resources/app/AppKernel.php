@@ -28,7 +28,7 @@ class AppKernel extends Kernel
             new \Http\HttplugBundle\HttplugBundle(),
         ];
 
-        if (in_array($this->getEnvironment(), array('dev', 'test', 'psr18'))) {
+        if (in_array($this->getEnvironment(), array('dev', 'test', 'psr18', 'decorated'))) {
             $bundles[] = new Symfony\Bundle\WebProfilerBundle\WebProfilerBundle();
         }
 
