@@ -41,6 +41,9 @@
             <argument/>
             <argument/>
         </service>
+        <service id="httplug.plugin.content_type" class="Http\Client\Common\Plugin\ContentTypePlugin" public="false" abstract="true">
+            <argument/>
+        </service>
         <service id="httplug.plugin.header_append" class="Http\Client\Common\Plugin\HeaderAppendPlugin" public="false" abstract="true">
             <argument/>
         </service>

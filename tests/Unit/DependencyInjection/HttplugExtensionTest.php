@@ -84,6 +84,11 @@ class HttplugExtensionTest extends AbstractExtensionTestCase
                             ],
                         ],
                         [
+                            'content_type' => [
+                                'skip_detection' => true,
+                            ],
+                        ],
+                        [
                             'header_append' => [
                                 'headers' => ['X-FOO' => 'bar'],
                             ],
@@ -131,6 +136,7 @@ class HttplugExtensionTest extends AbstractExtensionTestCase
             'httplug.client.acme.plugin.decoder',
             'httplug.plugin.redirect',
             'httplug.client.acme.plugin.add_host',
+            'httplug.client.acme.plugin.content_type',
             'httplug.client.acme.plugin.header_append',
             'httplug.client.acme.plugin.header_defaults',
             'httplug.client.acme.plugin.header_set',

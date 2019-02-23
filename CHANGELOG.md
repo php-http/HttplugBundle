@@ -9,6 +9,7 @@ The change log describes what is "Added", "Removed", "Changed" or "Fixed" betwee
 - Autowiring support for FlexibleClient, HttpMethodsClientInterface and
   BatchClientInterface if they are enabled on the default/first client.
   (Only available with Httplug 2)
+- Configuration for the content_type plugin
 
 ### Changed
 
