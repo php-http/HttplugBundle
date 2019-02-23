@@ -2,22 +2,25 @@
 
 namespace Http\HttplugBundle\ClientFactory;
 
+use Http\Client\HttpClient;
 use Http\Mock\Client;
 
 /**
  * @author Gary PEGEOT <garypegeot@gmail.com>
  */
-class MockFactory implements ClientFactory
+final class MockFactory implements ClientFactory
 {
     /**
-     * @var Client
+     * @var HttpClient
      */
     private $client;
 
     /**
-     * @param Client $client
+     * Set the client instance that this factory should return.
+     *
+     * Note that this can be any client, not only a mock client.
      */
-    public function setClient(Client $client)
+    public function setClient(HttpClient $client)
     {
         $this->client = $client;
     }

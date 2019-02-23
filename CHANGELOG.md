@@ -14,6 +14,12 @@ The change log describes what is "Added", "Removed", "Changed" or "Fixed" betwee
 
 - Removed `twig/twig` dependency
 
+### Fixed
+
+- MockFactory now accepts any client, e.g. a mock client decorated with the
+  plugin client for the development panel, so that configuring a mock client
+  actually works. The MockFactory is now `final`.
+
 ## 1.14.0
 
 ### Added
