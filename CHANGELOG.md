@@ -13,6 +13,8 @@ The change log describes what is "Added", "Removed", "Changed" or "Fixed" betwee
 ### Changed
 
 - Removed `twig/twig` dependency
+- Removed hard dependency on `php-http/cache-plugin`. If you want to use the
+  cache plugin, you need to require it in your project.
 
 ## 1.14.0
 
