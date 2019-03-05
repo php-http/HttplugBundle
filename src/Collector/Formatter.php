@@ -21,7 +21,7 @@ use Psr\Http\Message\ResponseInterface;
  *
  * @internal
  */
-class Formatter implements MessageFormatter
+final class Formatter implements MessageFormatter
 {
     /**
      * @var MessageFormatter

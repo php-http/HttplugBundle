@@ -18,7 +18,7 @@ use Symfony\Component\Stopwatch\Stopwatch;
  *
  * @internal
  */
-class ProfileClientFactory implements ClientFactory
+final class ProfileClientFactory implements ClientFactory
 {
     /**
      * @var ClientFactory|callable

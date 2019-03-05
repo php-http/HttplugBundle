@@ -19,7 +19,7 @@ use Symfony\Component\HttpKernel\DataCollector\DataCollector;
  *
  * @internal
  */
-class Collector extends DataCollector
+final class Collector extends DataCollector
 {
     /**
      * @var Stack|null
