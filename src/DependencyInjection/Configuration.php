@@ -142,7 +142,7 @@ class Configuration implements ConfigurationInterface
                         ->scalarNode('formatter')->defaultNull()->end()
                         ->scalarNode('captured_body_length')
                             ->beforeNormalization()
-                                ->always(function($maxLength) {
+                                ->always(function ($maxLength) {
                                     if (null === $maxLength) {
                                         return null;
                                     }
