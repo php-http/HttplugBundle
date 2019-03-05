@@ -16,6 +16,12 @@ The change log describes what is "Added", "Removed", "Changed" or "Fixed" betwee
 - Removed hard dependency on `php-http/cache-plugin`. If you want to use the
   cache plugin, you need to require it in your project.
 
+### Fixed
+
+- MockFactory now accepts any client, e.g. a mock client decorated with the
+  plugin client for the development panel, so that configuring a mock client
+  actually works. The MockFactory is now `final`.
+
 ## 1.14.0
 
 ### Added
