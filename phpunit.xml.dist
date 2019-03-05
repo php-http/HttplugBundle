@@ -12,10 +12,10 @@
 
     <testsuites>
         <testsuite name="HttplugBundle unit tests">
-            <directory suffix="Test.php">./Tests/Unit</directory>
+            <directory suffix="Test.php">./tests/Unit</directory>
         </testsuite>
         <testsuite name="HttplugBundle functional tests">
-            <directory suffix="Test.php">./Tests/Functional</directory>
+            <directory suffix="Test.php">./tests/Functional</directory>
         </testsuite>
     </testsuites>
 
@@ -24,14 +24,14 @@
             <directory>./</directory>
             <exclude>
                 <directory>./Resources</directory>
-                <directory>./Tests</directory>
+                <directory>./tests</directory>
                 <directory>./vendor</directory>
             </exclude>
         </whitelist>
     </filter>
 
     <php>
-        <server name="KERNEL_DIR" value="./Tests/Resources/app" />
+        <server name="KERNEL_DIR" value="./tests/Resources/app" />
         <server name="KERNEL_CLASS" value="AppKernel" />
     </php>
 </phpunit>

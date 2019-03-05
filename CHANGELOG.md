@@ -12,6 +12,7 @@ The change log describes what is "Added", "Removed", "Changed" or "Fixed" betwee
 
 ### Changed
 
+- Moved source code to `src/` and tests to `tests/`
 - Removed `twig/twig` dependency
 - Removed hard dependency on `php-http/cache-plugin`. If you want to use the
   cache plugin, you need to require it in your project.
