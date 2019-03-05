@@ -395,4 +395,12 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
         $file = __DIR__.'/../../Resources/Fixtures/config/cache_config_with_no_pool.yml';
         $this->assertProcessedConfigurationEquals([], [$file]);
     }
+
+    public function testLimitlessCapturedBodyLength()
+    {
+        $file = __DIR__.'/../../Resources/Fixtures/config/limitless_captured_body_length.yml';
+        $config = $this->emptyConfig;
+        $config['profiling']['captured_body_length'] = null;
+        $this->assertProcessedConfigurationEquals($config, [$file]);
+    }
 }
