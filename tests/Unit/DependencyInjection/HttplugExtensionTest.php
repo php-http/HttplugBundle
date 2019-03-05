@@ -121,6 +121,12 @@ class HttplugExtensionTest extends AbstractExtensionTestCase
                             ],
                         ],
                         [
+                            'request_seekable_body' => [
+                                'use_file_buffer' => true,
+                            ],
+                        ],
+//                        'response_seekable_body',
+                        [
                             'query_defaults' => [
                                 'parameters' => ['locale' => 'en'],
                             ],

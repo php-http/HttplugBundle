@@ -341,6 +341,11 @@ class HttplugExtension extends Extension
 
                 break;
 
+            case 'request_seekable_body':
+            case 'response_seekable_body':
+                $definition->replaceArgument(0, $config);
+                break;
+
             default:
                 throw new \InvalidArgumentException(sprintf('Internal exception: Plugin %s is not handled', $name));
         }
