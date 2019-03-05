@@ -186,20 +186,24 @@ class HttplugExtension extends Extension
                     ->replaceArgument(2, $options);
 
                 break;
+
             case 'cookie':
                 $definition->replaceArgument(0, new Reference($config['cookie_jar']));
 
                 break;
+
             case 'decoder':
                 $definition->addArgument([
                     'use_content_encoding' => $config['use_content_encoding'],
                 ]);
 
                 break;
+
             case 'history':
                 $definition->replaceArgument(0, new Reference($config['journal']));
 
                 break;
+
             case 'logger':
                 $definition->replaceArgument(0, new Reference($config['logger']));
                 if (!empty($config['formatter'])) {
@@ -207,6 +211,7 @@ class HttplugExtension extends Extension
                 }
 
                 break;
+
             case 'redirect':
                 $definition->addArgument([
                     'preserve_header' => $config['preserve_header'],
@@ -214,12 +219,14 @@ class HttplugExtension extends Extension
                 ]);
 
                 break;
+
             case 'retry':
                 $definition->addArgument([
                     'retries' => $config['retry'],
                 ]);
 
                 break;
+
             case 'stopwatch':
                 $definition->replaceArgument(0, new Reference($config['stopwatch']));
 
@@ -236,12 +243,14 @@ class HttplugExtension extends Extension
                 ]);
 
                 break;
+
             case 'add_path':
                 $pathUriService = $serviceId.'.path_uri';
                 $this->createUri($container, $pathUriService, $config['path']);
                 $definition->replaceArgument(0, new Reference($pathUriService));
 
                 break;
+
             case 'base_uri':
                 $baseUriService = $serviceId.'.base_uri';
                 $this->createUri($container, $baseUriService, $config['uri']);
@@ -251,6 +260,11 @@ class HttplugExtension extends Extension
                 ]);
 
                 break;
+
+            case 'content_type':
+                $definition->replaceArgument(0, $config);
+                break;
+
             case 'header_append':
             case 'header_defaults':
             case 'header_set':
