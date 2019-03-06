@@ -403,4 +403,14 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
         $config['profiling']['captured_body_length'] = null;
         $this->assertProcessedConfigurationEquals($config, [$file]);
     }
+
+    /**
+     * @expectedException \Symfony\Component\Config\Definition\Exception\InvalidConfigurationException
+     * @expectedExceptionMessage The child node "captured_body_length" at path "httplug.profiling" must be an integer or null.
+     */
+    public function testInvalidCapturedBodyLengthString()
+    {
+        $file = __DIR__.'/../../Resources/Fixtures/config/invalid_captured_body_length.yml';
+        $this->assertProcessedConfigurationEquals([], [$file]);
+    }
 }

@@ -147,7 +147,14 @@ class Configuration implements ConfigurationInterface
                                         return null;
                                     }
 
-                                    return (int) $maxLength;
+                                    if (!is_int($maxLength)) {
+                                        $invalidConfiguration = new InvalidConfigurationException('The child node "captured_body_length" at path "httplug.profiling" must be an integer or null.');
+                                        $invalidConfiguration->setPath('httplug.profiling');
+
+                                        throw $invalidConfiguration;
+                                    }
+
+                                    return $maxLength;
                                 })
                             ->end()
                             ->defaultValue(0)
