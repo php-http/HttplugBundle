@@ -17,6 +17,8 @@ The change log describes what is "Added", "Removed", "Changed" or "Fixed" betwee
 - Removed `twig/twig` dependency
 - Removed hard dependency on `php-http/cache-plugin`. If you want to use the
   cache plugin, you need to require it in your project.
+- Allow to set `httpplug.profiling.captured_body_length` configuration to `null`
+  to avoid body limitation size.
 
 ### Fixed
 
