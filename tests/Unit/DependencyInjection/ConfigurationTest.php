@@ -406,7 +406,7 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
 
     /**
      * @expectedException \Symfony\Component\Config\Definition\Exception\InvalidConfigurationException
-     * @expectedExceptionMessage The child node "captured_body_length" at path "httplug.profiling" must be an integer or null.
+     * @expectedExceptionMessage The child node "captured_body_length" at path "httplug.profiling" must be an integer or null
      */
     public function testInvalidCapturedBodyLengthString()
     {

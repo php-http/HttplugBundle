@@ -141,21 +141,11 @@ class Configuration implements ConfigurationInterface
                         ->end()
                         ->scalarNode('formatter')->defaultNull()->end()
                         ->scalarNode('captured_body_length')
-                            ->beforeNormalization()
-                                ->always(function ($maxLength) {
-                                    if (null === $maxLength) {
-                                        return null;
-                                    }
-
-                                    if (!is_int($maxLength)) {
-                                        $invalidConfiguration = new InvalidConfigurationException('The child node "captured_body_length" at path "httplug.profiling" must be an integer or null.');
-                                        $invalidConfiguration->setPath('httplug.profiling');
-
-                                        throw $invalidConfiguration;
-                                    }
-
-                                    return $maxLength;
+                            ->validate()
+                                ->ifTrue(function ($v) {
+                                    return null !== $v && !is_int($v);
                                 })
+                                ->thenInvalid('The child node "captured_body_length" at path "httplug.profiling" must be an integer or null ("%s" given).')
                             ->end()
                             ->defaultValue(0)
                             ->info('Limit long HTTP message bodies to x characters. If set to 0 we do not read the message body. If null the body will not be truncated. Only available with the default formatter (FullHttpMessageFormatter).')
