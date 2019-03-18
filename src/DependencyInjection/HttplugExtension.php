@@ -26,6 +26,7 @@ use Symfony\Component\DependencyInjection\DefinitionDecorator;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
+use Twig\Environment as TwigEnvironment;
 
 /**
  * @author David Buchmann <mail@davidbu.ch>
@@ -79,7 +80,7 @@ class HttplugExtension extends Extension
                 ->addArgument($config['profiling']['captured_body_length'])
             ;
 
-            if (!class_exists(\Twig_Environment::class)) {
+            if (!class_exists(TwigEnvironment::class) && !class_exists(\Twig_Environment::class)) {
                 $container->removeDefinition('httplug.collector.twig.http_message');
             }
         }
