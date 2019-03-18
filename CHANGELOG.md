@@ -10,6 +10,7 @@ The change log describes what is "Added", "Removed", "Changed" or "Fixed" betwee
   BatchClientInterface if they are enabled on the default/first client.
   (Only available with Httplug 2)
 - Configuration for the content_type plugin
+- Support for namespaced Twig classes.
 - Configuration option default_client_autowiring that you can set to false 
   to prevent autowiring the HttpClient and HttpAsyncClient
 
@@ -27,6 +28,8 @@ The change log describes what is "Added", "Removed", "Changed" or "Fixed" betwee
 - MockFactory now accepts any client, e.g. a mock client decorated with the
   plugin client for the development panel, so that configuring a mock client
   actually works. The MockFactory is now `final`.
+- Width of the HTTPlug icon in Profiler Toolbar.
+- `RequestExceptionInterface` formatting (`getResponse()` is not called anymore).
 
 ## 1.14.0
 
