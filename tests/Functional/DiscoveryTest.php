@@ -10,6 +10,8 @@ use Http\Message\MessageFactory;
 use Http\Message\StreamFactory;
 use Http\Message\UriFactory;
 use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractExtensionTestCase;
+use Matthias\SymfonyDependencyInjectionTest\PhpUnit\ContainerBuilderHasAliasConstraint;
+use PHPUnit\Framework\Constraint\LogicalNot;
 use Symfony\Component\DependencyInjection\Definition;
 
 /**
@@ -70,5 +72,40 @@ final class DiscoveryTest extends AbstractExtensionTestCase
         $this->assertContainerBuilderHasService('httplug.client.default', HttpClient::class);
         $clientDefinition = $this->container->getDefinition('httplug.client.default');
         $this->assertEquals([HttpClientDiscovery::class, 'find'], $clientDefinition->getFactory());
+    }
+
+    public function testEnableAutowiring()
+    {
+        $this->load([
+            'default_client_autowiring' => true,
+        ]);
+
+        $this->assertContainerBuilderHasService('httplug.client.default');
+        $this->assertContainerBuilderHasService('httplug.async_client.default');
+        $this->assertContainerBuilderHasAlias(HttpClient::class);
+        $this->assertContainerBuilderHasAlias(HttpAsyncClient::class);
+    }
+
+    public function testDisableAutowiring()
+    {
+        if (PHP_VERSION_ID <= 70000) {
+            $this->markTestSkipped();
+        }
+
+        $this->load([
+            'default_client_autowiring' => false,
+        ]);
+
+        $this->assertContainerBuilderHasService('httplug.client.default');
+        $this->assertContainerBuilderHasService('httplug.async_client.default');
+
+        self::assertThat(
+            $this->container,
+            new LogicalNot(new ContainerBuilderHasAliasConstraint(HttpClient::class))
+        );
+        self::assertThat(
+            $this->container,
+            new LogicalNot(new ContainerBuilderHasAliasConstraint(HttpAsyncClient::class))
+        );
     }
 }

@@ -12,6 +12,7 @@ use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractExtensionConfigurati
 class ConfigurationTest extends AbstractExtensionConfigurationTestCase
 {
     private $emptyConfig = [
+        'default_client_autowiring' => true,
         'main_alias' => [
             'client' => 'httplug.client.default',
             'message_factory' => 'httplug.message_factory.default',
@@ -102,6 +103,7 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
     public function testSupportsAllConfigFormats()
     {
         $expectedConfiguration = [
+            'default_client_autowiring' => false,
             'main_alias' => [
                 'client' => 'my_client',
                 'message_factory' => 'my_message_factory',

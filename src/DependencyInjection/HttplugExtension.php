@@ -10,6 +10,7 @@ use Http\Client\Common\HttpMethodsClientInterface;
 use Http\Client\Common\Plugin\AuthenticationPlugin;
 use Http\Client\Common\PluginClient;
 use Http\Client\Common\PluginClientFactory;
+use Http\Client\HttpAsyncClient;
 use Http\Client\HttpClient;
 use Http\Message\Authentication\BasicAuth;
 use Http\Message\Authentication\Bearer;
@@ -88,6 +89,11 @@ class HttplugExtension extends Extension
         $this->configureClients($container, $config);
         $this->configurePlugins($container, $config['plugins']); // must be after clients, as clients.X.plugins might use plugins as templates that will be removed
         $this->configureAutoDiscoveryClients($container, $config);
+
+        if (!$config['default_client_autowiring']) {
+            $container->removeAlias(HttpAsyncClient::class);
+            $container->removeAlias(HttpClient::class);
+        }
     }
 
     /**
