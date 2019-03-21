@@ -10,6 +10,8 @@ The change log describes what is "Added", "Removed", "Changed" or "Fixed" betwee
   BatchClientInterface if they are enabled on the default/first client.
   (Only available with Httplug 2)
 - Configuration for the content_type plugin
+- Configuration option default_client_autowiring that you can set to false 
+  to prevent autowiring the HttpClient and HttpAsyncClient
 
 ### Changed
 

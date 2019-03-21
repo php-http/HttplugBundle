@@ -2,6 +2,7 @@
 <container xmlns="http://symfony.com/schema/dic/services">
 
     <config xmlns="http://example.org/schema/dic/httplug">
+        <default-client-autowiring>false</default-client-autowiring>
         <main-alias>
             <client>my_client</client>
             <message-factory>my_message_factory</message-factory>

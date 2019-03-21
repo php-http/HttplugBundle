@@ -1,6 +1,7 @@
 <?php
 
 $container->loadFromExtension('httplug', [
+    'default_client_autowiring' => false,
     'main_alias' => [
         'client'          => 'my_client',
         'message_factory' => 'my_message_factory',
