@@ -127,6 +127,7 @@ class HttplugExtension extends Extension
                 $default = $first;
             } else {
                 $default = 'default';
+                $serviceId = 'httplug.client.'.$default;
             }
 
             // Autowiring alias for special clients, if they are enabled on the default client
