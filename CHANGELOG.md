@@ -6,7 +6,7 @@ The change log describes what is "Added", "Removed", "Changed" or "Fixed" betwee
 
 ### Fixed
 
-- Fix undedinfed `$serviceId` when a client is named "default".
+- Fix undefined `$serviceId` when a client is named "default".
 
 ## 1.15.0 - 2019-03-29
 
