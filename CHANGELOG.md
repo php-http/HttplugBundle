@@ -2,6 +2,12 @@
 
 The change log describes what is "Added", "Removed", "Changed" or "Fixed" between each release.
 
+## 1.15.1 - 2019-04-12
+
+### Fixed
+
+- Fix undedinfed `$serviceId` when a client is named "default".
+
 ## 1.15.0 - 2019-03-29
 
 ### Added
