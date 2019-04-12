@@ -449,4 +449,57 @@ class HttplugExtensionTest extends AbstractExtensionTestCase
             $this->assertFalse($this->container->getDefinition('httplug.client.acme.batch_client')->isPrivate());
         }
     }
+
+    /**
+     * @dataProvider provideVcrPluginConfig
+     * @group vcr-plugin
+     */
+    public function testVcrPluginConfiguration(array $config, array $services, array $arguments = [])
+    {
+        $prefix = 'httplug.client.acme.vcr';
+        $this->load(['clients' => ['acme' => ['plugins' => [['vcr' => $config]]]]]);
+
+        foreach ($services as $service) {
+            $this->assertContainerBuilderHasService("$prefix.$service");
+        }
+
+        foreach ($arguments as $id => $args) {
+            foreach ($args as $index => $value) {
+                $this->assertContainerBuilderHasServiceDefinitionWithArgument("$prefix.$id", $index, $value);
+            }
+        }
+    }
+
+    public function provideVcrPluginConfig()
+    {
+        $config = [
+            'mode' => 'record',
+            'recorder' => 'in_memory',
+            'naming_strategy' => 'app.naming_strategy',
+        ];
+        yield [$config, ['record']];
+
+        $config['mode'] = 'replay';
+        yield [$config, ['replay']];
+
+        $config['mode'] = 'replay_or_record';
+        yield [$config, ['replay', 'record']];
+
+        $config['recorder'] = 'filesystem';
+        $config['fixtures_directory'] = __DIR__;
+        unset($config['naming_strategy']);
+
+        yield [$config, ['replay', 'record', 'recorder', 'naming_strategy'], ['replay' => [2 => false]]];
+
+        $config['naming_strategy_options'] = [
+            'hash_headers' => ['X-FOO'],
+            'hash_body_methods' => ['PATCH'],
+        ];
+
+        yield [
+            $config,
+            ['replay', 'record', 'recorder', 'naming_strategy'],
+            ['naming_strategy' => [$config['naming_strategy_options']]],
+        ];
+    }
 }

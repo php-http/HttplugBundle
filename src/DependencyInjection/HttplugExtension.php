@@ -12,6 +12,9 @@ use Http\Client\Common\PluginClient;
 use Http\Client\Common\PluginClientFactory;
 use Http\Client\HttpAsyncClient;
 use Http\Client\HttpClient;
+use Http\Client\Plugin\Vcr\NamingStrategy\PathNamingStrategy;
+use Http\Client\Plugin\Vcr\RecordPlugin;
+use Http\Client\Plugin\Vcr\ReplayPlugin;
 use Http\Message\Authentication\BasicAuth;
 use Http\Message\Authentication\Bearer;
 use Http\Message\Authentication\QueryParam;
@@ -49,6 +52,10 @@ class HttplugExtension extends Extension
         $loader->load('plugins.xml');
         if (\class_exists(MockClient::class)) {
             $loader->load('mock-client.xml');
+        }
+
+        if (\class_exists(RecordPlugin::class)) {
+            $loader->load('vcr-plugin.xml');
         }
 
         // Register default services
@@ -359,12 +366,19 @@ class HttplugExtension extends Extension
         foreach ($arguments['plugins'] as $plugin) {
             $pluginName = key($plugin);
             $pluginConfig = current($plugin);
-            if ('reference' === $pluginName) {
-                $plugins[] = $pluginConfig['id'];
-            } elseif ('authentication' === $pluginName) {
-                $plugins = array_merge($plugins, $this->configureAuthentication($container, $pluginConfig, $serviceId.'.authentication'));
-            } else {
-                $plugins[] = $this->configurePlugin($container, $serviceId, $pluginName, $pluginConfig);
+
+            switch ($pluginName) {
+                case 'reference':
+                    $plugins[] = $pluginConfig['id'];
+                    break;
+                case 'authentication':
+                    $plugins = array_merge($plugins, $this->configureAuthentication($container, $pluginConfig, $serviceId.'.authentication'));
+                    break;
+                case 'vcr':
+                    $plugins = array_merge($plugins, $this->configureVcrPlugin($container, $pluginConfig, "$serviceId.vcr"));
+                    break;
+                default:
+                    $plugins[] = $this->configurePlugin($container, $serviceId, $pluginName, $pluginConfig);
             }
         }
 
@@ -508,13 +522,77 @@ class HttplugExtension extends Extension
     {
         $pluginServiceId = $serviceId.'.plugin.'.$pluginName;
 
-        $definition = class_exists(ChildDefinition::class)
-            ? new ChildDefinition('httplug.plugin.'.$pluginName)
-            : new DefinitionDecorator('httplug.plugin.'.$pluginName);
+        $definition = $this->getChildDefinition("httplug.plugin.$pluginName");
 
         $this->configurePluginByName($pluginName, $definition, $pluginConfig, $container, $pluginServiceId);
         $container->setDefinition($pluginServiceId, $definition);
 
         return $pluginServiceId;
+    }
+
+    private function configureVcrPlugin(ContainerBuilder $container, array $config, $prefix)
+    {
+        $recorder = $config['recorder'];
+        $recorderId = $container->hasDefinition($recorder) ? $recorder : "httplug.plugin.vcr.recorder.$recorder";
+        $namingStrategyId = $config['naming_strategy'];
+
+        if ('filesystem' === $recorder) {
+            $recorderDefinition = $this->getChildDefinition('httplug.plugin.vcr.recorder.filesystem');
+            $recorderDefinition->replaceArgument(0, $config['fixtures_directory']);
+            $recorderDefinition->setPublic(false);
+            $recorderId = "$prefix.recorder";
+
+            $container->setDefinition($recorderId, $recorderDefinition);
+        }
+
+        if ('default' === $config['naming_strategy']) {
+            $namingStrategyId = "$prefix.naming_strategy";
+            $namingStrategy = $container->register("$prefix.naming_strategy", PathNamingStrategy::class)
+                ->setPublic(false);
+
+            if (!empty($config['naming_strategy_options'])) {
+                $namingStrategy->setArguments([$config['naming_strategy_options']]);
+            }
+        }
+
+        $arguments = [
+            new Reference($namingStrategyId),
+            new Reference($recorderId),
+        ];
+        $record = new Definition(RecordPlugin::class, $arguments);
+        $replay = new Definition(ReplayPlugin::class, $arguments);
+        $plugins = [];
+
+        switch ($config['mode']) {
+            case 'replay':
+                $container->setDefinition("$prefix.replay", $replay);
+                $plugins[] = "$prefix.replay";
+                break;
+            case 'replay_or_record':
+                $replay->setArgument(2, false);
+                $container->setDefinition("$prefix.replay", $replay);
+                $container->setDefinition("$prefix.record", $record);
+                $plugins[] = "$prefix.replay";
+                $plugins[] = "$prefix.record";
+                break;
+            case 'record':
+                $container->setDefinition("$prefix.record", $record);
+                $plugins[] = "$prefix.record";
+                break;
+        }
+
+        return $plugins;
+    }
+
+    /**
+     * @param string $parent the parent service id
+     *
+     * @return ChildDefinition
+     */
+    private function getChildDefinition($parent)
+    {
+        $definitionClass = class_exists(ChildDefinition::class) ? ChildDefinition::class : DefinitionDecorator::class;
+
+        return new $definitionClass($parent);
     }
 }

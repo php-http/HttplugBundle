@@ -62,7 +62,7 @@ $container->loadFromExtension('httplug', [
                             'password' => 'bar',
                         ],
                     ],
-                ]
+                ],
             ],
         ],
     ],
