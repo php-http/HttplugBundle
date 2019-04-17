@@ -5,6 +5,9 @@ namespace Http\HttplugBundle\DependencyInjection;
 use Http\Client\Common\Plugin\Cache\Generator\CacheKeyGenerator;
 use Http\Client\Common\Plugin\CachePlugin;
 use Http\Client\Common\Plugin\Journal;
+use Http\Client\Plugin\Vcr\NamingStrategy\NamingStrategyInterface;
+use Http\Client\Plugin\Vcr\Recorder\PlayerInterface;
+use Http\Client\Plugin\Vcr\Recorder\RecorderInterface;
 use Http\Message\CookieJar;
 use Http\Message\Formatter;
 use Http\Message\StreamFactory;
@@ -455,12 +458,12 @@ class Configuration implements ConfigurationInterface
                         ->cannotBeEmpty()
                     ->end()
                     ->scalarNode('recorder')
-                        ->info('Which recorder to use. Can be "in_memory", "filesystem" or the ID of your service')
+                        ->info(sprintf('Which recorder to use. Can be "in_memory", "filesystem" or the ID of your service implementing %s and %s. When using filesystem, specify "fixtures_directory" as well.', RecorderInterface::class, PlayerInterface::class))
                         ->defaultValue('filesystem')
                         ->cannotBeEmpty()
                     ->end()
                     ->scalarNode('naming_strategy')
-                        ->info('Which naming strategy to use. Add the ID of your service to override the default one.')
+                        ->info(sprintf('Which naming strategy to use. Add the ID of your service implementing %s to override the default one.', NamingStrategyInterface::class))
                         ->defaultValue('default')
                         ->cannotBeEmpty()
                     ->end()
