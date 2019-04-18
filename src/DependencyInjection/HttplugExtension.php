@@ -385,7 +385,7 @@ class HttplugExtension extends Extension
                     $plugins = array_merge($plugins, $this->configureAuthentication($container, $pluginConfig, $serviceId.'.authentication'));
                     break;
                 case 'vcr':
-
+                    $this->useVcrPlugin = true;
                     $plugins = array_merge($plugins, $this->configureVcrPlugin($container, $pluginConfig, $serviceId.'.vcr'));
                     break;
                 default:
@@ -544,7 +544,7 @@ class HttplugExtension extends Extension
     private function configureVcrPlugin(ContainerBuilder $container, array $config, $prefix)
     {
         $recorder = $config['recorder'];
-        $recorderId = $container->hasDefinition($recorder) ? $recorder : 'httplug.plugin.vcr.recorder.'.$recorder;
+        $recorderId = in_array($recorder, ['filesystem', 'in_memory']) ? 'httplug.plugin.vcr.recorder.'.$recorder : $recorder;
         $namingStrategyId = $config['naming_strategy'];
         $replayId = $prefix.'.replay';
         $recordId = $prefix.'.record';

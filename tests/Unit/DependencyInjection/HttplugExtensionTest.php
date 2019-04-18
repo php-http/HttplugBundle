@@ -3,6 +3,7 @@
 namespace Http\HttplugBundle\Tests\Unit\DependencyInjection;
 
 use Http\Client\HttpClient;
+use Http\Client\Plugin\Vcr\Recorder\InMemoryRecorder;
 use Http\HttplugBundle\Collector\PluginClientFactoryListener;
 use Http\HttplugBundle\DependencyInjection\HttplugExtension;
 use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractExtensionTestCase;
@@ -458,6 +459,7 @@ class HttplugExtensionTest extends AbstractExtensionTestCase
     {
         $prefix = 'httplug.client.acme.vcr';
         $this->load(['clients' => ['acme' => ['plugins' => [['vcr' => $config]]]]]);
+        $this->assertContainerBuilderHasService('httplug.plugin.vcr.recorder.in_memory', InMemoryRecorder::class);
 
         foreach ($services as $service) {
             $this->assertContainerBuilderHasService("$prefix.$service");
@@ -468,6 +470,15 @@ class HttplugExtensionTest extends AbstractExtensionTestCase
                 $this->assertContainerBuilderHasServiceDefinitionWithArgument("$prefix.$id", $index, $value);
             }
         }
+    }
+
+    /**
+     * @group vcr-plugin
+     */
+    public function testIsNotLoadedUnlessNeeded()
+    {
+        $this->load(['clients' => ['acme' => ['plugins' => []]]]);
+        $this->assertContainerBuilderNotHasService('httplug.plugin.vcr.recorder.in_memory');
     }
 
     public function provideVcrPluginConfig()
