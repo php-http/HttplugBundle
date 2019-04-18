@@ -254,6 +254,32 @@ class HttplugExtensionTest extends AbstractExtensionTestCase
         $this->assertSame('header_cache_key_generator', (string) $config['cache_key_generator']);
     }
 
+    public function testContentTypePluginAllowedOptions()
+    {
+        $this->load([
+            'clients' => [
+                'acme' => [
+                    'plugins' => [
+                        [
+                            'content_type' => [
+                                'skip_detection' => true,
+                                'size_limit' => 200000,
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ]);
+
+        $cachePlugin = $this->container->findDefinition('httplug.client.acme.plugin.content_type');
+
+        $config = $cachePlugin->getArgument(0);
+        $this->assertEquals([
+            'skip_detection' => true,
+            'size_limit' => 200000,
+        ], $config);
+    }
+
     public function testUsingServiceKeyForClients()
     {
         $this->load([
