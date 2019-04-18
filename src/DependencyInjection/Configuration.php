@@ -454,7 +454,7 @@ class Configuration implements ConfigurationInterface
                         ->enumNode('mode')
                         ->info('What should be the behavior of the plugin?')
                         ->values(['record', 'replay', 'replay_or_record'])
-                        ->defaultValue('replay_or_record')
+                        ->isRequired()
                         ->cannotBeEmpty()
                     ->end()
                     ->scalarNode('recorder')
