@@ -36,6 +36,11 @@ $container->loadFromExtension('httplug', [
                     ],
                 ],
                 [
+                    'content_type' => [
+                        'skip_detection' => true,
+                    ],
+                ],
+                [
                     'header_set' => [
                         'headers' => [
                             'X-FOO' => 'bar',

@@ -26,6 +26,9 @@ httplug:
                     base_uri:
                         uri: http://localhost
                 -
+                    content_type:
+                        skip_detection: true
+                -
                     header_set:
                         headers:
                             X-FOO: bar

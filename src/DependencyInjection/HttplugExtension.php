@@ -270,7 +270,9 @@ class HttplugExtension extends Extension
                 break;
 
             case 'content_type':
+                unset($config['enabled']);
                 $definition->replaceArgument(0, $config);
+
                 break;
 
             case 'header_append':

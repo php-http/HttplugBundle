@@ -152,6 +152,12 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
                             ],
                         ],
                         [
+                            'content_type' => [
+                                'enabled' => true,
+                                'skip_detection' => true,
+                            ],
+                        ],
+                        [
                             'header_set' => [
                                 'enabled' => true,
                                 'headers' => [

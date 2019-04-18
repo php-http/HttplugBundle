@@ -27,6 +27,9 @@
                 <base-uri uri="http://localhost"/>
             </plugin>
             <plugin>
+                <content-type skip-detection="true"/>
+            </plugin>
+            <plugin>
                 <header-set>
                     <header name="X-FOO">bar</header>
                 </header-set>
