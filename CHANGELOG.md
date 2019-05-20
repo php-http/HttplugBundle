@@ -2,6 +2,8 @@
 
 The change log describes what is "Added", "Removed", "Changed" or "Fixed" between each release.
 
+## 1.15.2 - 2019-04-18
+
 ### Fixed
 
 - Fix to pass only allowed options to the `ContentTypePlugin`. 
