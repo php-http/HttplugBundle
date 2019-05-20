@@ -2,6 +2,10 @@
 
 The change log describes what is "Added", "Removed", "Changed" or "Fixed" between each release.
 
+### Added
+
+- Integration for VCR Plugin
+
 ## 1.15.2 - 2019-04-18
 
 ### Fixed

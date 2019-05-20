@@ -462,12 +462,12 @@ class HttplugExtensionTest extends AbstractExtensionTestCase
         $this->assertContainerBuilderHasService('httplug.plugin.vcr.recorder.in_memory', InMemoryRecorder::class);
 
         foreach ($services as $service) {
-            $this->assertContainerBuilderHasService("$prefix.$service");
+            $this->assertContainerBuilderHasService($prefix.'.'.$service);
         }
 
         foreach ($arguments as $id => $args) {
             foreach ($args as $index => $value) {
-                $this->assertContainerBuilderHasServiceDefinitionWithArgument("$prefix.$id", $index, $value);
+                $this->assertContainerBuilderHasServiceDefinitionWithArgument($prefix.'.'.$id, $index, $value);
             }
         }
     }
