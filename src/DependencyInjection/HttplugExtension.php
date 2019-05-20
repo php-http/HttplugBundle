@@ -533,7 +533,7 @@ class HttplugExtension extends Extension
     {
         $pluginServiceId = $serviceId.'.plugin.'.$pluginName;
 
-        $definition = $this->getChildDefinition('httplug.plugin.'.$pluginName);
+        $definition = $this->createChildDefinition('httplug.plugin.'.$pluginName);
 
         $this->configurePluginByName($pluginName, $definition, $pluginConfig, $container, $pluginServiceId);
         $container->setDefinition($pluginServiceId, $definition);
@@ -550,7 +550,7 @@ class HttplugExtension extends Extension
         $recordId = $prefix.'.record';
 
         if ('filesystem' === $recorder) {
-            $recorderDefinition = $this->getChildDefinition('httplug.plugin.vcr.recorder.filesystem');
+            $recorderDefinition = $this->createChildDefinition('httplug.plugin.vcr.recorder.filesystem');
             $recorderDefinition->replaceArgument(0, $config['fixtures_directory']);
             $recorderId = $prefix.'.recorder';
 
@@ -559,7 +559,7 @@ class HttplugExtension extends Extension
 
         if ('default' === $config['naming_strategy']) {
             $namingStrategyId = $prefix.'.naming_strategy';
-            $namingStrategy = $this->getChildDefinition('httplug.plugin.vcr.naming_strategy.path');
+            $namingStrategy = $this->createChildDefinition('httplug.plugin.vcr.naming_strategy.path');
 
             if (!empty($config['naming_strategy_options'])) {
                 $namingStrategy->setArguments([$config['naming_strategy_options']]);
@@ -600,9 +600,9 @@ class HttplugExtension extends Extension
     /**
      * @param string $parent the parent service id
      *
-     * @return ChildDefinition
+     * @return ChildDefinition|DefinitionDecorator
      */
-    private function getChildDefinition($parent)
+    private function createChildDefinition($parent)
     {
         $definitionClass = class_exists(ChildDefinition::class) ? ChildDefinition::class : DefinitionDecorator::class;
 
