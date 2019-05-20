@@ -598,6 +598,8 @@ class HttplugExtension extends Extension
     }
 
     /**
+     * BC for old Symfony versions. Remove this method and use new ChildDefinition directly when we drop support for Symfony 2.
+     *
      * @param string $parent the parent service id
      *
      * @return ChildDefinition|DefinitionDecorator
