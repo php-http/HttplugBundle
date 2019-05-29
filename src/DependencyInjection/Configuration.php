@@ -5,6 +5,9 @@ namespace Http\HttplugBundle\DependencyInjection;
 use Http\Client\Common\Plugin\Cache\Generator\CacheKeyGenerator;
 use Http\Client\Common\Plugin\CachePlugin;
 use Http\Client\Common\Plugin\Journal;
+use Http\Client\Plugin\Vcr\NamingStrategy\NamingStrategyInterface;
+use Http\Client\Plugin\Vcr\Recorder\PlayerInterface;
+use Http\Client\Plugin\Vcr\Recorder\RecorderInterface;
 use Http\Message\CookieJar;
 use Http\Message\Formatter;
 use Http\Message\StreamFactory;
@@ -435,6 +438,50 @@ class Configuration implements ConfigurationInterface
                             ->useAttributeAsKey('name')
                             ->prototype('scalar')->end()
                         ->end()
+                    ->end()
+                ->end()
+                ->arrayNode('vcr')
+                    ->canBeEnabled()
+                    ->addDefaultsIfNotSet()
+                    ->info('Record response to be replayed during tests or development cycle.')
+                    ->validate()
+                        ->ifTrue(function ($config) {
+                            return 'filesystem' === $config['recorder'] && empty($config['fixtures_directory']);
+                        })
+                        ->thenInvalid('If you want to use the "filesystem" recorder you must also specify a "fixtures_directory".')
+                    ->end()
+                    ->children()
+                        ->enumNode('mode')
+                        ->info('What should be the behavior of the plugin?')
+                        ->values(['record', 'replay', 'replay_or_record'])
+                        ->isRequired()
+                        ->cannotBeEmpty()
+                    ->end()
+                    ->scalarNode('recorder')
+                        ->info(sprintf('Which recorder to use. Can be "in_memory", "filesystem" or the ID of your service implementing %s and %s. When using filesystem, specify "fixtures_directory" as well.', RecorderInterface::class, PlayerInterface::class))
+                        ->defaultValue('filesystem')
+                        ->cannotBeEmpty()
+                    ->end()
+                    ->scalarNode('naming_strategy')
+                        ->info(sprintf('Which naming strategy to use. Add the ID of your service implementing %s to override the default one.', NamingStrategyInterface::class))
+                        ->defaultValue('default')
+                        ->cannotBeEmpty()
+                    ->end()
+                    ->arrayNode('naming_strategy_options')
+                        ->info('See http://docs.php-http.org/en/latest/plugins/vcr.html#the-naming-strategy for more details')
+                        ->children()
+                            ->arrayNode('hash_headers')
+                                ->info('List of header(s) that make the request unique (Ex: ‘Authorization’)')
+                                ->prototype('scalar')->end()
+                            ->end()
+                            ->arrayNode('hash_body_methods')
+                                ->info('for which request methods the body makes requests distinct.')
+                                ->prototype('scalar')->end()
+                            ->end()
+                        ->end()
+                    ->end() // End naming_strategy_options
+                    ->scalarNode('fixtures_directory')
+                        ->info('Where the responses will be stored and replay from when using the filesystem recorder. Should be accessible to your VCS.')
                     ->end()
                 ->end()
             ->end()

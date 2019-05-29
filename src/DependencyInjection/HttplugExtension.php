@@ -12,6 +12,8 @@ use Http\Client\Common\PluginClient;
 use Http\Client\Common\PluginClientFactory;
 use Http\Client\HttpAsyncClient;
 use Http\Client\HttpClient;
+use Http\Client\Plugin\Vcr\RecordPlugin;
+use Http\Client\Plugin\Vcr\ReplayPlugin;
 use Http\Message\Authentication\BasicAuth;
 use Http\Message\Authentication\Bearer;
 use Http\Message\Authentication\QueryParam;
@@ -35,6 +37,13 @@ use Twig\Environment as TwigEnvironment;
  */
 class HttplugExtension extends Extension
 {
+    /**
+     * Used to check is the VCR plugin is installed.
+     *
+     * @var bool
+     */
+    private $useVcrPlugin = false;
+
     /**
      * {@inheritdoc}
      */
@@ -93,6 +102,14 @@ class HttplugExtension extends Extension
         if (!$config['default_client_autowiring']) {
             $container->removeAlias(HttpAsyncClient::class);
             $container->removeAlias(HttpClient::class);
+        }
+
+        if ($this->useVcrPlugin) {
+            if (!\class_exists(RecordPlugin::class)) {
+                throw new \Exception('You need to require the VCR plugin to be able to use it: "composer require --dev php-http/vcr-plugin".');
+            }
+
+            $loader->load('vcr-plugin.xml');
         }
     }
 
@@ -359,12 +376,20 @@ class HttplugExtension extends Extension
         foreach ($arguments['plugins'] as $plugin) {
             $pluginName = key($plugin);
             $pluginConfig = current($plugin);
-            if ('reference' === $pluginName) {
-                $plugins[] = $pluginConfig['id'];
-            } elseif ('authentication' === $pluginName) {
-                $plugins = array_merge($plugins, $this->configureAuthentication($container, $pluginConfig, $serviceId.'.authentication'));
-            } else {
-                $plugins[] = $this->configurePlugin($container, $serviceId, $pluginName, $pluginConfig);
+
+            switch ($pluginName) {
+                case 'reference':
+                    $plugins[] = $pluginConfig['id'];
+                    break;
+                case 'authentication':
+                    $plugins = array_merge($plugins, $this->configureAuthentication($container, $pluginConfig, $serviceId.'.authentication'));
+                    break;
+                case 'vcr':
+                    $this->useVcrPlugin = true;
+                    $plugins = array_merge($plugins, $this->configureVcrPlugin($container, $pluginConfig, $serviceId.'.vcr'));
+                    break;
+                default:
+                    $plugins[] = $this->configurePlugin($container, $serviceId, $pluginName, $pluginConfig);
             }
         }
 
@@ -508,13 +533,81 @@ class HttplugExtension extends Extension
     {
         $pluginServiceId = $serviceId.'.plugin.'.$pluginName;
 
-        $definition = class_exists(ChildDefinition::class)
-            ? new ChildDefinition('httplug.plugin.'.$pluginName)
-            : new DefinitionDecorator('httplug.plugin.'.$pluginName);
+        $definition = $this->createChildDefinition('httplug.plugin.'.$pluginName);
 
         $this->configurePluginByName($pluginName, $definition, $pluginConfig, $container, $pluginServiceId);
         $container->setDefinition($pluginServiceId, $definition);
 
         return $pluginServiceId;
+    }
+
+    private function configureVcrPlugin(ContainerBuilder $container, array $config, $prefix)
+    {
+        $recorder = $config['recorder'];
+        $recorderId = in_array($recorder, ['filesystem', 'in_memory']) ? 'httplug.plugin.vcr.recorder.'.$recorder : $recorder;
+        $namingStrategyId = $config['naming_strategy'];
+        $replayId = $prefix.'.replay';
+        $recordId = $prefix.'.record';
+
+        if ('filesystem' === $recorder) {
+            $recorderDefinition = $this->createChildDefinition('httplug.plugin.vcr.recorder.filesystem');
+            $recorderDefinition->replaceArgument(0, $config['fixtures_directory']);
+            $recorderId = $prefix.'.recorder';
+
+            $container->setDefinition($recorderId, $recorderDefinition);
+        }
+
+        if ('default' === $config['naming_strategy']) {
+            $namingStrategyId = $prefix.'.naming_strategy';
+            $namingStrategy = $this->createChildDefinition('httplug.plugin.vcr.naming_strategy.path');
+
+            if (!empty($config['naming_strategy_options'])) {
+                $namingStrategy->setArguments([$config['naming_strategy_options']]);
+            }
+
+            $container->setDefinition($namingStrategyId, $namingStrategy);
+        }
+
+        $arguments = [
+            new Reference($namingStrategyId),
+            new Reference($recorderId),
+        ];
+        $record = new Definition(RecordPlugin::class, $arguments);
+        $replay = new Definition(ReplayPlugin::class, $arguments);
+        $plugins = [];
+
+        switch ($config['mode']) {
+            case 'replay':
+                $container->setDefinition($replayId, $replay);
+                $plugins[] = $replayId;
+                break;
+            case 'replay_or_record':
+                $replay->setArgument(2, false);
+                $container->setDefinition($replayId, $replay);
+                $container->setDefinition($recordId, $record);
+                $plugins[] = $replayId;
+                $plugins[] = $recordId;
+                break;
+            case 'record':
+                $container->setDefinition($recordId, $record);
+                $plugins[] = $recordId;
+                break;
+        }
+
+        return $plugins;
+    }
+
+    /**
+     * BC for old Symfony versions. Remove this method and use new ChildDefinition directly when we drop support for Symfony 2.
+     *
+     * @param string $parent the parent service id
+     *
+     * @return ChildDefinition|DefinitionDecorator
+     */
+    private function createChildDefinition($parent)
+    {
+        $definitionClass = class_exists(ChildDefinition::class) ? ChildDefinition::class : DefinitionDecorator::class;
+
+        return new $definitionClass($parent);
     }
 }
