@@ -6,6 +6,10 @@ The change log describes what is "Added", "Removed", "Changed" or "Fixed" betwee
 
 - Integration for VCR Plugin
 
+### Changed
+
+- **[BC] Dropped support for PHP 5.5, 5.6, and 7.0**
+
 ## 1.15.2 - 2019-04-18
 
 ### Fixed
