@@ -42,7 +42,8 @@
         "symfony/options-resolver": "^3.4.20 || ^4.0.15 || ^4.1.9 || ^4.2.1"
     },
     "conflict": {
-        "php-http/guzzle6-adapter": "<1.1"
+        "php-http/guzzle6-adapter": "<1.1",
+        "php-http/curl-client": "<2.0"
     },
     "require-dev": {
         "guzzlehttp/psr7": "^1.0",
