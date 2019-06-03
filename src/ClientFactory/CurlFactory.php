@@ -3,8 +3,8 @@
 namespace Http\HttplugBundle\ClientFactory;
 
 use Http\Client\Curl\Client;
-use Http\Message\MessageFactory;
-use Http\Message\StreamFactory;
+use Psr\Http\Message\ResponseFactoryInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
 /**
  * @author Tobias Nyholm <tobias.nyholm@gmail.com>
@@ -12,22 +12,22 @@ use Http\Message\StreamFactory;
 class CurlFactory implements ClientFactory
 {
     /**
-     * @var MessageFactory
+     * @var ResponseFactoryInterface
      */
-    private $messageFactory;
+    private $responseFactory;
 
     /**
-     * @var StreamFactory
+     * @var StreamFactoryInterface
      */
     private $streamFactory;
 
     /**
-     * @param MessageFactory $messageFactory
-     * @param StreamFactory  $streamFactory
+     * @param ResponseFactoryInterface $responseFactory
+     * @param StreamFactoryInterface   $streamFactory
      */
-    public function __construct(MessageFactory $messageFactory, StreamFactory $streamFactory)
+    public function __construct(ResponseFactoryInterface $responseFactory, StreamFactoryInterface $streamFactory)
     {
-        $this->messageFactory = $messageFactory;
+        $this->responseFactory = $responseFactory;
         $this->streamFactory = $streamFactory;
     }
 
@@ -53,6 +53,6 @@ class CurlFactory implements ClientFactory
             }
         }
 
-        return new Client($this->messageFactory, $this->streamFactory, $config);
+        return new Client($this->responseFactory, $this->streamFactory, $config);
     }
 }

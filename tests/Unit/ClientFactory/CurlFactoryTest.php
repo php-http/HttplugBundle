@@ -4,9 +4,9 @@ namespace Http\HttplugBundle\Tests\Unit\ClientFactory;
 
 use Http\HttplugBundle\ClientFactory\CurlFactory;
 use Http\Client\Curl\Client;
-use Http\Message\MessageFactory;
-use Http\Message\StreamFactory;
 use PHPUnit\Framework\TestCase;
+use Psr\Http\Message\ResponseFactoryInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
 /**
  * @author Tobias Nyholm <tobias.nyholm@gmail.com>
@@ -20,8 +20,8 @@ class CurlFactoryTest extends TestCase
         }
 
         $factory = new CurlFactory(
-            $this->getMockBuilder(MessageFactory::class)->getMock(),
-            $this->getMockBuilder(StreamFactory::class)->getMock()
+            $this->getMockBuilder(ResponseFactoryInterface::class)->getMock(),
+            $this->getMockBuilder(StreamFactoryInterface::class)->getMock()
         );
         $client = $factory->createClient();
 
