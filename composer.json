@@ -1,8 +1,17 @@
 {
     "name": "php-http/httplug-bundle",
-    "description": "Symfony integration for HTTPlug",
     "type": "symfony-bundle",
-    "keywords": ["http", "discovery", "adapter", "message", "factory", "bundle", "httplug", "php-http"],
+    "description": "Symfony integration for HTTPlug",
+    "keywords": [
+        "http",
+        "discovery",
+        "adapter",
+        "message",
+        "factory",
+        "bundle",
+        "httplug",
+        "php-http"
+    ],
     "homepage": "http://httplug.io",
     "license": "MIT",
     "authors": [
@@ -32,6 +41,9 @@
         "symfony/http-kernel": "^3.4.20 || ^4.0.15 || ^4.1.9 || ^4.2.1",
         "symfony/options-resolver": "^3.4.20 || ^4.0.15 || ^4.1.9 || ^4.2.1"
     },
+    "conflict": {
+        "php-http/guzzle6-adapter": "<1.1"
+    },
     "require-dev": {
         "guzzlehttp/psr7": "^1.0",
         "matthiasnoback/symfony-dependency-injection-test": "^3.0",
@@ -53,13 +65,18 @@
         "symfony/web-profiler-bundle": "^3.4.20 || ^4.0.15 || ^4.1.9 || ^4.2.1",
         "twig/twig": "^1.36 || ^2.6"
     },
-    "conflict": {
-        "php-http/guzzle6-adapter": "<1.1"
-    },
     "suggest": {
-        "twig/twig": "Add this to your require-dev section when using the WebProfilerBundle",
         "php-http/cache-plugin": "To configure clients that cache responses",
-        "php-http/mock-client": "Add this to your require-dev section to mock HTTP responses easily"
+        "php-http/mock-client": "Add this to your require-dev section to mock HTTP responses easily",
+        "twig/twig": "Add this to your require-dev section when using the WebProfilerBundle"
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.x-dev"
+        }
     },
     "autoload": {
         "psr-4": {
@@ -77,18 +94,10 @@
             "tests/Resources/app/AppKernel.php"
         ]
     },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
     "scripts": {
         "test": "vendor/bin/simple-phpunit",
         "test-ci": "vendor/bin/simple-phpunit --coverage-text --coverage-clover=build/coverage.xml"
-    },
-    "config": {
-        "sort-packages": true
-    },
-    "extra": {
-        "branch-alias": {
-            "dev-master": "1.x-dev"
-        }
-    },
-    "prefer-stable": true,
-    "minimum-stability": "dev"
+    }
 }
