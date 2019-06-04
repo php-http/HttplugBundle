@@ -768,7 +768,14 @@ class Configuration implements ConfigurationInterface
             ->end()
         ;
 
-        $cache = $builder->root('cache');
+        $treeBuilder = new TreeBuilder('cache');
+        // Keep compatibility with symfony/config < 4.2
+        if (!method_exists($treeBuilder, 'getRootNode')) {
+            $cache = $treeBuilder->root('cache');
+        } else {
+            $cache = $treeBuilder->getRootNode();
+        }
+
         $cache
             ->canBeEnabled()
             ->info('Configure HTTP caching, requires the php-http/cache-plugin package')

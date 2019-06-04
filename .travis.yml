@@ -22,22 +22,15 @@ matrix:
     include:
           # Minimum supported Symfony version and latest PHP version
         - php: 7.3
-          env: COMPOSER_FLAGS="--prefer-stable --prefer-lowest" SYMFONY_DEPRECATIONS_HELPER="weak" SYMFONY_PHPUNIT_VERSION="5.7"
+          env: COMPOSER_FLAGS="--prefer-stable --prefer-lowest" SYMFONY_DEPRECATIONS_HELPER="weak"
 
           # Test the latest stable release
-        - php: 5.5
-          env: SYMFONY_PHPUNIT_VERSION="5.7"
-        - php: 5.6
-          env: SYMFONY_PHPUNIT_VERSION="5.7"
-        - php: 7.0
         - php: 7.1
         - php: 7.2
         - php: 7.3
           env: COVERAGE=true TEST_COMMAND="composer test-ci"
 
           # Test LTS versions
-        - php: 7.3
-          env: DEPENDENCIES="dunglas/symfony-lock:^2"
         - php: 7.3
           env: DEPENDENCIES="dunglas/symfony-lock:^3"
         - php: 7.3
