@@ -2,6 +2,13 @@
 
 The change log describes what is "Added", "Removed", "Changed" or "Fixed" between each release.
 
+## 1.16.0 - unreleased
+
+### Changed
+
+- Dropped support for PHP < 7.1
+- Dropped support for Symfony 2 
+
 ### Added
 
 - Integration for VCR Plugin
