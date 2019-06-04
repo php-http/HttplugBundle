@@ -17,6 +17,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\HttpKernel\Profiler\Profiler;
 
@@ -113,7 +114,11 @@ class ServiceInstantiationTest extends WebTestCase
 
         $event = new GetResponseEvent(static::$kernel, new Request(), HttpKernelInterface::MASTER_REQUEST);
 
-        $dispatcher->dispatch(KernelEvents::REQUEST, $event);
+        if (version_compare(Kernel::VERSION, '4.3.0', '>=')) {
+            $dispatcher->dispatch($event, KernelEvents::REQUEST);
+        } else {
+            $dispatcher->dispatch(KernelEvents::REQUEST, $event);
+        }
 
         return static::$kernel;
     }
