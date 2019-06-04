@@ -9,6 +9,8 @@
          convertWarningsToExceptions="true">
     <php>
         <env name="SHELL_VERBOSITY" value="-1" />
+        <server name="KERNEL_DIR" value="./tests/Resources/app" />
+        <server name="KERNEL_CLASS" value="AppKernel" />
     </php>
 
     <testsuites>
@@ -30,9 +32,4 @@
             </exclude>
         </whitelist>
     </filter>
-
-    <php>
-        <server name="KERNEL_DIR" value="./tests/Resources/app" />
-        <server name="KERNEL_CLASS" value="AppKernel" />
-    </php>
 </phpunit>
