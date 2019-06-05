@@ -457,6 +457,10 @@ class HttplugExtensionTest extends AbstractExtensionTestCase
      */
     public function testVcrPluginConfiguration(array $config, array $services, array $arguments = [])
     {
+        if (!class_exists(\Http\Client\Plugin\Vcr\Recorder\InMemoryRecorder::class)) {
+            $this->markTestSkipped('VCR plugin is not installed.');
+        }
+
         $prefix = 'httplug.client.acme.vcr';
         $this->load(['clients' => ['acme' => ['plugins' => [['vcr' => $config]]]]]);
         $this->assertContainerBuilderHasService('httplug.plugin.vcr.recorder.in_memory', InMemoryRecorder::class);
@@ -477,6 +481,10 @@ class HttplugExtensionTest extends AbstractExtensionTestCase
      */
     public function testIsNotLoadedUnlessNeeded()
     {
+        if (!class_exists(\Http\Client\Plugin\Vcr\Recorder\InMemoryRecorder::class)) {
+            $this->markTestSkipped('VCR plugin is not installed.');
+        }
+
         $this->load(['clients' => ['acme' => ['plugins' => []]]]);
         $this->assertContainerBuilderNotHasService('httplug.plugin.vcr.recorder.in_memory');
     }
