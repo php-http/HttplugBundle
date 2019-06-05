@@ -7,7 +7,7 @@ The change log describes what is "Added", "Removed", "Changed" or "Fixed" betwee
 ### Changed
 
 - Dropped support for PHP < 7.1
-- Dropped support for Symfony 2 
+- Dropped support for Symfony versions that do not receive bugfixes
 
 ### Added
 
