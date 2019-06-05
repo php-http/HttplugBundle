@@ -15,7 +15,7 @@ class CurlFactoryTest extends TestCase
 {
     public function testCreateClient()
     {
-        if (!class_exists(\Http\Client\Curl\Client::class)) {
+        if (!class_exists(Client::class)) {
             $this->markTestSkipped('Curl client is not installed');
         }
 

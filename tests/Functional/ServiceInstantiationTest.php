@@ -2,6 +2,7 @@
 
 namespace Http\HttplugBundle\Tests\Functional;
 
+use GuzzleHttp\Psr7\Request as GuzzleRequest;
 use Http\Client\Common\Plugin\RedirectPlugin;
 use Http\Client\Common\PluginClient;
 use Http\Client\HttpClient;
@@ -14,7 +15,7 @@ use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\ResponseInterface;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\Kernel;
@@ -98,7 +99,7 @@ class ServiceInstantiationTest extends WebTestCase
         $psr18Client = NSA::getProperty($flexibleClient, 'httpClient');
         $this->assertInstanceOf(ClientInterface::class, $psr18Client);
 
-        $response = $client->sendRequest(new \GuzzleHttp\Psr7\Request('GET', 'https://example.com'));
+        $response = $client->sendRequest(new GuzzleRequest('GET', 'https://example.com'));
         $this->assertInstanceOf(ResponseInterface::class, $response);
     }
 
@@ -112,7 +113,7 @@ class ServiceInstantiationTest extends WebTestCase
         /** @var EventDispatcherInterface $dispatcher */
         $dispatcher = static::$kernel->getContainer()->get('event_dispatcher');
 
-        $event = new GetResponseEvent(static::$kernel, new Request(), HttpKernelInterface::MASTER_REQUEST);
+        $event = new GetResponseEvent(static::$kernel, new SymfonyRequest(), HttpKernelInterface::MASTER_REQUEST);
 
         if (version_compare(Kernel::VERSION, '4.3.0', '>=')) {
             $dispatcher->dispatch($event, KernelEvents::REQUEST);

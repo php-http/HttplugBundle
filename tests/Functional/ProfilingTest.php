@@ -64,9 +64,6 @@ class ProfilingTest extends TestCase
         $this->assertEquals('example.com', $stack->getRequestHost());
     }
 
-    /**
-     * @expectedException \Exception
-     */
     public function testProfilingWhenPluginThrowException()
     {
         $client = $this->createClient([
@@ -74,6 +71,7 @@ class ProfilingTest extends TestCase
         ]);
 
         try {
+            $this->expectException(\Exception::class);
             $client->sendRequest(new Request('GET', 'https://example.com'));
         } finally {
             $this->assertCount(1, $this->collector->getStacks());

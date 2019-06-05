@@ -17,7 +17,7 @@ class Issue206 extends WebTestCase
     {
         static::bootKernel();
         $container = static::$kernel->getContainer();
-        PluginClientFactory::setFactory([$container->get('Http\Client\Common\PluginClientFactory'), 'createClient']);
+        PluginClientFactory::setFactory([$container->get(PluginClientFactory::class), 'createClient']);
 
         // Create a client
         $myCustomClient = new HttpMethodsClient(HttpClientDiscovery::find(), MessageFactoryDiscovery::find());

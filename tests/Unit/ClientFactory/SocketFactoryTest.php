@@ -14,7 +14,7 @@ class SocketFactoryTest extends TestCase
 {
     public function testCreateClient()
     {
-        if (!class_exists(\Http\Client\Socket\Client::class)) {
+        if (!class_exists(Client::class)) {
             $this->markTestSkipped('Socket client is not installed');
         }
 

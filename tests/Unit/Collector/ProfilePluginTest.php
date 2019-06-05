@@ -168,9 +168,6 @@ class ProfilePluginTest extends TestCase
         $this->assertEquals('FormattedResponse', $profile->getResponse());
     }
 
-    /**
-     * @expectedException \Http\Client\Exception\TransferException
-     */
     public function testOnRejected()
     {
         $promise = $this->subject->handleRequest($this->request, function () {
@@ -178,8 +175,7 @@ class ProfilePluginTest extends TestCase
         }, function () {
         });
 
-        $this->assertEquals($this->exception, $promise->wait());
-        $profile = $this->currentStack->getProfiles()[0];
-        $this->assertEquals('FormattedException', $profile->getResponse());
+        $this->expectException(TransferException::class);
+        $promise->wait();
     }
 }

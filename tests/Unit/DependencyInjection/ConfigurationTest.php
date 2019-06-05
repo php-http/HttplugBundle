@@ -5,6 +5,11 @@ namespace Http\HttplugBundle\Tests\Unit\DependencyInjection;
 use Http\HttplugBundle\DependencyInjection\Configuration;
 use Http\HttplugBundle\DependencyInjection\HttplugExtension;
 use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractExtensionConfigurationTestCase;
+use Http\Adapter\Guzzle6\Client;
+use Http\Message\MessageFactory\GuzzleMessageFactory;
+use Http\Message\UriFactory\GuzzleUriFactory;
+use Http\Message\StreamFactory\GuzzleStreamFactory;
+use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 
 /**
  * @author David Buchmann <mail@davidbu.ch>
@@ -111,10 +116,10 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
                 'stream_factory' => 'my_stream_factory',
             ],
             'classes' => [
-                'client' => 'Http\Adapter\Guzzle6\Client',
-                'message_factory' => 'Http\Message\MessageFactory\GuzzleMessageFactory',
-                'uri_factory' => 'Http\Message\UriFactory\GuzzleUriFactory',
-                'stream_factory' => 'Http\Message\StreamFactory\GuzzleStreamFactory',
+                'client' => Client::class,
+                'message_factory' => GuzzleMessageFactory::class,
+                'uri_factory' => GuzzleUriFactory::class,
+                'stream_factory' => GuzzleStreamFactory::class,
             ],
             'clients' => [
                 'test' => [
@@ -280,44 +285,42 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
         }
     }
 
-    /**
-     * @expectedException \Symfony\Component\Config\Definition\Exception\InvalidConfigurationException
-     * @expectedExceptionMessage Nonexisting\Class
-     */
     public function testMissingClass()
     {
         $file = __DIR__.'/../../Resources/Fixtures/config/invalid_class.yml';
+
+        $this->expectException(InvalidConfigurationException::class);
+        $this->expectExceptionMessage('Nonexisting\Class');
         $this->assertProcessedConfigurationEquals([], [$file]);
     }
 
-    /**
-     * @expectedException \Symfony\Component\Config\Definition\Exception\InvalidConfigurationException
-     * @expectedExceptionMessage Unrecognized option "foobar" under "httplug.clients.acme.plugins.0"
-     */
     public function testInvalidPlugin()
     {
         $file = __DIR__.'/../../Resources/Fixtures/config/invalid_plugin.yml';
+
+        $this->expectException(InvalidConfigurationException::class);
+        $this->expectExceptionMessage('Unrecognized option "foobar" under "httplug.clients.acme.plugins.0"');
         $this->assertProcessedConfigurationEquals([], [$file]);
     }
 
-    /**
-     * @expectedException \Symfony\Component\Config\Definition\Exception\InvalidConfigurationException
-     * @expectedExceptionMessage password, service, username
-     */
     public function testInvalidAuthentication()
     {
         $file = __DIR__.'/../../Resources/Fixtures/config/invalid_auth.yml';
+
+        $this->expectException(InvalidConfigurationException::class);
+        $this->expectExceptionMessage('password, service, username');
         $this->assertProcessedConfigurationEquals([], [$file]);
     }
 
     /**
      * @group legacy
-     * @expectedException \Symfony\Component\Config\Definition\Exception\InvalidConfigurationException
-     * @expectedExceptionMessage Invalid configuration for path "httplug.plugins.cache.config": You can't provide config option "respect_cache_headers" and "respect_response_cache_directives" simultaniously. Use "respect_response_cache_directives" instead.
      */
     public function testInvalidCacheConfig()
     {
         $file = __DIR__.'/../../Resources/Fixtures/config/invalid_cache_config.yml';
+
+        $this->expectException(InvalidConfigurationException::class);
+        $this->expectExceptionMessage('Invalid configuration for path "httplug.plugins.cache.config": You can\'t provide config option "respect_cache_headers" and "respect_response_cache_directives" simultaniously. Use "respect_response_cache_directives" instead.');
         $this->assertProcessedConfigurationEquals([], [$file]);
     }
 
@@ -374,33 +377,30 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
         $this->assertProcessedConfigurationEquals($config, [$file]);
     }
 
-    /**
-     * @expectedException \Symfony\Component\Config\Definition\Exception\InvalidConfigurationException
-     * @expectedExceptionMessage Can't configure both "toolbar" and "profiling" section. The "toolbar" config is deprecated as of version 1.3.0, please only use "profiling".
-     */
     public function testProfilingToolbarCollision()
     {
         $file = __DIR__.'/../../Resources/Fixtures/config/bc/profiling_toolbar.yml';
+
+        $this->expectException(InvalidConfigurationException::class);
+        $this->expectExceptionMessage('Can\'t configure both "toolbar" and "profiling" section. The "toolbar" config is deprecated as of version 1.3.0, please only use "profiling".');
         $this->assertProcessedConfigurationEquals([], [$file]);
     }
 
-    /**
-     * @expectedException \Symfony\Component\Config\Definition\Exception\InvalidConfigurationException
-     * @expectedExceptionMessage The child node "cache_pool" at path "httplug.clients.test.plugins.0.cache" must be configured.
-     */
     public function testClientCacheConfigMustHavePool()
     {
         $file = __DIR__.'/../../Resources/Fixtures/config/client_cache_config_with_no_pool.yml';
+
+        $this->expectException(InvalidConfigurationException::class);
+        $this->expectExceptionMessage('The child node "cache_pool" at path "httplug.clients.test.plugins.0.cache" must be configured.');
         $this->assertProcessedConfigurationEquals([], [$file]);
     }
 
-    /**
-     * @expectedException \Symfony\Component\Config\Definition\Exception\InvalidConfigurationException
-     * @expectedExceptionMessage The child node "cache_pool" at path "httplug.plugins.cache" must be configured.
-     */
     public function testCacheConfigMustHavePool()
     {
         $file = __DIR__.'/../../Resources/Fixtures/config/cache_config_with_no_pool.yml';
+
+        $this->expectException(InvalidConfigurationException::class);
+        $this->expectExceptionMessage('The child node "cache_pool" at path "httplug.plugins.cache" must be configured.');
         $this->assertProcessedConfigurationEquals([], [$file]);
     }
 
@@ -412,13 +412,12 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
         $this->assertProcessedConfigurationEquals($config, [$file]);
     }
 
-    /**
-     * @expectedException \Symfony\Component\Config\Definition\Exception\InvalidConfigurationException
-     * @expectedExceptionMessage The child node "captured_body_length" at path "httplug.profiling" must be an integer or null
-     */
     public function testInvalidCapturedBodyLengthString()
     {
         $file = __DIR__.'/../../Resources/Fixtures/config/invalid_captured_body_length.yml';
+
+        $this->expectException(InvalidConfigurationException::class);
+        $this->expectExceptionMessage('The child node "captured_body_length" at path "httplug.profiling" must be an integer or null');
         $this->assertProcessedConfigurationEquals([], [$file]);
     }
 }

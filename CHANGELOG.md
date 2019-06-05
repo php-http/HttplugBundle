@@ -2,7 +2,7 @@
 
 The change log describes what is "Added", "Removed", "Changed" or "Fixed" between each release.
 
-## 1.16.0 - unreleased
+## 1.16.0 - 2019-06-05
 
 ### Changed
 
@@ -12,12 +12,11 @@ The change log describes what is "Added", "Removed", "Changed" or "Fixed" betwee
 ### Added
 
 - Integration for VCR Plugin
-- curl-client v1.* is marked in conflict with the current bundle version.
 
 ### Fixed
 
-- Fix compatibility with curl-client v2.*, the `CurlFactory` now build the
-  client using PSR17 factories.
+- Fix compatibility with curl-client `2.*`. The `CurlFactory` now builds the
+  client using PSR-17 factories. Marked a conflict for curl-client `1.*`.
 
 ## 1.15.2 - 2019-04-18
 

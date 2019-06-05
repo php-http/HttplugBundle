@@ -9,6 +9,7 @@ use Http\HttplugBundle\DependencyInjection\HttplugExtension;
 use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractExtensionTestCase;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\Kernel;
+use Http\Adapter\Guzzle6\Client;
 
 /**
  * @author David Buchmann <mail@davidbu.ch>
@@ -43,11 +44,11 @@ class HttplugExtensionTest extends AbstractExtensionTestCase
     {
         $this->load([
             'classes' => [
-                'client' => 'Http\Adapter\Guzzle6\Client',
+                'client' => Client::class,
             ],
         ]);
 
-        $this->assertContainerBuilderHasService('httplug.client.default', 'Http\Adapter\Guzzle6\Client');
+        $this->assertContainerBuilderHasService('httplug.client.default', Client::class);
     }
 
     public function testConfigLoadService()
@@ -457,7 +458,7 @@ class HttplugExtensionTest extends AbstractExtensionTestCase
      */
     public function testVcrPluginConfiguration(array $config, array $services, array $arguments = [])
     {
-        if (!class_exists(\Http\Client\Plugin\Vcr\Recorder\InMemoryRecorder::class)) {
+        if (!class_exists(InMemoryRecorder::class)) {
             $this->markTestSkipped('VCR plugin is not installed.');
         }
 
@@ -481,7 +482,7 @@ class HttplugExtensionTest extends AbstractExtensionTestCase
      */
     public function testIsNotLoadedUnlessNeeded()
     {
-        if (!class_exists(\Http\Client\Plugin\Vcr\Recorder\InMemoryRecorder::class)) {
+        if (!class_exists(InMemoryRecorder::class)) {
             $this->markTestSkipped('VCR plugin is not installed.');
         }
 

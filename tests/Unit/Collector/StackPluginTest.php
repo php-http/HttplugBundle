@@ -11,6 +11,7 @@ use Http\HttplugBundle\Collector\Stack;
 use Http\HttplugBundle\Collector\StackPlugin;
 use Http\Promise\FulfilledPromise;
 use Http\Promise\RejectedPromise;
+use PHPUnit\Framework\Error\Warning;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -130,9 +131,6 @@ class StackPluginTest extends TestCase
         $this->assertEquals('FormattedResponse', $currentStack->getResponse());
     }
 
-    /**
-     * @expectedException \Exception
-     */
     public function testOnRejected()
     {
         //Capture the current stack
@@ -157,15 +155,10 @@ class StackPluginTest extends TestCase
         $promise = $this->subject->handleRequest($this->request, $next, function () {
         });
 
-        $this->assertEquals($this->exception, $promise->wait());
-        $this->assertInstanceOf(Stack::class, $currentStack);
-        $this->assertEquals('FormattedException', $currentStack->getResponse());
-        $this->assertTrue($currentStack->isFailed());
+        $this->expectException(\Exception::class);
+        $promise->wait();
     }
 
-    /**
-     * @expectedException \Exception
-     */
     public function testOnException()
     {
         $this->collector
@@ -177,27 +170,14 @@ class StackPluginTest extends TestCase
             throw new \Exception();
         };
 
+        $this->expectException(\Exception::class);
         $this->subject->handleRequest($this->request, $next, function () {
         });
     }
 
     public function testOnError()
     {
-        if (PHP_VERSION_ID <= 70000) {
-            $this->markTestSkipped();
-        }
-
-        /*
-         * Use the correct PHPUnit version
-         * PHPUnit wrap any \Error into a \PHPUnit\Framework\Error\Warning.
-         */
-        if (class_exists('PHPUnit_Framework_Error')) {
-            // PHPUnit 5.7
-            $this->setExpectedException(\PHPUnit_Framework_Error::class);
-        } else {
-            // PHPUnit 6.0 and above
-            $this->expectException(\PHPUnit\Framework\Error\Warning::class);
-        }
+        $this->expectException(Warning::class);
 
         $this->collector
             ->expects($this->once())
