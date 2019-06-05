@@ -27,10 +27,10 @@ Enable the bundle in your kernel:
 
 public function registerBundles()
 {
-    $bundles = array(
+    $bundles = [
         // ...
         new Http\HttplugBundle\HttplugBundle(),
-    );
+    ];
 }
 ```
 
