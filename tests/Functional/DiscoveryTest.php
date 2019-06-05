@@ -13,6 +13,7 @@ use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractExtensionTestCase;
 use Matthias\SymfonyDependencyInjectionTest\PhpUnit\ContainerBuilderHasAliasConstraint;
 use PHPUnit\Framework\Constraint\LogicalNot;
 use Symfony\Component\DependencyInjection\Definition;
+use Http\Adapter\Guzzle6\Client;
 
 /**
  * @author Márk Sági-Kazár <mark.sagikazar@gmail.com>
@@ -50,9 +51,9 @@ final class DiscoveryTest extends AbstractExtensionTestCase
     public function testDiscoveryPartialFallbacks()
     {
         $this->load();
-        $this->setDefinition('httplug.client.default', new Definition('Http\Adapter\Guzzle6\Client'));
+        $this->setDefinition('httplug.client.default', new Definition(Client::class));
 
-        $this->assertContainerBuilderHasService('httplug.client.default', 'Http\Adapter\Guzzle6\Client');
+        $this->assertContainerBuilderHasService('httplug.client.default', Client::class);
         $this->assertContainerBuilderHasService('httplug.message_factory.default', MessageFactory::class);
         $this->assertContainerBuilderHasService('httplug.uri_factory.default', UriFactory::class);
         $this->assertContainerBuilderHasService('httplug.stream_factory.default', StreamFactory::class);

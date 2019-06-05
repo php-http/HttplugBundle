@@ -13,7 +13,7 @@ class Guzzle6FactoryTest extends TestCase
 {
     public function testCreateClient()
     {
-        if (!class_exists(\Http\Adapter\Guzzle6\Client::class)) {
+        if (!class_exists(Client::class)) {
             $this->markTestSkipped('Guzzle6 adapter is not installed');
         }
 

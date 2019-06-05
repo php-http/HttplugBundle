@@ -9,17 +9,18 @@ use Http\Client\Exception\TransferException;
 use Http\HttplugBundle\Collector\Formatter;
 use Http\Message\Formatter as MessageFormatter;
 use Http\Message\Formatter\CurlCommandFormatter;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 class FormatterTest extends TestCase
 {
     /**
-     * @var MessageFormatter|\PHPUnit_Framework_MockObject_MockObject
+     * @var MessageFormatter|MockObject
      */
     private $formatter;
 
     /**
-     * @var CurlCommandFormatter|\PHPUnit_Framework_MockObject_MockObject
+     * @var CurlCommandFormatter|MockObject
      */
     private $curlFormatter;
 

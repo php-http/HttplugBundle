@@ -14,7 +14,7 @@ class BuzzFactoryTest extends TestCase
 {
     public function testCreateClient()
     {
-        if (!class_exists(\Http\Adapter\Buzz\Client::class)) {
+        if (!class_exists(Client::class)) {
             $this->markTestSkipped('Buzz adapter is not installed');
         }
 
