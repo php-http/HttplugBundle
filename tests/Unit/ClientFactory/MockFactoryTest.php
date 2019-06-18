@@ -28,6 +28,6 @@ class MockFactoryTest extends TestCase
 
         $factory->setClient($client);
 
-        $this->assertEquals($client, $factory->createClient());
+        $this->assertSame($client, $factory->createClient());
     }
 }
