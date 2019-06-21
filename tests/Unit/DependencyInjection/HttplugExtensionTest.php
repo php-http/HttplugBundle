@@ -221,7 +221,7 @@ class HttplugExtensionTest extends AbstractExtensionTestCase
         $this->assertContainerBuilderHasService(PluginClientFactoryListener::class);
     }
 
-    public function testOverrideProfillingFormatter()
+    public function testOverrideProfilingFormatter()
     {
         $this->load(
             [
