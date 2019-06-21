@@ -20,7 +20,7 @@ use Http\Adapter\Guzzle6\Client;
  */
 final class DiscoveryTest extends AbstractExtensionTestCase
 {
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -37,7 +37,7 @@ final class DiscoveryTest extends AbstractExtensionTestCase
         ];
     }
 
-    public function testDiscoveryFallbacks()
+    public function testDiscoveryFallbacks(): void
     {
         $this->load();
 
@@ -48,7 +48,7 @@ final class DiscoveryTest extends AbstractExtensionTestCase
         $this->assertContainerBuilderHasService('httplug.async_client.default', HttpAsyncClient::class);
     }
 
-    public function testDiscoveryPartialFallbacks()
+    public function testDiscoveryPartialFallbacks(): void
     {
         $this->load();
         $this->setDefinition('httplug.client.default', new Definition(Client::class));
@@ -60,7 +60,7 @@ final class DiscoveryTest extends AbstractExtensionTestCase
         $this->assertContainerBuilderHasService('httplug.async_client.default', HttpAsyncClient::class);
     }
 
-    public function testNoDiscoveryFallbacks()
+    public function testNoDiscoveryFallbacks(): void
     {
         $this->setDefinition('httplug.client.default', new Definition(HttpClient::class));
         $this->setDefinition('httplug.message_factory.default', new Definition(MessageFactory::class));
@@ -75,7 +75,7 @@ final class DiscoveryTest extends AbstractExtensionTestCase
         $this->assertEquals([HttpClientDiscovery::class, 'find'], $clientDefinition->getFactory());
     }
 
-    public function testEnableAutowiring()
+    public function testEnableAutowiring(): void
     {
         $this->load([
             'default_client_autowiring' => true,
@@ -87,7 +87,7 @@ final class DiscoveryTest extends AbstractExtensionTestCase
         $this->assertContainerBuilderHasAlias(HttpAsyncClient::class);
     }
 
-    public function testDisableAutowiring()
+    public function testDisableAutowiring(): void
     {
         if (PHP_VERSION_ID <= 70000) {
             $this->markTestSkipped();

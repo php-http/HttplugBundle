@@ -12,7 +12,7 @@ use PHPUnit\Framework\TestCase;
  */
 class BuzzFactoryTest extends TestCase
 {
-    public function testCreateClient()
+    public function testCreateClient(): void
     {
         if (!class_exists(Client::class)) {
             $this->markTestSkipped('Buzz adapter is not installed');

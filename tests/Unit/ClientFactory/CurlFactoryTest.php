@@ -13,7 +13,7 @@ use Psr\Http\Message\StreamFactoryInterface;
  */
 class CurlFactoryTest extends TestCase
 {
-    public function testCreateClient()
+    public function testCreateClient(): void
     {
         if (!class_exists(Client::class)) {
             $this->markTestSkipped('Curl client is not installed');

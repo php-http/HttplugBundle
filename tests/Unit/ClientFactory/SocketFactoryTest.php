@@ -12,7 +12,7 @@ use PHPUnit\Framework\TestCase;
  */
 class SocketFactoryTest extends TestCase
 {
-    public function testCreateClient()
+    public function testCreateClient(): void
     {
         if (!class_exists(Client::class)) {
             $this->markTestSkipped('Socket client is not installed');

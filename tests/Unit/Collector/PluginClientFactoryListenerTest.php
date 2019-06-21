@@ -14,7 +14,7 @@ use Symfony\Component\Stopwatch\Stopwatch;
 
 final class PluginClientFactoryListenerTest extends TestCase
 {
-    public function testRegisterPluginClientFactory()
+    public function testRegisterPluginClientFactory(): void
     {
         $collector = $this->getMockBuilder(Collector::class)->getMock();
         $formatter = $this->getMockBuilder(Formatter::class)->disableOriginalConstructor()->getMock();

@@ -37,14 +37,14 @@ class ProfilingTest extends TestCase
      */
     private $stopwatch;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->collector = new Collector([]);
         $this->formatter = new Formatter(new FullHttpMessageFormatter(), new CurlCommandFormatter());
         $this->stopwatch = new Stopwatch();
     }
 
-    public function testProfilingWithCachePlugin()
+    public function testProfilingWithCachePlugin(): void
     {
         $client = $this->createClient([
             new Plugin\CachePlugin(new ArrayAdapter(), StreamFactoryDiscovery::find(), [
@@ -64,7 +64,7 @@ class ProfilingTest extends TestCase
         $this->assertEquals('example.com', $stack->getRequestHost());
     }
 
-    public function testProfilingWhenPluginThrowException()
+    public function testProfilingWhenPluginThrowException(): void
     {
         $client = $this->createClient([
             new ExceptionThrowerPlugin(),
@@ -83,7 +83,7 @@ class ProfilingTest extends TestCase
         }
     }
 
-    public function testProfiling()
+    public function testProfiling(): void
     {
         $client = $this->createClient([
             new Plugin\AddHostPlugin(UriFactoryDiscovery::find()->createUri('https://example.com')),
@@ -122,7 +122,7 @@ class ExceptionThrowerPlugin implements Plugin
 {
     use Plugin\VersionBridgePlugin;
 
-    protected function doHandleRequest(RequestInterface $request, callable $next, callable $first)
+    protected function doHandleRequest(RequestInterface $request, callable $next, callable $first): void
     {
         throw new \Exception();
     }

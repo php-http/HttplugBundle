@@ -15,7 +15,7 @@ use Symfony\Component\EventDispatcher\Event;
 
 class DiscoveredClientsTest extends WebTestCase
 {
-    public function testDiscoveredClient()
+    public function testDiscoveredClient(): void
     {
         $container = $this->getContainer(false);
 
@@ -26,7 +26,7 @@ class DiscoveredClientsTest extends WebTestCase
         $this->assertInstanceOf(HttpClient::class, $service);
     }
 
-    public function testDiscoveredAsyncClient()
+    public function testDiscoveredAsyncClient(): void
     {
         $container = $this->getContainer(false);
 
@@ -37,7 +37,7 @@ class DiscoveredClientsTest extends WebTestCase
         $this->assertInstanceOf(HttpAsyncClient::class, $service);
     }
 
-    public function testDiscoveredClientWithProfilingEnabled()
+    public function testDiscoveredClientWithProfilingEnabled(): void
     {
         $container = $this->getContainer(true);
 
@@ -49,7 +49,7 @@ class DiscoveredClientsTest extends WebTestCase
         $this->assertInstanceOf(HttpClient::class, NSA::getProperty($service, 'client'));
     }
 
-    public function testDiscoveredAsyncClientWithProfilingEnabled()
+    public function testDiscoveredAsyncClientWithProfilingEnabled(): void
     {
         $container = $this->getContainer(true);
 
@@ -64,7 +64,7 @@ class DiscoveredClientsTest extends WebTestCase
     /**
      * Test with httplug.discovery.client: "auto".
      */
-    public function testDiscovery()
+    public function testDiscovery(): void
     {
         $container = $this->getContainer(true);
 
@@ -86,7 +86,7 @@ class DiscoveredClientsTest extends WebTestCase
     /**
      * Test with httplug.discovery.client: null.
      */
-    public function testDisabledDiscovery()
+    public function testDisabledDiscovery(): void
     {
         $container = $this->getContainer(true, 'discovery_disabled');
 
@@ -98,7 +98,7 @@ class DiscoveredClientsTest extends WebTestCase
     /**
      * Test with httplug.discovery.client: "httplug.client.acme".
      */
-    public function testForcedDiscovery()
+    public function testForcedDiscovery(): void
     {
         $container = $this->getContainer(true, 'discovery_forced');
 
@@ -119,7 +119,7 @@ class DiscoveredClientsTest extends WebTestCase
         return static::$kernel->getContainer();
     }
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 

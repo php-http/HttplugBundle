@@ -17,7 +17,7 @@ use PHPUnit\Framework\TestCase;
  */
 class MockFactoryTest extends TestCase
 {
-    public function testCreateClient()
+    public function testCreateClient(): void
     {
         $factory = new MockFactory();
         $client = $factory->createClient();
