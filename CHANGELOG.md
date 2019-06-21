@@ -2,6 +2,12 @@
 
 The change log describes what is "Added", "Removed", "Changed" or "Fixed" between each release.
 
+## Unreleased
+
+### Added
+
+- Configured clients are now tagged with `'httplug.client'`
+
 ## 1.16.0 - 2019-06-05
 
 ### Changed
