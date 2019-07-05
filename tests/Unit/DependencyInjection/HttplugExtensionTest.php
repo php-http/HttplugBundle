@@ -31,6 +31,11 @@ class HttplugExtensionTest extends AbstractExtensionTestCase
         ];
     }
 
+    public function testConstants(): void
+    {
+        self::assertSame('httplug.client', HttplugExtension::HTTPLUG_CLIENT_TAG);
+    }
+
     public function testConfigLoadDefault(): void
     {
         $this->load();
@@ -450,6 +455,25 @@ class HttplugExtensionTest extends AbstractExtensionTestCase
             // Symfony made services private by default starting from 3.4
             $this->assertFalse($this->container->getDefinition('httplug.client.acme.batch_client')->isPrivate());
         }
+    }
+
+    public function testClientIsTaggedWithHttplugClientTag(): void
+    {
+        $this->load([
+            'clients' => [
+                'acme' => null,
+            ],
+        ]);
+
+        $serviceId = 'httplug.client.acme';
+
+        $this->assertContainerBuilderHasService($serviceId);
+
+        $this->assertTrue($this->container->getDefinition($serviceId)->hasTag(HttplugExtension::HTTPLUG_CLIENT_TAG), sprintf(
+            'Failed asserting that client with service identifier "%s" has been tagged with "%s".',
+            $serviceId,
+            HttplugExtension::HTTPLUG_CLIENT_TAG
+        ));
     }
 
     /**

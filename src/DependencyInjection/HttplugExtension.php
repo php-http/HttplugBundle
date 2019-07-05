@@ -37,6 +37,8 @@ use Twig\Environment as TwigEnvironment;
  */
 class HttplugExtension extends Extension
 {
+    public const HTTPLUG_CLIENT_TAG = 'httplug.client';
+
     /**
      * Used to check is the VCR plugin is installed.
      *
@@ -419,6 +421,7 @@ class HttplugExtension extends Extension
             ->addArgument([
                 'client_name' => $clientName,
             ])
+            ->addTag(self::HTTPLUG_CLIENT_TAG)
         ;
 
         if (is_bool($arguments['public'])) {
