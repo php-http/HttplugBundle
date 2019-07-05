@@ -8,7 +8,14 @@ $finder = PhpCsFixer\Finder::create()
 
 return PhpCsFixer\Config::create()
     ->setRules([
-         '@Symfony' => true,
-         'array_syntax' => ['syntax' => 'short'],
+        '@Symfony' => true,
+        'array_syntax' => ['syntax' => 'short'],
+        'visibility_required' => [
+            'elements' => [
+                'const',
+                'method',
+                'property',
+            ],
+        ],
     ])
     ->setFinder($finder);
