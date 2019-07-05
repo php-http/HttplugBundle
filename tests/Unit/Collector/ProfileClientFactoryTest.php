@@ -33,7 +33,7 @@ class ProfileClientFactoryTest extends TestCase
      */
     private $client;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->collector = $this->getMockBuilder(Collector::class)->disableOriginalConstructor()->getMock();
         $this->formatter = $this->getMockBuilder(Formatter::class)->disableOriginalConstructor()->getMock();
@@ -41,7 +41,7 @@ class ProfileClientFactoryTest extends TestCase
         $this->client = $this->getMockBuilder(HttpClient::class)->getMock();
     }
 
-    public function testCreateClientFromClientFactory()
+    public function testCreateClientFromClientFactory(): void
     {
         $factory = $this->getMockBuilder(ClientFactory::class)->getMock();
         $factory->method('createClient')->willReturn($this->client);
@@ -51,7 +51,7 @@ class ProfileClientFactoryTest extends TestCase
         $this->assertInstanceOf(ProfileClient::class, $subject->createClient());
     }
 
-    public function testCreateClientFromCallable()
+    public function testCreateClientFromCallable(): void
     {
         $factory = function ($config) {
             return $this->client;

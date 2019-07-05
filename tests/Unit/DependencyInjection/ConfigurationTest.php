@@ -90,7 +90,7 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
         return new Configuration(true);
     }
 
-    public function testEmptyConfiguration()
+    public function testEmptyConfiguration(): void
     {
         $formats = array_map(function ($path) {
             return __DIR__.'/../../Resources/Fixtures/'.$path;
@@ -105,7 +105,7 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
         }
     }
 
-    public function testSupportsAllConfigFormats()
+    public function testSupportsAllConfigFormats(): void
     {
         $expectedConfiguration = [
             'default_client_autowiring' => false,
@@ -285,7 +285,7 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
         }
     }
 
-    public function testMissingClass()
+    public function testMissingClass(): void
     {
         $file = __DIR__.'/../../Resources/Fixtures/config/invalid_class.yml';
 
@@ -294,7 +294,7 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
         $this->assertProcessedConfigurationEquals([], [$file]);
     }
 
-    public function testInvalidPlugin()
+    public function testInvalidPlugin(): void
     {
         $file = __DIR__.'/../../Resources/Fixtures/config/invalid_plugin.yml';
 
@@ -303,7 +303,7 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
         $this->assertProcessedConfigurationEquals([], [$file]);
     }
 
-    public function testInvalidAuthentication()
+    public function testInvalidAuthentication(): void
     {
         $file = __DIR__.'/../../Resources/Fixtures/config/invalid_auth.yml';
 
@@ -315,7 +315,7 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
     /**
      * @group legacy
      */
-    public function testInvalidCacheConfig()
+    public function testInvalidCacheConfig(): void
     {
         $file = __DIR__.'/../../Resources/Fixtures/config/invalid_cache_config.yml';
 
@@ -327,7 +327,7 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
     /**
      * @group legacy
      */
-    public function testBackwardCompatibility()
+    public function testBackwardCompatibility(): void
     {
         $formats = array_map(function ($path) {
             return __DIR__.'/../../Resources/Fixtures/'.$path;
@@ -344,7 +344,7 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
     /**
      * @group legacy
      */
-    public function testCacheConfigDeprecationCompatibility()
+    public function testCacheConfigDeprecationCompatibility(): void
     {
         $file = __DIR__.'/../../Resources/Fixtures/config/bc/cache_config.yml';
         $config = $this->emptyConfig;
@@ -362,7 +362,7 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
     /**
      * @group legacy
      */
-    public function testCacheConfigDeprecationCompatibilityIssue166()
+    public function testCacheConfigDeprecationCompatibilityIssue166(): void
     {
         $file = __DIR__.'/../../Resources/Fixtures/config/bc/issue-166.yml';
         $config = $this->emptyConfig;
@@ -377,7 +377,7 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
         $this->assertProcessedConfigurationEquals($config, [$file]);
     }
 
-    public function testProfilingToolbarCollision()
+    public function testProfilingToolbarCollision(): void
     {
         $file = __DIR__.'/../../Resources/Fixtures/config/bc/profiling_toolbar.yml';
 
@@ -386,7 +386,7 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
         $this->assertProcessedConfigurationEquals([], [$file]);
     }
 
-    public function testClientCacheConfigMustHavePool()
+    public function testClientCacheConfigMustHavePool(): void
     {
         $file = __DIR__.'/../../Resources/Fixtures/config/client_cache_config_with_no_pool.yml';
 
@@ -395,7 +395,7 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
         $this->assertProcessedConfigurationEquals([], [$file]);
     }
 
-    public function testCacheConfigMustHavePool()
+    public function testCacheConfigMustHavePool(): void
     {
         $file = __DIR__.'/../../Resources/Fixtures/config/cache_config_with_no_pool.yml';
 
@@ -404,7 +404,7 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
         $this->assertProcessedConfigurationEquals([], [$file]);
     }
 
-    public function testLimitlessCapturedBodyLength()
+    public function testLimitlessCapturedBodyLength(): void
     {
         $file = __DIR__.'/../../Resources/Fixtures/config/limitless_captured_body_length.yml';
         $config = $this->emptyConfig;
@@ -412,7 +412,7 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
         $this->assertProcessedConfigurationEquals($config, [$file]);
     }
 
-    public function testInvalidCapturedBodyLengthString()
+    public function testInvalidCapturedBodyLengthString(): void
     {
         $file = __DIR__.'/../../Resources/Fixtures/config/invalid_captured_body_length.yml';
 

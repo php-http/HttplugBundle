@@ -8,7 +8,7 @@ use PHPUnit\Framework\TestCase;
 
 class CollectorTest extends TestCase
 {
-    public function testCollectClientNames()
+    public function testCollectClientNames(): void
     {
         $collector = new Collector();
 
@@ -19,7 +19,7 @@ class CollectorTest extends TestCase
         $this->assertEquals(['default', 'acme'], $collector->getClients());
     }
 
-    public function testActivateStack()
+    public function testActivateStack(): void
     {
         $parent = new Stack('acme', 'GET / HTTP/1.1');
         $stack = new Stack('acme', 'GET / HTTP/1.1');
@@ -33,7 +33,7 @@ class CollectorTest extends TestCase
         $this->assertEquals($stack, $collector->getActiveStack());
     }
 
-    public function testDeactivateStack()
+    public function testDeactivateStack(): void
     {
         $stack = new Stack('acme', 'GET / HTTP/1.1');
         $collector = new Collector();
@@ -45,7 +45,7 @@ class CollectorTest extends TestCase
         $this->assertNull($collector->getActiveStack());
     }
 
-    public function testDeactivateStackSetParentAsActiveStack()
+    public function testDeactivateStackSetParentAsActiveStack(): void
     {
         $parent = new Stack('acme', 'GET / HTTP/1.1');
         $stack = new Stack('acme', 'GET / HTTP/1.1');
@@ -59,7 +59,7 @@ class CollectorTest extends TestCase
         $this->assertEquals($parent, $collector->getActiveStack());
     }
 
-    public function testAddStack()
+    public function testAddStack(): void
     {
         $stack = new Stack('acme', 'GET / HTTP/1.1');
         $collector = new Collector();
@@ -70,7 +70,7 @@ class CollectorTest extends TestCase
         $this->assertEquals([$stack], $collector->getClientRootStacks('acme'));
     }
 
-    public function testResetAction()
+    public function testResetAction(): void
     {
         $stack = new Stack('acme', 'GET / HTTP/1.1');
 

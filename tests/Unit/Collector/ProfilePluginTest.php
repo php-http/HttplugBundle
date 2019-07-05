@@ -69,7 +69,7 @@ class ProfilePluginTest extends TestCase
      */
     private $subject;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->plugin = $this->getMockBuilder(Plugin::class)->getMock();
         $this->collector = $this->getMockBuilder(Collector::class)->disableOriginalConstructor()->getMock();
@@ -119,7 +119,7 @@ class ProfilePluginTest extends TestCase
         );
     }
 
-    public function testCallDecoratedPlugin()
+    public function testCallDecoratedPlugin(): void
     {
         $this->plugin
             ->expects($this->once())
@@ -129,15 +129,15 @@ class ProfilePluginTest extends TestCase
 
         $this->subject->handleRequest($this->request, function () {
             return $this->fulfilledPromise;
-        }, function () {
+        }, function (): void {
         });
     }
 
-    public function testProfileIsInitialized()
+    public function testProfileIsInitialized(): void
     {
         $this->subject->handleRequest($this->request, function () {
             return $this->fulfilledPromise;
-        }, function () {
+        }, function (): void {
         });
 
         $this->assertCount(1, $this->currentStack->getProfiles());
@@ -145,22 +145,22 @@ class ProfilePluginTest extends TestCase
         $this->assertEquals(get_class($this->plugin), $profile->getPlugin());
     }
 
-    public function testCollectRequestInformations()
+    public function testCollectRequestInformations(): void
     {
         $this->subject->handleRequest($this->request, function () {
             return $this->fulfilledPromise;
-        }, function () {
+        }, function (): void {
         });
 
         $profile = $this->currentStack->getProfiles()[0];
         $this->assertEquals('FormattedRequest', $profile->getRequest());
     }
 
-    public function testOnFulfilled()
+    public function testOnFulfilled(): void
     {
         $promise = $this->subject->handleRequest($this->request, function () {
             return $this->fulfilledPromise;
-        }, function () {
+        }, function (): void {
         });
 
         $this->assertEquals($this->response, $promise->wait());
@@ -168,11 +168,11 @@ class ProfilePluginTest extends TestCase
         $this->assertEquals('FormattedResponse', $profile->getResponse());
     }
 
-    public function testOnRejected()
+    public function testOnRejected(): void
     {
         $promise = $this->subject->handleRequest($this->request, function () {
             return $this->rejectedPromise;
-        }, function () {
+        }, function (): void {
         });
 
         $this->expectException(TransferException::class);

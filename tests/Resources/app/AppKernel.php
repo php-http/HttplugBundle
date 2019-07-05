@@ -38,7 +38,7 @@ class AppKernel extends Kernel
     /**
      * {@inheritdoc}
      */
-    protected function configureContainer(ContainerBuilder $container, LoaderInterface $loader)
+    protected function configureContainer(ContainerBuilder $container, LoaderInterface $loader): void
     {
         $loader->load(__DIR__.'/config/config_'.$this->getEnvironment().'.yml');
         if ($this->isDebug()) {
@@ -49,7 +49,7 @@ class AppKernel extends Kernel
     /**
      * {@inheritdoc}
      */
-    protected function configureRoutes(RouteCollectionBuilder $routes)
+    protected function configureRoutes(RouteCollectionBuilder $routes): void
     {
         $routes->import('@WebProfilerBundle/Resources/config/routing/wdt.xml', '/_wdt');
         $routes->import('@WebProfilerBundle/Resources/config/routing/profiler.xml', '/_profiler');
@@ -94,7 +94,7 @@ class AppKernel extends Kernel
         return new Response();
     }
 
-    protected function build(ContainerBuilder $container)
+    protected function build(ContainerBuilder $container): void
     {
         $container->addCompilerPass(new PublicServicesForFunctionalTestsPass());
     }
@@ -102,7 +102,7 @@ class AppKernel extends Kernel
 
 class PublicServicesForFunctionalTestsPass implements CompilerPassInterface
 {
-    public function process(ContainerBuilder $container)
+    public function process(ContainerBuilder $container): void
     {
         $services = [
             'httplug.strategy',

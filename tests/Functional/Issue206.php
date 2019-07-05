@@ -13,7 +13,7 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class Issue206 extends WebTestCase
 {
-    public function testCustomClientDoesNotCauseException()
+    public function testCustomClientDoesNotCauseException(): void
     {
         static::bootKernel();
         $container = static::$kernel->getContainer();

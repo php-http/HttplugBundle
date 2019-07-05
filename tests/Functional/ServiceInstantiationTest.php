@@ -24,7 +24,7 @@ use Symfony\Component\HttpKernel\Profiler\Profiler;
 
 class ServiceInstantiationTest extends WebTestCase
 {
-    public function testHttpClient()
+    public function testHttpClient(): void
     {
         static::bootKernel();
         $container = static::$kernel->getContainer();
@@ -33,7 +33,7 @@ class ServiceInstantiationTest extends WebTestCase
         $this->assertInstanceOf(HttpClient::class, $client);
     }
 
-    public function testHttpClientNoDebug()
+    public function testHttpClientNoDebug(): void
     {
         static::bootKernel(['debug' => false]);
         $container = static::$kernel->getContainer();
@@ -42,7 +42,7 @@ class ServiceInstantiationTest extends WebTestCase
         $this->assertInstanceOf(HttpClient::class, $client);
     }
 
-    public function testDebugToolbar()
+    public function testDebugToolbar(): void
     {
         static::bootKernel(['debug' => true]);
         $container = static::$kernel->getContainer();
@@ -54,7 +54,7 @@ class ServiceInstantiationTest extends WebTestCase
         $this->assertInstanceOf(Collector::class, $collector);
     }
 
-    public function testProfilingShouldNotChangeServiceReference()
+    public function testProfilingShouldNotChangeServiceReference(): void
     {
         static::bootKernel(['debug' => true]);
         $container = static::$kernel->getContainer();
@@ -62,7 +62,7 @@ class ServiceInstantiationTest extends WebTestCase
         $this->assertInstanceof(RedirectPlugin::class, $container->get('app.http.plugin.custom'));
     }
 
-    public function testProfilingDecoration()
+    public function testProfilingDecoration(): void
     {
         static::bootKernel(['debug' => true]);
         $container = static::$kernel->getContainer();
@@ -81,7 +81,7 @@ class ServiceInstantiationTest extends WebTestCase
         $this->assertInstanceOf(ProfilePlugin::class, $plugins[4]);
     }
 
-    public function testProfilingPsr18Decoration()
+    public function testProfilingPsr18Decoration(): void
     {
         if (!interface_exists(ClientInterface::class)) {
             $this->markTestSkipped('PSR-18 is not installed');

@@ -48,7 +48,7 @@ class StackPluginTest extends TestCase
      */
     private $subject;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->collector = $this->getMockBuilder(Collector::class)->disableOriginalConstructor()->getMock();
         $this->formatter = $this->getMockBuilder(Formatter::class)->disableOriginalConstructor()->getMock();
@@ -77,7 +77,7 @@ class StackPluginTest extends TestCase
         $this->subject = new StackPlugin($this->collector, $this->formatter, 'default');
     }
 
-    public function testStackIsInitialized()
+    public function testStackIsInitialized(): void
     {
         $this->collector
             ->expects($this->once())
@@ -98,11 +98,11 @@ class StackPluginTest extends TestCase
             return new FulfilledPromise($this->response);
         };
 
-        $this->subject->handleRequest($this->request, $next, function () {
+        $this->subject->handleRequest($this->request, $next, function (): void {
         });
     }
 
-    public function testOnFulfilled()
+    public function testOnFulfilled(): void
     {
         //Capture the current stack
         $currentStack = null;
@@ -123,7 +123,7 @@ class StackPluginTest extends TestCase
             return new FulfilledPromise($this->response);
         };
 
-        $promise = $this->subject->handleRequest($this->request, $next, function () {
+        $promise = $this->subject->handleRequest($this->request, $next, function (): void {
         });
 
         $this->assertEquals($this->response, $promise->wait());
@@ -131,7 +131,7 @@ class StackPluginTest extends TestCase
         $this->assertEquals('FormattedResponse', $currentStack->getResponse());
     }
 
-    public function testOnRejected()
+    public function testOnRejected(): void
     {
         //Capture the current stack
         $currentStack = null;
@@ -152,30 +152,30 @@ class StackPluginTest extends TestCase
             return new RejectedPromise($this->exception);
         };
 
-        $promise = $this->subject->handleRequest($this->request, $next, function () {
+        $promise = $this->subject->handleRequest($this->request, $next, function (): void {
         });
 
         $this->expectException(\Exception::class);
         $promise->wait();
     }
 
-    public function testOnException()
+    public function testOnException(): void
     {
         $this->collector
             ->expects($this->once())
             ->method('deactivateStack')
         ;
 
-        $next = function () {
+        $next = function (): void {
             throw new \Exception();
         };
 
         $this->expectException(\Exception::class);
-        $this->subject->handleRequest($this->request, $next, function () {
+        $this->subject->handleRequest($this->request, $next, function (): void {
         });
     }
 
-    public function testOnError()
+    public function testOnError(): void
     {
         $this->expectException(Warning::class);
 
@@ -188,7 +188,7 @@ class StackPluginTest extends TestCase
             return 2 / 0;
         };
 
-        $this->subject->handleRequest($this->request, $next, function () {
+        $this->subject->handleRequest($this->request, $next, function (): void {
         });
     }
 }

@@ -11,7 +11,7 @@ use PHPUnit\Framework\TestCase;
  */
 class Guzzle6FactoryTest extends TestCase
 {
-    public function testCreateClient()
+    public function testCreateClient(): void
     {
         if (!class_exists(Client::class)) {
             $this->markTestSkipped('Guzzle6 adapter is not installed');

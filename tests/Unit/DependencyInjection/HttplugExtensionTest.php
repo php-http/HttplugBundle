@@ -17,7 +17,7 @@ use Http\Adapter\Guzzle6\Client;
  */
 class HttplugExtensionTest extends AbstractExtensionTestCase
 {
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -31,7 +31,7 @@ class HttplugExtensionTest extends AbstractExtensionTestCase
         ];
     }
 
-    public function testConfigLoadDefault()
+    public function testConfigLoadDefault(): void
     {
         $this->load();
 
@@ -40,7 +40,7 @@ class HttplugExtensionTest extends AbstractExtensionTestCase
         }
     }
 
-    public function testConfigLoadClass()
+    public function testConfigLoadClass(): void
     {
         $this->load([
             'classes' => [
@@ -51,7 +51,7 @@ class HttplugExtensionTest extends AbstractExtensionTestCase
         $this->assertContainerBuilderHasService('httplug.client.default', Client::class);
     }
 
-    public function testConfigLoadService()
+    public function testConfigLoadService(): void
     {
         $this->load([
             'main_alias' => [
@@ -67,7 +67,7 @@ class HttplugExtensionTest extends AbstractExtensionTestCase
         }
     }
 
-    public function testClientPlugins()
+    public function testClientPlugins(): void
     {
         $this->load([
             'clients' => [
@@ -162,7 +162,7 @@ class HttplugExtensionTest extends AbstractExtensionTestCase
     /**
      * @group legacy
      */
-    public function testNoProfilingWhenToolbarIsDisabled()
+    public function testNoProfilingWhenToolbarIsDisabled(): void
     {
         $this->load(
             [
@@ -181,7 +181,7 @@ class HttplugExtensionTest extends AbstractExtensionTestCase
         $this->verifyProfilingDisabled();
     }
 
-    public function testNoProfilingWhenNotInDebugMode()
+    public function testNoProfilingWhenNotInDebugMode(): void
     {
         $this->setParameter('kernel.debug', false);
         $this->load(
@@ -201,7 +201,7 @@ class HttplugExtensionTest extends AbstractExtensionTestCase
     /**
      * @group legacy
      */
-    public function testProfilingWhenToolbarIsSpecificallyOn()
+    public function testProfilingWhenToolbarIsSpecificallyOn(): void
     {
         $this->setParameter('kernel.debug', false);
         $this->load(
@@ -221,7 +221,7 @@ class HttplugExtensionTest extends AbstractExtensionTestCase
         $this->assertContainerBuilderHasService(PluginClientFactoryListener::class);
     }
 
-    public function testOverrideProfilingFormatter()
+    public function testOverrideProfilingFormatter(): void
     {
         $this->load(
             [
@@ -235,7 +235,7 @@ class HttplugExtensionTest extends AbstractExtensionTestCase
         $this->assertEquals('acme.formatter', (string) $def->getArgument(0));
     }
 
-    public function testCachePluginConfigCacheKeyGeneratorReference()
+    public function testCachePluginConfigCacheKeyGeneratorReference(): void
     {
         $this->load([
             'plugins' => [
@@ -256,7 +256,7 @@ class HttplugExtensionTest extends AbstractExtensionTestCase
         $this->assertSame('header_cache_key_generator', (string) $config['cache_key_generator']);
     }
 
-    public function testContentTypePluginAllowedOptions()
+    public function testContentTypePluginAllowedOptions(): void
     {
         $this->load([
             'clients' => [
@@ -282,7 +282,7 @@ class HttplugExtensionTest extends AbstractExtensionTestCase
         ], $config);
     }
 
-    public function testUsingServiceKeyForClients()
+    public function testUsingServiceKeyForClients(): void
     {
         $this->load([
             'clients' => [
@@ -297,7 +297,7 @@ class HttplugExtensionTest extends AbstractExtensionTestCase
         $this->assertFalse($client->isPublic());
     }
 
-    private function verifyProfilingDisabled()
+    private function verifyProfilingDisabled(): void
     {
         $def = $this->container->findDefinition('httplug.client');
         $this->assertTrue(is_subclass_of($def->getClass(), HttpClient::class));
@@ -311,7 +311,7 @@ class HttplugExtensionTest extends AbstractExtensionTestCase
         }
     }
 
-    public function testClientShouldHaveDefaultVisibility()
+    public function testClientShouldHaveDefaultVisibility(): void
     {
         $this->load([
             'clients' => [
@@ -331,7 +331,7 @@ class HttplugExtensionTest extends AbstractExtensionTestCase
         }
     }
 
-    public function testFlexibleClientShouldBePrivateByDefault()
+    public function testFlexibleClientShouldBePrivateByDefault(): void
     {
         $this->load([
             'clients' => [
@@ -345,7 +345,7 @@ class HttplugExtensionTest extends AbstractExtensionTestCase
         $this->assertFalse($this->container->getDefinition('httplug.client.acme.flexible')->isPublic());
     }
 
-    public function testHttpMethodsClientShouldBePrivateByDefault()
+    public function testHttpMethodsClientShouldBePrivateByDefault(): void
     {
         $this->load([
             'clients' => [
@@ -359,7 +359,7 @@ class HttplugExtensionTest extends AbstractExtensionTestCase
         $this->assertFalse($this->container->getDefinition('httplug.client.acme.http_methods')->isPublic());
     }
 
-    public function testBatchClientShouldBePrivateByDefault()
+    public function testBatchClientShouldBePrivateByDefault(): void
     {
         $this->load([
             'clients' => [
@@ -373,7 +373,7 @@ class HttplugExtensionTest extends AbstractExtensionTestCase
         $this->assertFalse($this->container->getDefinition('httplug.client.acme.batch_client')->isPublic());
     }
 
-    public function testClientCanBePublic()
+    public function testClientCanBePublic(): void
     {
         $this->load([
             'clients' => [
@@ -392,7 +392,7 @@ class HttplugExtensionTest extends AbstractExtensionTestCase
         }
     }
 
-    public function testFlexibleClientCanBePublic()
+    public function testFlexibleClientCanBePublic(): void
     {
         $this->load([
             'clients' => [
@@ -412,7 +412,7 @@ class HttplugExtensionTest extends AbstractExtensionTestCase
         }
     }
 
-    public function testHttpMethodsClientCanBePublic()
+    public function testHttpMethodsClientCanBePublic(): void
     {
         $this->load([
             'clients' => [
@@ -432,7 +432,7 @@ class HttplugExtensionTest extends AbstractExtensionTestCase
         }
     }
 
-    public function testBatchClientCanBePublic()
+    public function testBatchClientCanBePublic(): void
     {
         $this->load([
             'clients' => [
@@ -456,7 +456,7 @@ class HttplugExtensionTest extends AbstractExtensionTestCase
      * @dataProvider provideVcrPluginConfig
      * @group vcr-plugin
      */
-    public function testVcrPluginConfiguration(array $config, array $services, array $arguments = [])
+    public function testVcrPluginConfiguration(array $config, array $services, array $arguments = []): void
     {
         if (!class_exists(InMemoryRecorder::class)) {
             $this->markTestSkipped('VCR plugin is not installed.');
@@ -480,7 +480,7 @@ class HttplugExtensionTest extends AbstractExtensionTestCase
     /**
      * @group vcr-plugin
      */
-    public function testIsNotLoadedUnlessNeeded()
+    public function testIsNotLoadedUnlessNeeded(): void
     {
         if (!class_exists(InMemoryRecorder::class)) {
             $this->markTestSkipped('VCR plugin is not installed.');

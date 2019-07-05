@@ -9,7 +9,7 @@ use PHPUnit\Framework\TestCase;
 
 class ConfiguredClientsStrategyTest extends TestCase
 {
-    public function testGetCandidates()
+    public function testGetCandidates(): void
     {
         $httpClient = $this->getMockBuilder(HttpClient::class)->getMock();
         $httpAsyncClient = $this->getMockBuilder(HttpAsyncClient::class)->getMock();
@@ -24,7 +24,7 @@ class ConfiguredClientsStrategyTest extends TestCase
         $this->assertEquals($httpAsyncClient, $candidate['class']());
     }
 
-    public function testGetCandidatesEmpty()
+    public function testGetCandidatesEmpty(): void
     {
         $strategy = new ConfiguredClientsStrategy(null, null);
 
@@ -35,7 +35,7 @@ class ConfiguredClientsStrategyTest extends TestCase
         $this->assertEquals([], $candidates);
     }
 
-    public function testGetCandidatesEmptyAsync()
+    public function testGetCandidatesEmptyAsync(): void
     {
         $httpClient = $this->getMockBuilder(HttpClient::class)->getMock();
         $strategy = new ConfiguredClientsStrategy($httpClient, null);
@@ -48,7 +48,7 @@ class ConfiguredClientsStrategyTest extends TestCase
         $this->assertEquals([], $candidates);
     }
 
-    public function testGetCandidatesEmptySync()
+    public function testGetCandidatesEmptySync(): void
     {
         $httpAsyncClient = $this->getMockBuilder(HttpAsyncClient::class)->getMock();
         $strategy = new ConfiguredClientsStrategy(null, $httpAsyncClient);

@@ -29,7 +29,7 @@ class FormatterTest extends TestCase
      */
     private $subject;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->formatter = $this->getMockBuilder(MessageFormatter::class)->getMock();
         $this->curlFormatter = $this->getMockBuilder(CurlCommandFormatter::class)->getMock();
@@ -37,7 +37,7 @@ class FormatterTest extends TestCase
         $this->subject = new Formatter($this->formatter, $this->curlFormatter);
     }
 
-    public function testFormatRequest()
+    public function testFormatRequest(): void
     {
         $request = new Request('GET', '/');
 
@@ -50,7 +50,7 @@ class FormatterTest extends TestCase
         $this->subject->formatRequest($request);
     }
 
-    public function testFormatResponse()
+    public function testFormatResponse(): void
     {
         $response = new Response();
 
@@ -63,7 +63,7 @@ class FormatterTest extends TestCase
         $this->subject->formatResponse($response);
     }
 
-    public function testFormatHttpException()
+    public function testFormatHttpException(): void
     {
         $request = new Request('GET', '/');
         $response = new Response();
@@ -79,20 +79,20 @@ class FormatterTest extends TestCase
         $this->assertEquals('FormattedException', $this->subject->formatException($exception));
     }
 
-    public function testFormatTransferException()
+    public function testFormatTransferException(): void
     {
         $exception = new TransferException('ExceptionMessage');
 
         $this->assertEquals('Transfer error: ExceptionMessage', $this->subject->formatException($exception));
     }
 
-    public function testFormatException()
+    public function testFormatException(): void
     {
         $exception = new \RuntimeException('Unexpected error');
         $this->assertEquals('Unexpected exception of type "RuntimeException": Unexpected error', $this->subject->formatException($exception));
     }
 
-    public function testFormatAsCurlCommand()
+    public function testFormatAsCurlCommand(): void
     {
         $request = new Request('GET', '/');
 

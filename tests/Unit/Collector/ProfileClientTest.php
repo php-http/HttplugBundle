@@ -88,7 +88,7 @@ class ProfileClientTest extends TestCase
      */
     private $uri;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->collector = $this->getMockBuilder(Collector::class)->disableOriginalConstructor()->getMock();
         $this->activeStack = new Stack('default', 'FormattedRequest');
@@ -127,7 +127,7 @@ class ProfileClientTest extends TestCase
         ;
     }
 
-    public function testSendRequest()
+    public function testSendRequest(): void
     {
         $this->client
             ->expects($this->once())
@@ -145,7 +145,7 @@ class ProfileClientTest extends TestCase
         $this->assertEquals('https', $this->activeStack->getRequestScheme());
     }
 
-    public function testSendAsyncRequest()
+    public function testSendAsyncRequest(): void
     {
         $this->client
             ->expects($this->once())
@@ -168,7 +168,7 @@ class ProfileClientTest extends TestCase
         $this->assertEquals('https', $this->activeStack->getRequestScheme());
     }
 
-    public function testOnFulfilled()
+    public function testOnFulfilled(): void
     {
         $this->collector
             ->expects($this->once())
@@ -193,7 +193,7 @@ class ProfileClientTest extends TestCase
         $this->assertEquals('FormattedResponse', $this->activeStack->getClientResponse());
     }
 
-    public function testOnRejected()
+    public function testOnRejected(): void
     {
         $this->collector
             ->expects($this->once())

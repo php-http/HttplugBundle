@@ -12,7 +12,7 @@ use PHPUnit\Framework\TestCase;
  */
 class ReactFactoryTest extends TestCase
 {
-    public function testCreateClient()
+    public function testCreateClient(): void
     {
         if (!class_exists(Client::class)) {
             $this->markTestSkipped('React adapter is not installed');
