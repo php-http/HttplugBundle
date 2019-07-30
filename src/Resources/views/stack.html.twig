@@ -38,7 +38,7 @@
             {{ stack.clientRequest|httplug_markup|nl2br }}
         </div>
         <div class="httplug-message card">
-            <h4>Response</h4>
+            <h4>Response {% if stack.debugTokenLink %}<span class="label status-info"><a href="{{ stack.debugTokenLink }}">Debug Token: {{ stack.debugToken }}</a></span>{% endif %}</h4>
             {{ stack.clientResponse|httplug_markup|nl2br }}
         </div>
     </div>

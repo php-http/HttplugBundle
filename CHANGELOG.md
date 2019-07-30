@@ -7,6 +7,8 @@ The change log describes what is "Added", "Removed", "Changed" or "Fixed" betwee
 ### Added
 
 - Configured clients are now tagged with `'httplug.client'`
+- Adds a link to profiler page when response is from a Symfony application with
+  profiler enabled
 
 ## 1.16.0 - 2019-06-05
 
