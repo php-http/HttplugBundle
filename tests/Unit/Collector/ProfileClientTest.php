@@ -14,6 +14,7 @@ use Http\HttplugBundle\Collector\Stack;
 use Http\Promise\FulfilledPromise;
 use Http\Promise\Promise;
 use Http\Promise\RejectedPromise;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -34,7 +35,7 @@ class ProfileClientTest extends TestCase
     private $activeStack;
 
     /**
-     * @var HttpClient
+     * @var HttpClient|MockObject
      */
     private $client;
 
@@ -143,6 +144,16 @@ class ProfileClientTest extends TestCase
         $this->assertEquals('/target', $this->activeStack->getRequestTarget());
         $this->assertEquals('example.com', $this->activeStack->getRequestHost());
         $this->assertEquals('https', $this->activeStack->getRequestScheme());
+    }
+
+    public function testSendRequestTypeError()
+    {
+        $this->client
+            ->expects($this->once())
+            ->method('sendRequest')
+            ->willThrowException(new \TypeError('You set string to int prop'));
+
+        $response = $this->subject->sendRequest($this->request);
     }
 
     public function testSendAsyncRequest(): void
