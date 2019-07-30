@@ -8,6 +8,10 @@ The change log describes what is "Added", "Removed", "Changed" or "Fixed" betwee
 
 - Configured clients are now tagged with `'httplug.client'`
 
+### Changed
+
+- Fixed error handling. Now TypeErrors and other \Throwable are correctly handled by ProfileClient
+
 ## 1.16.0 - 2019-06-05
 
 ### Changed
