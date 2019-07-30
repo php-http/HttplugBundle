@@ -44,11 +44,11 @@ class Formatter implements MessageFormatter
     /**
      * Formats an exception.
      *
-     * @param Exception $exception
+     * @param \Throwable $exception
      *
      * @return string
      */
-    public function formatException(Exception $exception)
+    public function formatException(\Throwable $exception)
     {
         if ($exception instanceof HttpException) {
             return $this->formatter->formatResponse($exception->getResponse());
