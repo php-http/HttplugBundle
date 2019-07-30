@@ -151,7 +151,9 @@ class ProfileClientTest extends TestCase
         $this->client
             ->expects($this->once())
             ->method('sendRequest')
-            ->willThrowException(new \Error('You set string to int prop'));
+            ->willReturnCallback(function () {
+                throw new \Error('You set string to int prop');
+            });
 
         $response = $this->subject->sendRequest($this->request);
     }
