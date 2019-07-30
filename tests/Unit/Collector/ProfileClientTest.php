@@ -45,7 +45,7 @@ class ProfileClientTest extends TestCase
     private $request;
 
     /**
-     * @var Formatter
+     * @var Formatter|MockObject
      */
     private $formatter;
 
@@ -111,11 +111,6 @@ class ProfileClientTest extends TestCase
             ->with($this->response)
             ->willReturn('FormattedResponse')
         ;
-        $this->formatter
-            ->method('formatException')
-            ->with($this->exception)
-            ->willReturn('FormattedException')
-        ;
 
         $this->stopwatch
             ->method('start')
@@ -146,6 +141,10 @@ class ProfileClientTest extends TestCase
         $this->assertEquals('https', $this->activeStack->getRequestScheme());
     }
 
+    /**
+     * @expectedException \Error
+     * @expectedException "You set string to int prop"
+     */
     public function testSendRequestTypeError()
     {
         $this->client
@@ -154,8 +153,12 @@ class ProfileClientTest extends TestCase
             ->willReturnCallback(function () {
                 throw new \Error('You set string to int prop');
             });
+        $this->formatter
+            ->expects($this->once())
+            ->method('formatException')
+            ->with($this->isInstanceOf(\Error::class));
 
-        $response = $this->subject->sendRequest($this->request);
+        $this->subject->sendRequest($this->request);
     }
 
     public function testSendAsyncRequest(): void
@@ -222,6 +225,12 @@ class ProfileClientTest extends TestCase
         $this->client
             ->method('sendAsyncRequest')
             ->willReturn($this->rejectedPromise)
+        ;
+
+        $this->formatter
+            ->method('formatException')
+            ->with($this->exception)
+            ->willReturn('FormattedException')
         ;
 
         $this->subject->sendAsyncRequest($this->request);
