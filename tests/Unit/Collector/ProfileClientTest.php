@@ -14,6 +14,7 @@ use Http\HttplugBundle\Collector\Stack;
 use Http\Promise\FulfilledPromise;
 use Http\Promise\Promise;
 use Http\Promise\RejectedPromise;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -34,7 +35,7 @@ class ProfileClientTest extends TestCase
     private $activeStack;
 
     /**
-     * @var HttpClient
+     * @var HttpClient|MockObject
      */
     private $client;
 
@@ -44,7 +45,7 @@ class ProfileClientTest extends TestCase
     private $request;
 
     /**
-     * @var Formatter
+     * @var Formatter|MockObject
      */
     private $formatter;
 
@@ -110,11 +111,6 @@ class ProfileClientTest extends TestCase
             ->with($this->response)
             ->willReturn('FormattedResponse')
         ;
-        $this->formatter
-            ->method('formatException')
-            ->with($this->exception)
-            ->willReturn('FormattedException')
-        ;
 
         $this->stopwatch
             ->method('start')
@@ -143,6 +139,26 @@ class ProfileClientTest extends TestCase
         $this->assertEquals('/target', $this->activeStack->getRequestTarget());
         $this->assertEquals('example.com', $this->activeStack->getRequestHost());
         $this->assertEquals('https', $this->activeStack->getRequestScheme());
+    }
+
+    /**
+     * @expectedException \Error
+     * @expectedException "You set string to int prop"
+     */
+    public function testSendRequestTypeError()
+    {
+        $this->client
+            ->expects($this->once())
+            ->method('sendRequest')
+            ->willReturnCallback(function () {
+                throw new \Error('You set string to int prop');
+            });
+        $this->formatter
+            ->expects($this->once())
+            ->method('formatException')
+            ->with($this->isInstanceOf(\Error::class));
+
+        $this->subject->sendRequest($this->request);
     }
 
     public function testSendAsyncRequest(): void
@@ -209,6 +225,12 @@ class ProfileClientTest extends TestCase
         $this->client
             ->method('sendAsyncRequest')
             ->willReturn($this->rejectedPromise)
+        ;
+
+        $this->formatter
+            ->method('formatException')
+            ->with($this->exception)
+            ->willReturn('FormattedException')
         ;
 
         $this->subject->sendAsyncRequest($this->request);

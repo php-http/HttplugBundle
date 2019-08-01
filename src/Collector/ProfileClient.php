@@ -176,11 +176,11 @@ class ProfileClient implements HttpClient, HttpAsyncClient
     }
 
     /**
-     * @param \Exception     $exception
+     * @param \Throwable     $exception
      * @param StopwatchEvent $event
      * @param Stack          $stack
      */
-    private function collectExceptionInformations(\Exception $exception, StopwatchEvent $event, Stack $stack)
+    private function collectExceptionInformations(\Throwable $exception, StopwatchEvent $event, Stack $stack)
     {
         if ($exception instanceof HttpException) {
             $this->collectResponseInformations($exception->getResponse(), $event, $stack);
