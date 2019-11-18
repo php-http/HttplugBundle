@@ -63,7 +63,7 @@
         "symfony/stopwatch": "^3.4.20 || ^4.2.1",
         "symfony/twig-bundle": "^3.4.20 || ^4.2.1",
         "symfony/web-profiler-bundle": "^3.4.20 || ^4.2.1",
-        "twig/twig": "^1.36 || ^2.6"
+        "twig/twig": "^1.41 || ^2.10"
     },
     "suggest": {
         "php-http/cache-plugin": "To configure clients that cache responses",

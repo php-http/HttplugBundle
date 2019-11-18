@@ -6,6 +6,9 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class ProfilerTest extends WebTestCase
 {
+    /**
+     * @group legacy
+     */
     public function testShowProfiler(): void
     {
         $client = static::createClient();
