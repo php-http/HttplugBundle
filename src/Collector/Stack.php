@@ -82,6 +82,16 @@ final class Stack
     private $responseCode;
 
     /**
+     * @var string|null
+     */
+    private $debugToken;
+
+    /**
+     * @var string|null
+     */
+    private $debugTokenLink;
+
+    /**
      * @var int
      */
     private $duration = 0;
@@ -275,6 +285,38 @@ final class Stack
     public function setResponseCode($responseCode)
     {
         $this->responseCode = $responseCode;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDebugToken()
+    {
+        return $this->debugToken;
+    }
+
+    /**
+     * @param string $debugToken
+     */
+    public function setDebugToken($debugToken)
+    {
+        $this->debugToken = $debugToken;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDebugTokenLink()
+    {
+        return $this->debugTokenLink;
+    }
+
+    /**
+     * @param string $debugTokenLink
+     */
+    public function setDebugTokenLink($debugTokenLink)
+    {
+        $this->debugTokenLink = $debugTokenLink;
     }
 
     /**

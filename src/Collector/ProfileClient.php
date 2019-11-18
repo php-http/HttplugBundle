@@ -173,6 +173,10 @@ class ProfileClient implements HttpClient, HttpAsyncClient
         $stack->setDuration($event->getDuration());
         $stack->setResponseCode($response->getStatusCode());
         $stack->setClientResponse($this->formatter->formatResponse($response));
+        if ($response->hasHeader('X-Debug-Token-Link')) {
+            $stack->setDebugToken($response->getHeaderLine('X-Debug-Token'));
+            $stack->setDebugTokenLink($response->getHeaderLine('X-Debug-Token-Link'));
+        }
     }
 
     /**
