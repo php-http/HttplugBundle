@@ -13,6 +13,12 @@ The change log describes what is "Added", "Removed", "Changed" or "Fixed" betwee
 ### Changed
 
 - Fixed error handling. Now TypeErrors and other \Throwable are correctly handled by ProfileClient
+- Use tabular design in profiler for HTTP request/response headers
+
+### Deprecated
+
+- `httplug.collector.twig.http_message` service
+- `httplug_markup` Twig function
 
 ## 1.16.0 - 2019-06-05
 

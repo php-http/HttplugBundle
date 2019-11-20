@@ -24,6 +24,8 @@ class HttpMessageMarkupExtension extends \Twig_Extension
      */
     public function markup($message)
     {
+        @trigger_error('"httplug_markup" twig extension is deprecated since version 1.17 and will be removed in 2.0. Use "@Httplug/http_message.html.twig" template instead.', E_USER_DEPRECATED);
+
         $safeMessage = htmlentities($message);
         $parts = preg_split('|\\r?\\n\\r?\\n|', $safeMessage, 2);
 

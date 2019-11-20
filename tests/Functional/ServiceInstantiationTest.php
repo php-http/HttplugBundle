@@ -42,6 +42,9 @@ class ServiceInstantiationTest extends WebTestCase
         $this->assertInstanceOf(HttpClient::class, $client);
     }
 
+    /**
+     * @group legacy
+     */
     public function testDebugToolbar(): void
     {
         static::bootKernel(['debug' => true]);
