@@ -9,7 +9,9 @@ use Http\Adapter\Guzzle6\Client;
 use Http\Message\MessageFactory\GuzzleMessageFactory;
 use Http\Message\UriFactory\GuzzleUriFactory;
 use Http\Message\StreamFactory\GuzzleStreamFactory;
+use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
+use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
 
 /**
  * @author David Buchmann <mail@davidbu.ch>
@@ -80,12 +82,12 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
         ],
     ];
 
-    protected function getContainerExtension()
+    protected function getContainerExtension(): ExtensionInterface
     {
         return new HttplugExtension();
     }
 
-    protected function getConfiguration()
+    protected function getConfiguration(): ConfigurationInterface
     {
         return new Configuration(true);
     }

@@ -4,12 +4,9 @@ The change log describes what is "Added", "Removed", "Changed" or "Fixed" betwee
 
 ## Unreleased
 
-### Fixed
-
-- Avoid conflict with Twig 3.
-
 ### Added
 
+- Support Symfony 5 and Twig 3.
 - Configured clients are now tagged with `'httplug.client'`
 - Adds a link to profiler page when response is from a Symfony application with
   profiler enabled

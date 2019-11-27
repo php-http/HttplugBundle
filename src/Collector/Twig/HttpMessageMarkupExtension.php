@@ -5,13 +5,6 @@ namespace Http\HttplugBundle\Collector\Twig;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 
-if (!\class_exists(AbstractExtension::class)) {
-    class_alias(\Twig_Extension::class, AbstractExtension::class);
-}
-if (!\class_exists(TwigFilter::class)) {
-    class_alias(\Twig_SimpleFilter::class, TwigFilter::class);
-}
-
 /**
  * @author Tobias Nyholm <tobias.nyholm@gmail.com>
  */
