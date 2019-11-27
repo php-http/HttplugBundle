@@ -2,10 +2,20 @@
 
 namespace Http\HttplugBundle\Collector\Twig;
 
+use Twig\Extension\AbstractExtension;
+use Twig\TwigFilter;
+
+if (!\class_exists(AbstractExtension::class)) {
+    class_alias(\Twig_Extension::class, AbstractExtension::class);
+}
+if (!\class_exists(TwigFilter::class)) {
+    class_alias(\Twig_SimpleFilter::class, TwigFilter::class);
+}
+
 /**
  * @author Tobias Nyholm <tobias.nyholm@gmail.com>
  */
-class HttpMessageMarkupExtension extends \Twig_Extension
+class HttpMessageMarkupExtension extends AbstractExtension
 {
     /**
      * {@inheritdoc}
@@ -15,7 +25,7 @@ class HttpMessageMarkupExtension extends \Twig_Extension
     public function getFilters()
     {
         return [
-            new \Twig_SimpleFilter('httplug_markup', [$this, 'markup'], ['is_safe' => ['html']]),
+            new TwigFilter('httplug_markup', [$this, 'markup'], ['is_safe' => ['html']]),
         ];
     }
 

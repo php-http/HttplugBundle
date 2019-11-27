@@ -4,6 +4,10 @@ The change log describes what is "Added", "Removed", "Changed" or "Fixed" betwee
 
 ## Unreleased
 
+### Fixed
+
+- Avoid conflict with Twig 3.
+
 ### Added
 
 - Configured clients are now tagged with `'httplug.client'`
