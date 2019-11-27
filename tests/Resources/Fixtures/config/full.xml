@@ -54,7 +54,7 @@
                 <my_service type="service" service="my_auth_service"/>
             </authentication>
             <cache cache-pool="my_cache_pool" stream-factory="my_other_stream_factory">
-                <config default-ttl="42" cache-lifetime="2592000" hash-algo="sha1" cache-key-generator="null">
+                <config default-ttl="42" cache-lifetime="2592000" hash-algo="sha1" cache-key-generator="null" cache-listeners="null">
                     <respect-response-cache-directive>X-Foo</respect-response-cache-directive>
                     <method>GET</method>
                 </config>
