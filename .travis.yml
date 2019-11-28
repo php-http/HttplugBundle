@@ -10,8 +10,9 @@ cache:
 env:
     global:
         - TEST_COMMAND="composer test"
-        - SYMFONY_PHPUNIT_VERSION="6.5"
+        - SYMFONY_PHPUNIT_VERSION="8"
         - SYMFONY_PHPUNIT_DIR="$HOME/symfony-bridge/.phpunit"
+        - SYMFONY_DEPRECATIONS_HELPER="max[self]=0"
 
 branches:
     except:
@@ -25,7 +26,6 @@ matrix:
           env: COMPOSER_FLAGS="--prefer-stable --prefer-lowest" SYMFONY_DEPRECATIONS_HELPER="weak"
 
           # Test the latest stable release
-        - php: 7.1
         - php: 7.2
         - php: 7.3
           env: COVERAGE=true TEST_COMMAND="composer test-ci" DEPENDENCIES="php-http/vcr-plugin:^1.0@dev"

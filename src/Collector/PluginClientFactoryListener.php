@@ -3,8 +3,16 @@
 namespace Http\HttplugBundle\Collector;
 
 use Http\Client\Common\PluginClientFactory as DefaultPluginClientFactory;
-use Symfony\Component\EventDispatcher\Event;
+use Symfony\Component\EventDispatcher\Event as LegacyEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpKernel\Kernel;
+use Symfony\Contracts\EventDispatcher\Event;
+
+if (Kernel::MAJOR_VERSION >= 5) {
+    \class_alias(Event::class, 'Http\HttplugBundle\Collector\PluginClientFactoryListenerEventClass');
+} else {
+    \class_alias(LegacyEvent::class, 'Http\HttplugBundle\Collector\PluginClientFactoryListenerEventClass');
+}
 
 /**
  * This subscriber ensures that every PluginClient created when using Http\Client\Common\PluginClientFactory without
@@ -32,10 +40,8 @@ final class PluginClientFactoryListener implements EventSubscriberInterface
 
     /**
      * Make sure to profile clients created using PluginClientFactory.
-     *
-     * @param Event $e
      */
-    public function onEvent(Event $e)
+    public function onEvent(PluginClientFactoryListenerEventClass $e)
     {
         DefaultPluginClientFactory::setFactory([$this->factory, 'createClient']);
     }
