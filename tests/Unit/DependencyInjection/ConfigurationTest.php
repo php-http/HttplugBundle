@@ -43,6 +43,7 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
                 'stream_factory' => 'httplug.stream_factory',
                 'config' => [
                     'methods' => ['GET', 'HEAD'],
+                    'blacklisted_paths' => [],
                 ],
             ],
             'cookie' => [
@@ -233,6 +234,7 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
                         'methods' => ['GET'],
                         'cache_key_generator' => null,
                         'respect_response_cache_directives' => ['X-Foo'],
+                        'blacklisted_paths' => ['\/path\/not-to-be\/cached'],
                     ],
                 ],
                 'cookie' => [
@@ -354,6 +356,7 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
             'config' => [
                 'methods' => ['GET', 'HEAD'],
                 'respect_cache_headers' => true,
+                'blacklisted_paths' => [],
             ],
         ]);
         $this->assertProcessedConfigurationEquals($config, [$file]);
@@ -372,6 +375,7 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
             'config' => [
                 'methods' => ['GET', 'HEAD'],
                 'respect_cache_headers' => false,
+                'blacklisted_paths' => [],
             ],
         ]);
         $this->assertProcessedConfigurationEquals($config, [$file]);

@@ -57,6 +57,7 @@
                 <config default-ttl="42" cache-lifetime="2592000" hash-algo="sha1" cache-key-generator="null">
                     <respect-response-cache-directive>X-Foo</respect-response-cache-directive>
                     <method>GET</method>
+                    <blacklisted-paths>\/path\/not-to-be\/cached</blacklisted-paths>
                 </config>
             </cache>
             <cookie cookie-jar="my_cookie_jar"/>
