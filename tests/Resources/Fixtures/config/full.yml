@@ -73,7 +73,7 @@ httplug:
                 cache_key_generator: null
                 respect_response_cache_directives:
                   - X-Foo
-                cache_listeners: null
+                cache_listeners: []
         cookie:
             cookie_jar: my_cookie_jar
         decoder:

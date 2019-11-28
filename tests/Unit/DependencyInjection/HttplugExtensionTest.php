@@ -7,6 +7,7 @@ use Http\Client\Plugin\Vcr\Recorder\InMemoryRecorder;
 use Http\HttplugBundle\Collector\PluginClientFactoryListener;
 use Http\HttplugBundle\DependencyInjection\HttplugExtension;
 use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractExtensionTestCase;
+use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\Kernel;
 use Http\Adapter\Guzzle6\Client;
@@ -259,6 +260,47 @@ class HttplugExtensionTest extends AbstractExtensionTestCase
         $this->assertArrayHasKey('cache_key_generator', $config);
         $this->assertInstanceOf(Reference::class, $config['cache_key_generator']);
         $this->assertSame('header_cache_key_generator', (string) $config['cache_key_generator']);
+    }
+
+    public function testCachePluginConfigCacheListenersDefinition(): void
+    {
+        $this->load([
+            'plugins' => [
+                'cache' => [
+                    'cache_pool' => 'my_cache_pool',
+                    'config' => [
+                        'cache_listeners' => [
+                            '\Http\Client\Common\Plugin\Cache\Listener\AddHeaderCacheListener'
+                        ],
+                    ],
+                ],
+            ],
+        ]);
+
+        $cachePlugin = $this->container->findDefinition('httplug.plugin.cache');
+
+        $config = $cachePlugin->getArgument(2);
+        $this->assertArrayHasKey('cache_listeners', $config);
+        $this->assertContainsOnlyInstancesOf(Definition::class, $config['cache_listeners']);
+    }
+
+    public function testCachePluginInvalidConfigCacheListenersDefinition(): void
+    {
+        $this->load([
+            'plugins' => [
+                'cache' => [
+                    'cache_pool' => 'my_cache_pool',
+                    'config' => [
+                        'cache_listeners' => [],
+                    ],
+                ],
+            ],
+        ]);
+
+        $cachePlugin = $this->container->findDefinition('httplug.plugin.cache');
+
+        $config = $cachePlugin->getArgument(2);
+        $this->assertArrayNotHasKey('cache_listeners', $config);
     }
 
     public function testContentTypePluginAllowedOptions(): void

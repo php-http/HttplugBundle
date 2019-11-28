@@ -2,6 +2,7 @@
 
 namespace Http\HttplugBundle\Tests\Unit\DependencyInjection;
 
+use Http\Client\Common\Plugin\Cache\Listener\CacheListener;
 use Http\HttplugBundle\DependencyInjection\Configuration;
 use Http\HttplugBundle\DependencyInjection\HttplugExtension;
 use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractExtensionConfigurationTestCase;
@@ -423,5 +424,15 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
         $this->expectException(InvalidConfigurationException::class);
         $this->expectExceptionMessage('The child node "captured_body_length" at path "httplug.profiling" must be an integer or null');
         $this->assertProcessedConfigurationEquals([], [$file]);
+    }
+
+    public function testInvalidCacheConfigCacheListeners(): void
+    {
+        $file = __DIR__.'/../../Resources/Fixtures/config/invalid_cache_listener_config.yml';
+
+        $this->expectException(InvalidConfigurationException::class);
+        $this->expectExceptionMessage('A given listener class does not implement '.CacheListener::class);
+
+        $this->assertProcessedConfigurationEquals($this->emptyConfig, [$file]);
     }
 }

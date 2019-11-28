@@ -14,6 +14,7 @@ use Http\Message\Formatter;
 use Http\Message\StreamFactory;
 use Psr\Cache\CacheItemPoolInterface;
 use Psr\Log\LoggerInterface;
+use ReflectionClass;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\NodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
@@ -741,9 +742,24 @@ class Configuration implements ConfigurationInterface
                     ->end()
                 ->end()
                 ->arrayNode('cache_listeners')
-                    ->info('An array of services to act on the response based on the results of the cache check. Must implement ' . CacheListener::class . ' Defaults to an empty array.')
+                    ->info('An array of classes to act on the response based on the results of the cache check. Must implement ' . CacheListener::class . '. Defaults to an empty array.')
+                    ->beforeNormalization()->castToArray()->ifEmpty()->thenUnset()->end()
                     ->defaultValue([])
                     ->prototype('scalar')
+                        ->validate()
+                            ->ifTrue(function ($v) {
+                                $vs = is_array($v) ? $v : (is_null($v) ? [] : [$v]);
+
+                                return empty($vs) || array_reduce($vs, function($r, $e) {
+                                    return empty($e) || !class_exists($e) || !(new ReflectionClass($e))->implementsInterface(CacheListener::class);
+                                }, false);
+                            })
+                            ->thenInvalid('A given listener class does not implement '.CacheListener::class)
+                        ->end()
+                    ->end()
+                    ->validate()
+                        ->ifEmpty()
+                        ->thenUnset()
                     ->end()
                 ->end()
                 ->scalarNode('respect_cache_headers')
