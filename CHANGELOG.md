@@ -9,6 +9,7 @@ The change log describes what is "Added", "Removed", "Changed" or "Fixed" betwee
 - Configured clients are now tagged with `'httplug.client'`
 - Adds a link to profiler page when response is from a Symfony application with
   profiler enabled
+- Adding `cache_listeners` option of `php-http/cache-plugin`
 
 ### Changed
 
