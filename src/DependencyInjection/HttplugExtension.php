@@ -215,7 +215,7 @@ class HttplugExtension extends Extension
                         }
                     }
                 }
-                if (! count($options['cache_listeners'])) {
+                if (!count($options['cache_listeners'])) {
                     unset($options['cache_listeners']);
                 }
 

@@ -270,7 +270,7 @@ class HttplugExtensionTest extends AbstractExtensionTestCase
                     'cache_pool' => 'my_cache_pool',
                     'config' => [
                         'cache_listeners' => [
-                            '\Http\Client\Common\Plugin\Cache\Listener\AddHeaderCacheListener'
+                            '\Http\Client\Common\Plugin\Cache\Listener\AddHeaderCacheListener',
                         ],
                     ],
                 ],

@@ -44,7 +44,7 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
                 'stream_factory' => 'httplug.stream_factory',
                 'config' => [
                     'methods' => ['GET', 'HEAD'],
-                    'cache_listeners' => []
+                    'cache_listeners' => [],
                 ],
             ],
             'cookie' => [

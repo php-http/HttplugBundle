@@ -742,7 +742,7 @@ class Configuration implements ConfigurationInterface
                     ->end()
                 ->end()
                 ->arrayNode('cache_listeners')
-                    ->info('An array of classes to act on the response based on the results of the cache check. Must implement ' . CacheListener::class . '. Defaults to an empty array.')
+                    ->info('An array of classes to act on the response based on the results of the cache check. Must implement '.CacheListener::class.'. Defaults to an empty array.')
                     ->beforeNormalization()->castToArray()->ifEmpty()->thenUnset()->end()
                     ->defaultValue([])
                     ->prototype('scalar')
@@ -750,7 +750,7 @@ class Configuration implements ConfigurationInterface
                             ->ifTrue(function ($v) {
                                 $vs = is_array($v) ? $v : (is_null($v) ? [] : [$v]);
 
-                                return empty($vs) || array_reduce($vs, function($r, $e) {
+                                return empty($vs) || array_reduce($vs, function ($r, $e) {
                                     return empty($e) || !class_exists($e) || !(new ReflectionClass($e))->implementsInterface(CacheListener::class);
                                 }, false);
                             })
