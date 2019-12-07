@@ -26,9 +26,9 @@ matrix:
           env: COMPOSER_FLAGS="--prefer-stable --prefer-lowest" SYMFONY_DEPRECATIONS_HELPER="weak"
 
           # Test the latest stable release
-        - php: 7.4
         - php: 7.2
         - php: 7.3
+        - php: 7.4
           env: COVERAGE=true TEST_COMMAND="composer test-ci" DEPENDENCIES="php-http/vcr-plugin:^1.0@dev"
 
           # Test LTS versions
