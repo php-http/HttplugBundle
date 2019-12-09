@@ -32,9 +32,15 @@ matrix:
 
           # Test LTS versions
         - php: 7.3
-          env: DEPENDENCIES="dunglas/symfony-lock:^3"
+          env: SYMFONY_REQUIRE=3.4.*
         - php: 7.3
-          env: DEPENDENCIES="dunglas/symfony-lock:^4"
+          env: SYMFONY_REQUIRE=4.2.*
+        - php: 7.3
+          env: SYMFONY_REQUIRE=4.3.*
+        - php: 7.3
+          env: SYMFONY_REQUIRE=4.4.*
+        - php: 7.3
+          env: SYMFONY_REQUIRE=5.0.*
 
           # Test with httplug 1.x clients
         - php: 7.2
@@ -56,6 +62,7 @@ before_install:
     - if [[ $COVERAGE != true ]]; then phpenv config-rm xdebug.ini || true; fi
     - if ! [ -z "$STABILITY" ]; then composer config minimum-stability ${STABILITY}; fi;
     - if ! [ -v "$DEPENDENCIES" ]; then composer require --no-update ${DEPENDENCIES}; fi;
+    - composer global require --no-progress --no-scripts --no-plugins symfony/flex
 
 install:
     # To be removed when this issue will be resolved: https://github.com/composer/composer/issues/5355
