@@ -21,7 +21,7 @@
             <tr>
                 <th>{{ row[0] }}</th>
                 <td>
-                    {% if value matches '#^http(?s)://#' %}
+                    {% if value matches '#^https?://#' %}
                         <a href="{{ value }}">{{ value }}</a>
                     {% else %}
                         {{ value }}
