@@ -22,12 +22,13 @@ matrix:
     fast_finish: true
     include:
           # Minimum supported Symfony version and latest PHP version
-        - php: 7.3
+        - php: 7.4
           env: COMPOSER_FLAGS="--prefer-stable --prefer-lowest" SYMFONY_DEPRECATIONS_HELPER="weak"
 
           # Test the latest stable release
         - php: 7.2
         - php: 7.3
+        - php: 7.4
           env: COVERAGE=true TEST_COMMAND="composer test-ci" DEPENDENCIES="php-http/vcr-plugin:^1.0@dev"
 
           # Test LTS versions
@@ -51,7 +52,7 @@ matrix:
           env: DEPENDENCIES="php-http/guzzle6-adapter:^2.0.1 php-http/curl-client:^2.0.0 php-http/vcr-plugin:^1.0@dev"
 
           # Latest commit to master
-        - php: 7.3
+        - php: 7.4
           env: STABILITY="dev" DEPENDENCIES="php-http/vcr-plugin:^1.0@dev"
 
     allow_failures:
