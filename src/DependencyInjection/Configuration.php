@@ -21,6 +21,8 @@ use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\Config\Definition\Exception\InvalidTypeException;
+use Symfony\Component\DependencyInjection\Definition;
+use Symfony\Component\DependencyInjection\Reference;
 
 /**
  * This class contains the configuration information for the bundle.
@@ -742,24 +744,9 @@ class Configuration implements ConfigurationInterface
                     ->end()
                 ->end()
                 ->arrayNode('cache_listeners')
-                    ->info('An array of classes to act on the response based on the results of the cache check. Must implement '.CacheListener::class.'. Defaults to an empty array.')
-                    ->beforeNormalization()->castToArray()->ifEmpty()->thenUnset()->end()
-                    ->defaultValue([])
+                    ->info('A list of service ids to act on the response based on the results of the cache check. Must implement '.CacheListener::class.'. Defaults to an empty array.')
+                    ->beforeNormalization()->ifNull()->thenEmptyArray()->castToArray()->ifEmpty()->thenUnset()->end()
                     ->prototype('scalar')
-                        ->validate()
-                            ->ifTrue(function ($v) {
-                                $vs = is_array($v) ? $v : (is_null($v) ? [] : [$v]);
-
-                                return empty($vs) || array_reduce($vs, function ($r, $e) {
-                                    return empty($e) || !class_exists($e) || !(new ReflectionClass($e))->implementsInterface(CacheListener::class);
-                                }, false);
-                            })
-                            ->thenInvalid('A given listener class does not implement '.CacheListener::class)
-                        ->end()
-                    ->end()
-                    ->validate()
-                        ->ifEmpty()
-                        ->thenUnset()
                     ->end()
                 ->end()
                 ->scalarNode('respect_cache_headers')

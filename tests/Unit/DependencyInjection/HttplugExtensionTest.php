@@ -7,7 +7,6 @@ use Http\Client\Plugin\Vcr\Recorder\InMemoryRecorder;
 use Http\HttplugBundle\Collector\PluginClientFactoryListener;
 use Http\HttplugBundle\DependencyInjection\HttplugExtension;
 use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractExtensionTestCase;
-use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\Kernel;
 use Http\Adapter\Guzzle6\Client;
@@ -270,7 +269,7 @@ class HttplugExtensionTest extends AbstractExtensionTestCase
                     'cache_pool' => 'my_cache_pool',
                     'config' => [
                         'cache_listeners' => [
-                            '\Http\Client\Common\Plugin\Cache\Listener\AddHeaderCacheListener',
+                            'httplug.plugin.cache.listeners.add_header',
                         ],
                     ],
                 ],
@@ -281,26 +280,8 @@ class HttplugExtensionTest extends AbstractExtensionTestCase
 
         $config = $cachePlugin->getArgument(2);
         $this->assertArrayHasKey('cache_listeners', $config);
-        $this->assertContainsOnlyInstancesOf(Definition::class, $config['cache_listeners']);
-    }
-
-    public function testCachePluginInvalidConfigCacheListenersDefinition(): void
-    {
-        $this->load([
-            'plugins' => [
-                'cache' => [
-                    'cache_pool' => 'my_cache_pool',
-                    'config' => [
-                        'cache_listeners' => [],
-                    ],
-                ],
-            ],
-        ]);
-
-        $cachePlugin = $this->container->findDefinition('httplug.plugin.cache');
-
-        $config = $cachePlugin->getArgument(2);
-        $this->assertArrayNotHasKey('cache_listeners', $config);
+        $this->assertContainsOnlyInstancesOf(Reference::class, $config['cache_listeners']);
+        $this->assertSame('httplug.plugin.cache.listeners.add_header', (string) $config['cache_listeners'][0]);
     }
 
     public function testContentTypePluginAllowedOptions(): void

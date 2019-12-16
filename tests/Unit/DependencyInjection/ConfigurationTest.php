@@ -2,7 +2,6 @@
 
 namespace Http\HttplugBundle\Tests\Unit\DependencyInjection;
 
-use Http\Client\Common\Plugin\Cache\Listener\CacheListener;
 use Http\HttplugBundle\DependencyInjection\Configuration;
 use Http\HttplugBundle\DependencyInjection\HttplugExtension;
 use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractExtensionConfigurationTestCase;
@@ -97,7 +96,7 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
     public function testEmptyConfiguration(): void
     {
         $formats = array_map(function ($path) {
-            return __DIR__.'/../../Resources/Fixtures/'.$path;
+            return __DIR__ . '/../../Resources/Fixtures/' . $path;
         }, [
             'config/empty.yml',
             'config/empty.xml',
@@ -278,7 +277,7 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
         ];
 
         $formats = array_map(function ($path) {
-            return __DIR__.'/../../Resources/Fixtures/'.$path;
+            return __DIR__ . '/../../Resources/Fixtures/' . $path;
         }, [
             'config/full.yml',
             'config/full.xml',
@@ -292,7 +291,7 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
 
     public function testMissingClass(): void
     {
-        $file = __DIR__.'/../../Resources/Fixtures/config/invalid_class.yml';
+        $file = __DIR__ . '/../../Resources/Fixtures/config/invalid_class.yml';
 
         $this->expectException(InvalidConfigurationException::class);
         $this->expectExceptionMessage('Nonexisting\Class');
@@ -301,7 +300,7 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
 
     public function testInvalidPlugin(): void
     {
-        $file = __DIR__.'/../../Resources/Fixtures/config/invalid_plugin.yml';
+        $file = __DIR__ . '/../../Resources/Fixtures/config/invalid_plugin.yml';
 
         $this->expectException(InvalidConfigurationException::class);
         $this->expectExceptionMessage('Unrecognized option "foobar" under "httplug.clients.acme.plugins.0"');
@@ -310,7 +309,7 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
 
     public function testInvalidAuthentication(): void
     {
-        $file = __DIR__.'/../../Resources/Fixtures/config/invalid_auth.yml';
+        $file = __DIR__ . '/../../Resources/Fixtures/config/invalid_auth.yml';
 
         $this->expectException(InvalidConfigurationException::class);
         $this->expectExceptionMessage('password, service, username');
@@ -322,7 +321,7 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
      */
     public function testInvalidCacheConfig(): void
     {
-        $file = __DIR__.'/../../Resources/Fixtures/config/invalid_cache_config.yml';
+        $file = __DIR__ . '/../../Resources/Fixtures/config/invalid_cache_config.yml';
 
         $this->expectException(InvalidConfigurationException::class);
         $this->expectExceptionMessage('Invalid configuration for path "httplug.plugins.cache.config": You can\'t provide config option "respect_cache_headers" and "respect_response_cache_directives" simultaniously. Use "respect_response_cache_directives" instead.');
@@ -335,7 +334,7 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
     public function testBackwardCompatibility(): void
     {
         $formats = array_map(function ($path) {
-            return __DIR__.'/../../Resources/Fixtures/'.$path;
+            return __DIR__ . '/../../Resources/Fixtures/' . $path;
         }, [
             'config/bc/toolbar.yml',
             'config/bc/toolbar_auto.yml',
@@ -351,7 +350,7 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
      */
     public function testCacheConfigDeprecationCompatibility(): void
     {
-        $file = __DIR__.'/../../Resources/Fixtures/config/bc/cache_config.yml';
+        $file = __DIR__ . '/../../Resources/Fixtures/config/bc/cache_config.yml';
         $config = $this->emptyConfig;
         $config['plugins']['cache'] = array_merge($config['plugins']['cache'], [
             'enabled' => true,
@@ -370,7 +369,7 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
      */
     public function testCacheConfigDeprecationCompatibilityIssue166(): void
     {
-        $file = __DIR__.'/../../Resources/Fixtures/config/bc/issue-166.yml';
+        $file = __DIR__ . '/../../Resources/Fixtures/config/bc/issue-166.yml';
         $config = $this->emptyConfig;
         $config['plugins']['cache'] = array_merge($config['plugins']['cache'], [
             'enabled' => true,
@@ -386,7 +385,7 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
 
     public function testProfilingToolbarCollision(): void
     {
-        $file = __DIR__.'/../../Resources/Fixtures/config/bc/profiling_toolbar.yml';
+        $file = __DIR__ . '/../../Resources/Fixtures/config/bc/profiling_toolbar.yml';
 
         $this->expectException(InvalidConfigurationException::class);
         $this->expectExceptionMessage('Can\'t configure both "toolbar" and "profiling" section. The "toolbar" config is deprecated as of version 1.3.0, please only use "profiling".');
@@ -395,7 +394,7 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
 
     public function testClientCacheConfigMustHavePool(): void
     {
-        $file = __DIR__.'/../../Resources/Fixtures/config/client_cache_config_with_no_pool.yml';
+        $file = __DIR__ . '/../../Resources/Fixtures/config/client_cache_config_with_no_pool.yml';
 
         $this->expectException(InvalidConfigurationException::class);
         $this->expectExceptionMessage('The child node "cache_pool" at path "httplug.clients.test.plugins.0.cache" must be configured.');
@@ -404,7 +403,7 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
 
     public function testCacheConfigMustHavePool(): void
     {
-        $file = __DIR__.'/../../Resources/Fixtures/config/cache_config_with_no_pool.yml';
+        $file = __DIR__ . '/../../Resources/Fixtures/config/cache_config_with_no_pool.yml';
 
         $this->expectException(InvalidConfigurationException::class);
         $this->expectExceptionMessage('The child node "cache_pool" at path "httplug.plugins.cache" must be configured.');
@@ -413,7 +412,7 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
 
     public function testLimitlessCapturedBodyLength(): void
     {
-        $file = __DIR__.'/../../Resources/Fixtures/config/limitless_captured_body_length.yml';
+        $file = __DIR__ . '/../../Resources/Fixtures/config/limitless_captured_body_length.yml';
         $config = $this->emptyConfig;
         $config['profiling']['captured_body_length'] = null;
         $this->assertProcessedConfigurationEquals($config, [$file]);
@@ -421,20 +420,10 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
 
     public function testInvalidCapturedBodyLengthString(): void
     {
-        $file = __DIR__.'/../../Resources/Fixtures/config/invalid_captured_body_length.yml';
+        $file = __DIR__ . '/../../Resources/Fixtures/config/invalid_captured_body_length.yml';
 
         $this->expectException(InvalidConfigurationException::class);
         $this->expectExceptionMessage('The child node "captured_body_length" at path "httplug.profiling" must be an integer or null');
         $this->assertProcessedConfigurationEquals([], [$file]);
-    }
-
-    public function testInvalidCacheConfigCacheListeners(): void
-    {
-        $file = __DIR__.'/../../Resources/Fixtures/config/invalid_cache_listener_config.yml';
-
-        $this->expectException(InvalidConfigurationException::class);
-        $this->expectExceptionMessage('A given listener class does not implement '.CacheListener::class);
-
-        $this->assertProcessedConfigurationEquals($this->emptyConfig, [$file]);
     }
 }

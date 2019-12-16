@@ -211,7 +211,7 @@ class HttplugExtension extends Extension
                 if (!empty($options['cache_listeners'])) {
                     foreach ($options['cache_listeners'] as $i => $listener) {
                         if (!empty($listener)) {
-                            $options['cache_listeners'][$i] = new Definition($listener);
+                            $options['cache_listeners'][$i] = new Reference($listener);
                         }
                     }
                 }
