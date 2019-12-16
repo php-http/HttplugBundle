@@ -25,7 +25,7 @@ class HttplugExtensionTest extends AbstractExtensionTestCase
         $this->setParameter('kernel.debug', true);
     }
 
-    protected function getContainerExtensions()
+    protected function getContainerExtensions(): array
     {
         return [
             new HttplugExtension(),

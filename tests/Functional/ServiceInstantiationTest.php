@@ -17,6 +17,7 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\HttpKernel\KernelEvents;
@@ -116,7 +117,8 @@ class ServiceInstantiationTest extends WebTestCase
         /** @var EventDispatcherInterface $dispatcher */
         $dispatcher = static::$kernel->getContainer()->get('event_dispatcher');
 
-        $event = new GetResponseEvent(static::$kernel, new SymfonyRequest(), HttpKernelInterface::MASTER_REQUEST);
+        $class = (Kernel::MAJOR_VERSION >= 5) ? RequestEvent::class : GetResponseEvent::class;
+        $event = new $class(static::$kernel, SymfonyRequest::create('/'), HttpKernelInterface::MASTER_REQUEST);
 
         if (version_compare(Kernel::VERSION, '4.3.0', '>=')) {
             $dispatcher->dispatch($event, KernelEvents::REQUEST);

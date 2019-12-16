@@ -141,10 +141,6 @@ class ProfileClientTest extends TestCase
         $this->assertEquals('https', $this->activeStack->getRequestScheme());
     }
 
-    /**
-     * @expectedException \Error
-     * @expectedException "You set string to int prop"
-     */
     public function testSendRequestTypeError()
     {
         $this->client
@@ -158,6 +154,8 @@ class ProfileClientTest extends TestCase
             ->method('formatException')
             ->with($this->isInstanceOf(\Error::class));
 
+        $this->expectException(\Error::class);
+        $this->expectExceptionMessage('You set string to int prop');
         $this->subject->sendRequest($this->request);
     }
 
