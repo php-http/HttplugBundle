@@ -46,6 +46,31 @@
         </service>
         <service id="Http\Client\HttpClient" alias="httplug.client" public="false" />
 
+        <!-- Discovery for PSR-18 -->
+        <service id="httplug.psr18_client.default" class="Psr\Http\Client\ClientInterface">
+            <factory class="Http\Discovery\Psr18ClientDiscovery" method="find" />
+        </service>
+
+        <!-- Discovery for PSR-17 -->
+        <service id="httplug.psr17_request_factory.default" class="Psr\Http\Message\RequestFactoryInterface">
+            <factory class="Http\Discovery\Psr17FactoryDiscovery" method="findRequestFactory" />
+        </service>
+        <service id="httplug.psr17_response_factory.default" class="Psr\Http\Message\ResponseFactoryInterface">
+            <factory class="Http\Discovery\Psr17FactoryDiscovery" method="findResponseFactory" />
+        </service>
+        <service id="httplug.psr17_stream_factory.default" class="Psr\Http\Message\StreamFactoryInterface">
+            <factory class="Http\Discovery\Psr17FactoryDiscovery" method="findStreamFactory" />
+        </service>
+        <service id="httplug.psr17_uri_factory.default" class="Psr\Http\Message\UriFactoryInterface">
+            <factory class="Http\Discovery\Psr17FactoryDiscovery" method="findUrlFactory" />
+        </service>
+        <service id="httplug.psr17_uploaded_file_factory.default" class="Psr\Http\Message\UploadedFileFactoryInterface">
+            <factory class="Http\Discovery\Psr17FactoryDiscovery" method="findUploadedFileFactory" />
+        </service>
+        <service id="httplug.psr17_server_request_factory.default" class="Psr\Http\Message\ServerRequestFactoryInterface">
+            <factory class="Http\Discovery\Psr17FactoryDiscovery" method="findServerRequestFactory" />
+        </service>
+
         <!-- PluginClientFactory -->
         <service id="Http\Client\Common\PluginClientFactory" class="Http\Client\Common\PluginClientFactory" public="false" />
 
@@ -55,8 +80,8 @@
             <argument type="service" id="httplug.message_factory"/>
         </service>
         <service id="httplug.factory.curl" class="Http\HttplugBundle\ClientFactory\CurlFactory" public="false">
-            <argument type="service" id="httplug.message_factory"/>
-            <argument type="service" id="httplug.stream_factory"/>
+            <argument type="service" id="httplug.psr17_response_factory"/>
+            <argument type="service" id="httplug.psr17_stream_factory"/>
         </service>
         <service id="httplug.factory.guzzle5" class="Http\HttplugBundle\ClientFactory\Guzzle5Factory" public="false">
             <argument type="service" id="httplug.message_factory"/>

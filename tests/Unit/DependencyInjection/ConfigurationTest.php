@@ -9,6 +9,7 @@ use Http\Adapter\Guzzle6\Client;
 use Http\Message\MessageFactory\GuzzleMessageFactory;
 use Http\Message\UriFactory\GuzzleUriFactory;
 use Http\Message\StreamFactory\GuzzleStreamFactory;
+use Nyholm\Psr7\Factory\Psr17Factory;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
@@ -25,12 +26,26 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
             'message_factory' => 'httplug.message_factory.default',
             'uri_factory' => 'httplug.uri_factory.default',
             'stream_factory' => 'httplug.stream_factory.default',
+            'psr18_client' => 'httplug.psr18_client.default',
+            'psr17_request_factory' => 'httplug.psr17_request_factory.default',
+            'psr17_response_factory' => 'httplug.psr17_response_factory.default',
+            'psr17_stream_factory' => 'httplug.psr17_stream_factory.default',
+            'psr17_uri_factory' => 'httplug.psr17_uri_factory.default',
+            'psr17_uploaded_file_factory' => 'httplug.psr17_uploaded_file_factory.default',
+            'psr17_server_request_factory' => 'httplug.psr17_server_request_factory.default',
         ],
         'classes' => [
             'client' => null,
+            'psr18_client' => null,
             'message_factory' => null,
             'uri_factory' => null,
             'stream_factory' => null,
+            'psr17_request_factory' => null,
+            'psr17_response_factory' => null,
+            'psr17_stream_factory' => null,
+            'psr17_uri_factory' => null,
+            'psr17_uploaded_file_factory' => null,
+            'psr17_server_request_factory' => null,
         ],
         'clients' => [],
         'profiling' => [
@@ -117,12 +132,26 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
                 'message_factory' => 'my_message_factory',
                 'uri_factory' => 'my_uri_factory',
                 'stream_factory' => 'my_stream_factory',
+                'psr18_client' => 'httplug.psr18_client.default',
+                'psr17_request_factory' => 'httplug.psr17_request_factory.default',
+                'psr17_response_factory' => 'httplug.psr17_response_factory.default',
+                'psr17_stream_factory' => 'httplug.psr17_stream_factory.default',
+                'psr17_uri_factory' => 'httplug.psr17_uri_factory.default',
+                'psr17_uploaded_file_factory' => 'httplug.psr17_uploaded_file_factory.default',
+                'psr17_server_request_factory' => 'httplug.psr17_server_request_factory.default',
             ],
             'classes' => [
                 'client' => Client::class,
                 'message_factory' => GuzzleMessageFactory::class,
                 'uri_factory' => GuzzleUriFactory::class,
                 'stream_factory' => GuzzleStreamFactory::class,
+                'psr18_client' => Client::class,
+                'psr17_request_factory' => Psr17Factory::class,
+                'psr17_response_factory' => Psr17Factory::class,
+                'psr17_stream_factory' => Psr17Factory::class,
+                'psr17_uri_factory' => Psr17Factory::class,
+                'psr17_uploaded_file_factory' => Psr17Factory::class,
+                'psr17_server_request_factory' => Psr17Factory::class,
             ],
             'clients' => [
                 'test' => [

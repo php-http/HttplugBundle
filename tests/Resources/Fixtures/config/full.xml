@@ -14,6 +14,13 @@
             <message-factory>Http\Message\MessageFactory\GuzzleMessageFactory</message-factory>
             <uri-factory>Http\Message\UriFactory\GuzzleUriFactory</uri-factory>
             <stream-factory>Http\Message\StreamFactory\GuzzleStreamFactory</stream-factory>
+            <psr18-client>Http\Adapter\Guzzle6\Client</psr18-client>
+            <psr17-request-factory>Nyholm\Psr7\Factory\Psr17Factory</psr17-request-factory>
+            <psr17-response-factory>Nyholm\Psr7\Factory\Psr17Factory</psr17-response-factory>
+            <psr17-stream-factory>Nyholm\Psr7\Factory\Psr17Factory</psr17-stream-factory>
+            <psr17-uri-factory>Nyholm\Psr7\Factory\Psr17Factory</psr17-uri-factory>
+            <psr17-uploaded-file-factory>Nyholm\Psr7\Factory\Psr17Factory</psr17-uploaded-file-factory>
+            <psr17-server-request-factory>Nyholm\Psr7\Factory\Psr17Factory</psr17-server-request-factory>
         </classes>
         <client name="test" factory="httplug.factory.guzzle6" http-methods-client="true">
             <plugin>httplug.plugin.redirect</plugin>
