@@ -93,5 +93,9 @@
         <service id="httplug.factory.socket" class="Http\HttplugBundle\ClientFactory\SocketFactory" public="false">
             <argument type="service" id="httplug.message_factory"/>
         </service>
+        <service id="httplug.factory.symfony" class="Http\HttplugBundle\ClientFactory\SymfonyFactory" public="false">
+            <argument type="service" id="httplug.psr17_response_factory"/>
+            <argument type="service" id="httplug.psr17_stream_factory"/>
+        </service>
     </services>
 </container>
