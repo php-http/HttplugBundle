@@ -730,7 +730,7 @@ class Configuration implements ConfigurationInterface
                     ->prototype('scalar')
                         ->validate()
                             ->ifTrue(function ($v) {
-                                return false === @preg_match('/'.$v.'/', '');
+                                return false === @preg_match($v, '');
                             })
                             ->thenInvalid('Invalid regular expression for a blacklisted path: %s')
                         ->end()

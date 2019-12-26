@@ -74,7 +74,7 @@ httplug:
                 respect_response_cache_directives:
                   - X-Foo
                 blacklisted_paths:
-                  - \/path\/not-to-be\/cached
+                  - '@/path/not-to-be/cached@'
         cookie:
             cookie_jar: my_cookie_jar
         decoder:
