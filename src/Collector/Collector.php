@@ -14,6 +14,8 @@ use Symfony\Component\HttpKernel\DataCollector\DataCollector;
  * other request before the current one is sent by the client.
  *
  * @author Fabien Bourigault <bourigaultfabien@gmail.com>
+ *
+ * @internal
  */
 class Collector extends DataCollector
 {
