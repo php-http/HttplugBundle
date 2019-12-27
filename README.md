@@ -21,7 +21,7 @@ HTTPlug works with any HTTP client implementation that provides a HTTPlug adapte
 
 Enable the bundle in your kernel:
 
-**Symfony 4 example:**
+**Symfony 4 and 5 example:**
 
 ``` php
 // config/bundles.php
