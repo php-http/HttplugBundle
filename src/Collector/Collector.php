@@ -2,11 +2,9 @@
 
 namespace Http\HttplugBundle\Collector;
 
-use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\DataCollector\DataCollector;
-use Throwable;
 
 /**
  * The Collector hold profiled Stacks pushed by StackPlugin. It also have a list of configured clients.
@@ -16,11 +14,8 @@ use Throwable;
  * other request before the current one is sent by the client.
  *
  * @author Fabien Bourigault <bourigaultfabien@gmail.com>
- *
- * @internal
  */
-// Make this class non-abstract and move collect into it when we drop support for Symfony 4.
-abstract class BaseCollector extends DataCollector
+class Collector extends DataCollector
 {
     /**
      * @var Stack|null
@@ -192,28 +187,12 @@ abstract class BaseCollector extends DataCollector
             return $carry + $stack->getDuration();
         }, 0);
     }
-}
 
-if (Kernel::MAJOR_VERSION >= 5) {
-    class Collector extends BaseCollector
+    /**
+     * {@inheritdoc}
+     */
+    public function collect(Request $request, Response $response, $exception = null)
     {
-        /**
-         * {@inheritdoc}
-         */
-        public function collect(Request $request, Response $response, Throwable $exception = null)
-        {
-            // We do not need to collect any data from the Symfony Request and Response
-        }
-    }
-} else {
-    class Collector extends BaseCollector
-    {
-        /**
-         * {@inheritdoc}
-         */
-        public function collect(Request $request, Response $response, \Exception $exception = null)
-        {
-            // We do not need to collect any data from the Symfony Request and Response
-        }
+        // We do not need to collect any data from the Symfony Request and Response
     }
 }
