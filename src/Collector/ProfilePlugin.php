@@ -36,6 +36,11 @@ class ProfilePlugin implements Plugin
      */
     private $formatter;
 
+    /**
+     * @param Plugin    $plugin
+     * @param Collector $collector
+     * @param Formatter $formatter
+     */
     public function __construct(Plugin $plugin, Collector $collector, Formatter $formatter)
     {
         $this->plugin = $plugin;
@@ -84,7 +89,10 @@ class ProfilePlugin implements Plugin
     }
 
     /**
-     * @param Stack $stack
+     * @param RequestInterface $request
+     * @param Profile          $profile
+     * @param Exception        $exception
+     * @param Stack            $stack
      */
     private function onException(
         RequestInterface $request,
@@ -97,13 +105,20 @@ class ProfilePlugin implements Plugin
         $this->collectRequestInformation($request, $stack);
     }
 
+    /**
+     * @param RequestInterface $request
+     * @param Profile          $profile
+     */
     private function onOutgoingRequest(RequestInterface $request, Profile $profile)
     {
         $profile->setRequest($this->formatter->formatRequest($request));
     }
 
     /**
-     * @param Stack $stack
+     * @param ResponseInterface $response
+     * @param Profile           $profile
+     * @param RequestInterface  $request
+     * @param Stack             $stack
      */
     private function onOutgoingResponse(ResponseInterface $response, Profile $profile, RequestInterface $request, Stack $stack = null)
     {
@@ -114,6 +129,9 @@ class ProfilePlugin implements Plugin
     /**
      * Collect request information when not already done by the HTTP client. This happens when using the CachePlugin
      * and the cache is hit without re-validation.
+     *
+     * @param RequestInterface $request
+     * @param Stack|null       $stack
      */
     private function collectRequestInformation(RequestInterface $request, Stack $stack = null)
     {

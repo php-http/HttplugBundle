@@ -37,7 +37,9 @@ class StackPlugin implements Plugin
     private $formatter;
 
     /**
-     * @param string $client
+     * @param Collector $collector
+     * @param Formatter $formatter
+     * @param string    $client
      */
     public function __construct(Collector $collector, Formatter $formatter, $client)
     {

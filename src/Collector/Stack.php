@@ -127,6 +127,9 @@ final class Stack
         $this->parent = $parent;
     }
 
+    /**
+     * @param Profile $profile
+     */
     public function addProfile(Profile $profile)
     {
         $this->profiles[] = $profile;

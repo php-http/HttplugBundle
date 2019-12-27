@@ -85,12 +85,14 @@ class HttplugExtension extends Extension
                 // Add custom formatter
                 $container
                     ->getDefinition('httplug.collector.formatter')
-                    ->replaceArgument(0, new Reference($config['profiling']['formatter']));
+                    ->replaceArgument(0, new Reference($config['profiling']['formatter']))
+                ;
             }
 
             $container
                 ->getDefinition('httplug.formatter.full_http_message')
-                ->addArgument($config['profiling']['captured_body_length']);
+                ->addArgument($config['profiling']['captured_body_length'])
+            ;
 
             if (!class_exists(TwigEnvironment::class) && !class_exists(\Twig_Environment::class)) {
                 $container->removeDefinition('httplug.collector.twig.http_message');
@@ -117,6 +119,9 @@ class HttplugExtension extends Extension
 
     /**
      * Configure client services.
+     *
+     * @param ContainerBuilder $container
+     * @param array            $config
      */
     private function configureClients(ContainerBuilder $container, array $config)
     {
@@ -167,6 +172,9 @@ class HttplugExtension extends Extension
 
     /**
      * Configure all Httplug plugins or remove their service definition.
+     *
+     * @param ContainerBuilder $container
+     * @param array            $config
      */
     private function configurePlugins(ContainerBuilder $container, array $config)
     {
@@ -187,8 +195,10 @@ class HttplugExtension extends Extension
 
     /**
      * @param string           $name
-     * @param ContainerBuilder $container In case we need to add additional services for this plugin
-     * @param string           $serviceId service id of the plugin, in case we need to add additional services for this plugin
+     * @param Definition       $definition
+     * @param array            $config
+     * @param ContainerBuilder $container  In case we need to add additional services for this plugin
+     * @param string           $serviceId  service id of the plugin, in case we need to add additional services for this plugin
      */
     private function configurePluginByName($name, Definition $definition, array $config, ContainerBuilder $container, $serviceId)
     {
@@ -309,6 +319,9 @@ class HttplugExtension extends Extension
     }
 
     /**
+     * @param ContainerBuilder $container
+     * @param array            $config
+     *
      * @return array list of service ids for the authentication plugins
      */
     private function configureAuthentication(ContainerBuilder $container, array $config, $servicePrefix = 'httplug.plugin.authentication')
@@ -350,7 +363,8 @@ class HttplugExtension extends Extension
 
             $pluginServiceKey = $servicePrefix.'.'.$name;
             $container->register($pluginServiceKey, AuthenticationPlugin::class)
-                ->addArgument(new Reference($authServiceKey));
+                ->addArgument(new Reference($authServiceKey))
+            ;
             $pluginServices[] = $pluginServiceKey;
         }
 
@@ -358,7 +372,9 @@ class HttplugExtension extends Extension
     }
 
     /**
-     * @param string $clientName
+     * @param ContainerBuilder $container
+     * @param string           $clientName
+     * @param array            $arguments
      */
     private function configureClient(ContainerBuilder $container, $clientName, array $arguments)
     {
@@ -411,7 +427,8 @@ class HttplugExtension extends Extension
             ->addArgument([
                 'client_name' => $clientName,
             ])
-            ->addTag(self::HTTPLUG_CLIENT_TAG);
+            ->addTag(self::HTTPLUG_CLIENT_TAG)
+        ;
 
         if (is_bool($arguments['public'])) {
             $definition->setPublic($arguments['public']);
@@ -425,7 +442,8 @@ class HttplugExtension extends Extension
                 ->register($serviceId.'.flexible', FlexibleHttpClient::class)
                 ->addArgument(new Reference($serviceId.'.flexible.inner'))
                 ->setPublic($arguments['public'] ? true : false)
-                ->setDecoratedService($serviceId);
+                ->setDecoratedService($serviceId)
+            ;
         }
 
         if ($arguments['http_methods_client']) {
@@ -433,7 +451,8 @@ class HttplugExtension extends Extension
                 ->register($serviceId.'.http_methods', HttpMethodsClient::class)
                 ->setArguments([new Reference($serviceId.'.http_methods.inner'), new Reference('httplug.message_factory')])
                 ->setPublic($arguments['public'] ? true : false)
-                ->setDecoratedService($serviceId);
+                ->setDecoratedService($serviceId)
+            ;
         }
 
         if ($arguments['batch_client']) {
@@ -441,15 +460,17 @@ class HttplugExtension extends Extension
                 ->register($serviceId.'.batch_client', BatchClient::class)
                 ->setArguments([new Reference($serviceId.'.batch_client.inner')])
                 ->setPublic($arguments['public'] ? true : false)
-                ->setDecoratedService($serviceId);
+                ->setDecoratedService($serviceId)
+            ;
         }
     }
 
     /**
      * Create a URI object with the default URI factory.
      *
-     * @param string $serviceId Name of the private service to create
-     * @param string $uri       String representation of the URI
+     * @param ContainerBuilder $container
+     * @param string           $serviceId Name of the private service to create
+     * @param string           $uri       String representation of the URI
      */
     private function createUri(ContainerBuilder $container, $serviceId, $uri)
     {
@@ -457,12 +478,16 @@ class HttplugExtension extends Extension
             ->register($serviceId, UriInterface::class)
             ->setPublic(false)
             ->setFactory([new Reference('httplug.uri_factory'), 'createUri'])
-            ->addArgument($uri);
+            ->addArgument($uri)
+        ;
     }
 
     /**
      * Make the user can select what client is used for auto discovery. If none is provided, a service will be created
      * by finding a client using auto discovery.
+     *
+     * @param ContainerBuilder $container
+     * @param array            $config
      */
     private function configureAutoDiscoveryClients(ContainerBuilder $container, array $config)
     {
@@ -506,8 +531,10 @@ class HttplugExtension extends Extension
     /**
      * Configure a plugin using the parent definition from plugins.xml.
      *
-     * @param string $serviceId
-     * @param string $pluginName
+     * @param ContainerBuilder $container
+     * @param string           $serviceId
+     * @param string           $pluginName
+     * @param array            $pluginConfig
      *
      * @return string configured service id
      */
