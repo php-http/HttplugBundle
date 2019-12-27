@@ -24,7 +24,6 @@
 
         <service id="httplug.collector.twig.http_message" class="Http\HttplugBundle\Collector\Twig\HttpMessageMarkupExtension" public="false">
             <tag name="twig.extension" />
-            <deprecated>The %service_id% service is deprecated since version 1.17 and will be removed in 2.0. Use "@Httplug/http_message.html.twig" template instead.</deprecated>
         </service>
 
         <!-- Discovered clients -->
