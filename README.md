@@ -21,6 +21,19 @@ HTTPlug works with any HTTP client implementation that provides a HTTPlug adapte
 
 Enable the bundle in your kernel:
 
+**Symfony 4 example:**
+
+``` php
+// config/bundles.php
+<?php
+return [
+    ...
+    Http\HttplugBundle\HttplugBundle::class => ['all' => true],
+];
+```
+
+**Symfony 3 example:**
+
 ``` php
 <?php
 // app/AppKernel.php
