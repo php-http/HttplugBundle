@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Http\HttplugBundle\ClientFactory;
 
 @trigger_error('The '.__NAMESPACE__.'\PluginClientFactory class is deprecated since version 1.8 and will be removed in 2.0. Use Http\Client\Common\PluginClientFactory instead.', E_USER_DEPRECATED);

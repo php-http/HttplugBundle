@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Http\HttplugBundle\Collector;
 
 /**
@@ -125,9 +127,6 @@ final class Stack
         $this->parent = $parent;
     }
 
-    /**
-     * @param Profile $profile
-     */
     public function addProfile(Profile $profile)
     {
         $this->profiles[] = $profile;

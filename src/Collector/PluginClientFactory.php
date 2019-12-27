@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Http\HttplugBundle\Collector;
 
 use Http\Client\Common\Plugin;
@@ -34,11 +36,6 @@ final class PluginClientFactory
      */
     private $stopwatch;
 
-    /**
-     * @param Collector $collector
-     * @param Formatter $formatter
-     * @param Stopwatch $stopwatch
-     */
     public function __construct(Collector $collector, Formatter $formatter, Stopwatch $stopwatch)
     {
         $this->collector = $collector;
@@ -51,13 +48,13 @@ final class PluginClientFactory
      * @param Plugin[]                                   $plugins
      * @param array                                      $options {
      *
-     *     @var string $client_name to give client a name which may be used when displaying client information like in
-     *         the HTTPlugBundle profiler.
-     * }
+     * @return PluginClient
      *
      * @see PluginClient constructor for PluginClient specific $options.
      *
-     * @return PluginClient
+     * @var string $client_name to give client a name which may be used when displaying client information like in
+     *             the HTTPlugBundle profiler.
+     *             }
      */
     public function createClient($client, array $plugins = [], array $options = [])
     {

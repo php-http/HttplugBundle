@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Http\HttplugBundle\ClientFactory;
 
 use Buzz\Client\FileGetContents;
@@ -17,9 +19,6 @@ class BuzzFactory implements ClientFactory
      */
     private $messageFactory;
 
-    /**
-     * @param MessageFactory $messageFactory
-     */
     public function __construct(MessageFactory $messageFactory)
     {
         $this->messageFactory = $messageFactory;
@@ -47,18 +46,16 @@ class BuzzFactory implements ClientFactory
 
     /**
      * Get options to configure the Buzz client.
-     *
-     * @param array $config
      */
     private function getOptions(array $config = [])
     {
         $resolver = new OptionsResolver();
 
         $resolver->setDefaults([
-          'timeout' => 5,
-          'verify_peer' => true,
-          'verify_host' => 2,
-          'proxy' => null,
+            'timeout' => 5,
+            'verify_peer' => true,
+            'verify_host' => 2,
+            'proxy' => null,
         ]);
 
         $resolver->setAllowedTypes('timeout', 'int');

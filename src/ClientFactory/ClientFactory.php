@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Http\HttplugBundle\ClientFactory;
 
 use Http\Client\HttpClient;
@@ -11,8 +13,6 @@ interface ClientFactory
 {
     /**
      * Input an array of configuration to be able to create a HttpClient.
-     *
-     * @param array $config
      *
      * @return HttpClient
      */

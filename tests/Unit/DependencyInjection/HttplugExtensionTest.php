@@ -1,7 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Http\HttplugBundle\Tests\Unit\DependencyInjection;
 
+use Http\Adapter\Guzzle6\Client;
 use Http\Client\HttpClient;
 use Http\Client\Plugin\Vcr\Recorder\InMemoryRecorder;
 use Http\HttplugBundle\Collector\PluginClientFactoryListener;
@@ -9,7 +12,6 @@ use Http\HttplugBundle\DependencyInjection\HttplugExtension;
 use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractExtensionTestCase;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\Kernel;
-use Http\Adapter\Guzzle6\Client;
 
 /**
  * @author David Buchmann <mail@davidbu.ch>

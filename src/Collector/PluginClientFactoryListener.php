@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Http\HttplugBundle\Collector;
 
 use Http\Client\Common\PluginClientFactory as DefaultPluginClientFactory;
@@ -30,9 +32,6 @@ final class PluginClientFactoryListener implements EventSubscriberInterface
      */
     private $factory;
 
-    /**
-     * @param PluginClientFactory $factory
-     */
     public function __construct(PluginClientFactory $factory)
     {
         $this->factory = $factory;

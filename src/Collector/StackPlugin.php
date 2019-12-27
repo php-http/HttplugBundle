@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Http\HttplugBundle\Collector;
 
 use Exception;
@@ -35,9 +37,7 @@ class StackPlugin implements Plugin
     private $formatter;
 
     /**
-     * @param Collector $collector
-     * @param Formatter $formatter
-     * @param string    $client
+     * @param string $client
      */
     public function __construct(Collector $collector, Formatter $formatter, $client)
     {

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Http\HttplugBundle\ClientFactory;
 
 use GuzzleHttp\Client;
@@ -16,9 +18,6 @@ class Guzzle5Factory implements ClientFactory
      */
     private $messageFactory;
 
-    /**
-     * @param MessageFactory $messageFactory
-     */
     public function __construct(MessageFactory $messageFactory)
     {
         $this->messageFactory = $messageFactory;

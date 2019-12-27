@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Http\HttplugBundle\Collector\Twig;
 
 use Twig\Extension\AbstractExtension;

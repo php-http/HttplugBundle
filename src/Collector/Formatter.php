@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Http\HttplugBundle\Collector;
 
 use Exception;
@@ -31,10 +33,6 @@ class Formatter implements MessageFormatter
      */
     private $curlFormatter;
 
-    /**
-     * @param MessageFormatter     $formatter
-     * @param CurlCommandFormatter $curlFormatter
-     */
     public function __construct(MessageFormatter $formatter, CurlCommandFormatter $curlFormatter)
     {
         $this->formatter = $formatter;
@@ -43,8 +41,6 @@ class Formatter implements MessageFormatter
 
     /**
      * Formats an exception.
-     *
-     * @param \Throwable $exception
      *
      * @return string
      */
@@ -79,8 +75,6 @@ class Formatter implements MessageFormatter
 
     /**
      * Format a RequestInterface as a cURL command.
-     *
-     * @param RequestInterface $request
      *
      * @return string
      */

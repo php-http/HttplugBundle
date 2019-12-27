@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Http\HttplugBundle\Tests\Functional;
 
 use Http\Client\HttpAsyncClient;
@@ -11,9 +13,9 @@ use Http\HttplugBundle\Collector\ProfileClient;
 use Http\HttplugBundle\Discovery\ConfiguredClientsStrategy;
 use Nyholm\NSA;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\EventDispatcher\Event as LegacyEvent;
 use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Contracts\EventDispatcher\Event;
-use Symfony\Component\EventDispatcher\Event as LegacyEvent;
 
 class DiscoveredClientsTest extends WebTestCase
 {

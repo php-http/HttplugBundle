@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Http\HttplugBundle\ClientFactory;
 
 use Http\Adapter\React\Client;
@@ -15,9 +17,6 @@ class ReactFactory implements ClientFactory
      */
     private $messageFactory;
 
-    /**
-     * @param MessageFactory $messageFactory
-     */
     public function __construct(MessageFactory $messageFactory)
     {
         $this->messageFactory = $messageFactory;

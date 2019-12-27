@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Http\HttplugBundle\Tests\Unit\ClientFactory;
 
-use Http\HttplugBundle\ClientFactory\Guzzle6Factory;
 use Http\Adapter\Guzzle6\Client;
+use Http\HttplugBundle\ClientFactory\Guzzle6Factory;
 use PHPUnit\Framework\TestCase;
 
 /**

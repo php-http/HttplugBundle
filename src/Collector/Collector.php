@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Http\HttplugBundle\Collector;
 
-use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\DataCollector\DataCollector;
+use Symfony\Component\HttpKernel\Kernel;
 use Throwable;
 
 /**
@@ -51,8 +53,6 @@ abstract class BaseCollector extends DataCollector
 
     /**
      * Mark the stack as active. If a stack was already active, use it as parent for our stack.
-     *
-     * @param Stack $stack
      */
     public function activateStack(Stack $stack)
     {
@@ -65,8 +65,6 @@ abstract class BaseCollector extends DataCollector
 
     /**
      * Mark the stack as inactive.
-     *
-     * @param Stack $stack
      */
     public function deactivateStack(Stack $stack)
     {
@@ -81,17 +79,12 @@ abstract class BaseCollector extends DataCollector
         return $this->activeStack;
     }
 
-    /**
-     * @param Stack $stack
-     */
     public function addStack(Stack $stack)
     {
         $this->data['stacks'][] = $stack;
     }
 
     /**
-     * @param Stack $parent
-     *
      * @return Stack[]
      */
     public function getChildrenStacks(Stack $parent)
@@ -171,8 +164,6 @@ abstract class BaseCollector extends DataCollector
 
     /**
      * Recursively count message in stack.
-     *
-     * @param Stack $stack
      *
      * @return int
      */
