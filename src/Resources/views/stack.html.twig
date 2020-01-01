@@ -34,10 +34,10 @@
     </div>
     <div class="httplug-messages">
         <div class="httplug-message card">
-            {% include '@Httplug/http_message.html.twig' with { data: stack.clientRequest, header: 'Request' } only %}
+            {{ include('@Httplug/http_message.html.twig', { data: stack.clientRequest, header: 'Request' }, with_context=false) }}
         </div>
         <div class="httplug-message card">
-            {% include '@Httplug/http_message.html.twig' with { data: stack.clientResponse, header: 'Response' } only %}
+            {{ include('@Httplug/http_message.html.twig', { data: stack.clientResponse, header: 'Response' }, with_context=false) }}
         </div>
     </div>
     {% if stack.profiles %}
@@ -46,10 +46,10 @@
                 <h3 class="httplug-plugin-name">{{ profile.plugin }}</h3>
                 <div class="httplug-messages">
                     <div class="httplug-message">
-                        {% include '@Httplug/http_message.html.twig' with { data: profile.request, header: 'Request' } only %}
+                        {{ include('@Httplug/http_message.html.twig', { data: profile.request, header: 'Request' }, with_context=false) }}
                     </div>
                     <div class="httplug-message">
-                        {% include '@Httplug/http_message.html.twig' with { data: profile.response, header: 'Response' } only %}
+                        {{ include('@Httplug/http_message.html.twig', { data: profile.response, header: 'Response' }, with_context=false) }}
                     </div>
                 </div>
                 {% if not loop.last %}
@@ -61,11 +61,11 @@
 </div>
 {% for child in collector.childrenStacks(stack) %}
     <div class="httplug-stack">
-        {% include '@Httplug/stack.html.twig' with {
+        {{ include('@Httplug/stack.html.twig', {
             'collector': collector,
             'client': client,
             'stack': child,
             'id': id ~ '-' ~ loop.index
-        } only %}
+        }, with_context=false) }}
     </div>
 {% endfor %}
