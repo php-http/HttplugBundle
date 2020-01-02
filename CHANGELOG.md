@@ -2,7 +2,7 @@
 
 The change log describes what is "Added", "Removed", "Changed" or "Fixed" between each release.
 
-## Unreleased
+## 1.17.0 - 2019-12-27
 
 ### Added
 
@@ -10,7 +10,7 @@ The change log describes what is "Added", "Removed", "Changed" or "Fixed" betwee
 - Configured clients are now tagged with `'httplug.client'`
 - Adds a link to profiler page when response is from a Symfony application with
   profiler enabled
-- Adding `cache_listeners` option of `php-http/cache-plugin`
+- Adding `blacklisted_paths` option of `php-http/cache-plugin`
 
 ### Changed
 

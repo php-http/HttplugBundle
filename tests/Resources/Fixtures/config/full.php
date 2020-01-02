@@ -13,6 +13,13 @@ $container->loadFromExtension('httplug', [
         'message_factory' => 'Http\Message\MessageFactory\GuzzleMessageFactory',
         'uri_factory'     => 'Http\Message\UriFactory\GuzzleUriFactory',
         'stream_factory'  => 'Http\Message\StreamFactory\GuzzleStreamFactory',
+        'psr18_client'    => 'Http\Adapter\Guzzle6\Client',
+        'psr17_request_factory'        => 'Nyholm\Psr7\Factory\Psr17Factory',
+        'psr17_response_factory'       => 'Nyholm\Psr7\Factory\Psr17Factory',
+        'psr17_stream_factory'         => 'Nyholm\Psr7\Factory\Psr17Factory',
+        'psr17_uri_factory'            => 'Nyholm\Psr7\Factory\Psr17Factory',
+        'psr17_uploaded_file_factory'  => 'Nyholm\Psr7\Factory\Psr17Factory',
+        'psr17_server_request_factory' => 'Nyholm\Psr7\Factory\Psr17Factory',
     ],
     'clients' => [
         'test' => [
@@ -102,6 +109,7 @@ $container->loadFromExtension('httplug', [
                 'methods' => ['GET'],
                 'cache_key_generator' => null,
                 'respect_response_cache_directives' => ['X-Foo'],
+                'blacklisted_paths' => ['@/path/not-to-be/cached@'],
                 'cache_listeners' => [],
             ],
         ],
