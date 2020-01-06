@@ -2,6 +2,13 @@
 
 The change log describes what is "Added", "Removed", "Changed" or "Fixed" between each release.
 
+## 1.18.0 - unreleased
+
+### Added
+
+- Support the symfony/http-client
+- Register PSR-17 / PSR-18 classes as services
+
 ## 1.17.0 - 2019-12-27
 
 ### Added
