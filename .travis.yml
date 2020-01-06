@@ -39,9 +39,9 @@ matrix:
         - php: 7.3
           env: SYMFONY_REQUIRE=4.3.*
         - php: 7.3
-          env: SYMFONY_REQUIRE=4.4.*
+          env: SYMFONY_REQUIRE=4.4.* DEPENDENCIES="symfony/http-client:^4.4"
         - php: 7.3
-          env: SYMFONY_REQUIRE=5.0.*
+          env: SYMFONY_REQUIRE=5.0.* DEPENDENCIES="symfony/http-client:^5.0"
 
           # Test with httplug 1.x clients
         - php: 7.2
