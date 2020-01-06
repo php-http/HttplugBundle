@@ -1,7 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Http\HttplugBundle\Tests\Unit\DependencyInjection\Compiler;
 
+use Http\Adapter\Guzzle6\Client;
 use Http\Client\HttpAsyncClient;
 use Http\Client\HttpClient;
 use Http\Discovery\HttpClientDiscovery;
@@ -13,7 +16,6 @@ use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractExtensionTestCase;
 use Matthias\SymfonyDependencyInjectionTest\PhpUnit\ContainerBuilderHasAliasConstraint;
 use PHPUnit\Framework\Constraint\LogicalNot;
 use Symfony\Component\DependencyInjection\Definition;
-use Http\Adapter\Guzzle6\Client;
 
 /**
  * @author Márk Sági-Kazár <mark.sagikazar@gmail.com>

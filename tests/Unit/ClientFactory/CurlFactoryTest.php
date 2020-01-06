@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Http\HttplugBundle\Tests\Unit\ClientFactory;
 
-use Http\HttplugBundle\ClientFactory\CurlFactory;
 use Http\Client\Curl\Client;
+use Http\HttplugBundle\ClientFactory\CurlFactory;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\StreamFactoryInterface;

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Http\HttplugBundle\DependencyInjection;
 
 use Http\Client\Common\Plugin\Cache\Generator\CacheKeyGenerator;

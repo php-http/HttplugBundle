@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Http\HttplugBundle\Tests\Unit\Collector;
 
 use Http\Client\HttpClient;

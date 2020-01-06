@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Http\HttplugBundle\Collector;
 
 use Http\Client\Common\FlexibleHttpClient;

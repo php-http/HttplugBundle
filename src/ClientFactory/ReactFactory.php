@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Http\HttplugBundle\ClientFactory;
 
 use Http\Adapter\React\Client;
