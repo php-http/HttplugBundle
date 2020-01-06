@@ -10,29 +10,15 @@
 **Symfony integration for [HTTPlug](http://httplug.io/).**
 
 
-## Install
+## Installation
 
-Via Composer
+To install the bundle with Symfony Flex, use the recipe:
 
 ``` bash
-$ composer require php-http/httplug-bundle php-http/curl-client guzzlehttp/psr7
+$ composer require php-http/httplug-bundle
 ```
-HTTPlug works with any HTTP client implementation that provides a HTTPlug adapter. The command above installs the Guzzle client. For alternatives, see the [HTTPlug client list](http://docs.php-http.org/en/latest/clients.html).
 
-Enable the bundle in your kernel:
-
-``` php
-<?php
-// app/AppKernel.php
-
-public function registerBundles()
-{
-    $bundles = [
-        // ...
-        new Http\HttplugBundle\HttplugBundle(),
-    ];
-}
-```
+See the [bundle documentation](https://php-http.readthedocs.io/en/latest/integrations/symfony-bundle.html) for installation without Flex and for further options. There is also a [HTTPlug client list](http://docs.php-http.org/en/latest/clients.html) if you want to use a specific HTTP client.
 
 ## Documentation
 
