@@ -269,7 +269,7 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
                         'blacklisted_paths' => ['@/path/not-to-be/cached@'],
                         'cache_listeners' => [
                             'my_cache_listener_0',
-                            'my_cache_listener_1'
+                            'my_cache_listener_1',
                         ],
                     ],
                 ],
