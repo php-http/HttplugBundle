@@ -62,7 +62,8 @@
             </authentication>
             <cache cache-pool="my_cache_pool" stream-factory="my_other_stream_factory">
                 <config default-ttl="42" cache-lifetime="2592000" hash-algo="sha1" cache-key-generator="null">
-                    <cache-listeners></cache-listeners>
+                    <cache-listeners>my_cache_listener_0</cache-listeners>
+                    <cache-listeners>my_cache_listener_1</cache-listeners>
                     <respect-response-cache-directive>X-Foo</respect-response-cache-directive>
                     <method>GET</method>
                     <blacklisted-paths>@/path/not-to-be/cached@</blacklisted-paths>
