@@ -718,6 +718,7 @@ class Configuration implements ConfigurationInterface
         $config
             ->fixXmlConfig('method')
             ->fixXmlConfig('respect_response_cache_directive')
+            ->fixXmlConfig('cache_listener')
             ->addDefaultsIfNotSet()
             ->validate()
                 ->ifTrue(function ($config) {
@@ -771,7 +772,7 @@ class Configuration implements ConfigurationInterface
                 ->end()
                 ->arrayNode('cache_listeners')
                     ->info('A list of service ids to act on the response based on the results of the cache check. Must implement '.CacheListener::class.'. Defaults to an empty array.')
-                    ->beforeNormalization()->ifNull()->thenEmptyArray()->castToArray()->ifEmpty()->thenUnset()->end()
+                    ->beforeNormalization()->castToArray()->end()
                     ->prototype('scalar')
                     ->end()
                 ->end()
