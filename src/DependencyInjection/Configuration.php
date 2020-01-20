@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Http\HttplugBundle\DependencyInjection;
 
 use Http\Client\Common\Plugin\Cache\Generator\CacheKeyGenerator;
+use Http\Client\Common\Plugin\Cache\Listener\CacheListener;
 use Http\Client\Common\Plugin\CachePlugin;
 use Http\Client\Common\Plugin\Journal;
 use Http\Client\Plugin\Vcr\NamingStrategy\NamingStrategyInterface;
@@ -719,6 +720,7 @@ class Configuration implements ConfigurationInterface
         $config
             ->fixXmlConfig('method')
             ->fixXmlConfig('respect_response_cache_directive')
+            ->fixXmlConfig('cache_listener')
             ->addDefaultsIfNotSet()
             ->validate()
                 ->ifTrue(function ($config) {
@@ -768,6 +770,12 @@ class Configuration implements ConfigurationInterface
                             })
                             ->thenInvalid('Invalid method: %s')
                         ->end()
+                    ->end()
+                ->end()
+                ->arrayNode('cache_listeners')
+                    ->info('A list of service ids to act on the response based on the results of the cache check. Must implement '.CacheListener::class.'. Defaults to an empty array.')
+                    ->beforeNormalization()->castToArray()->end()
+                    ->prototype('scalar')
                     ->end()
                 ->end()
                 ->scalarNode('respect_cache_headers')

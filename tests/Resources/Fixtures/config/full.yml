@@ -82,6 +82,9 @@ httplug:
                   - X-Foo
                 blacklisted_paths:
                   - '@/path/not-to-be/cached@'
+                cache_listeners:
+                  - my_cache_listener_0
+                  - my_cache_listener_1
         cookie:
             cookie_jar: my_cookie_jar
         decoder:

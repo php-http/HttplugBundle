@@ -63,6 +63,7 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
                 'config' => [
                     'methods' => ['GET', 'HEAD'],
                     'blacklisted_paths' => [],
+                    'cache_listeners' => [],
                 ],
             ],
             'cookie' => [
@@ -268,6 +269,10 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
                         'cache_key_generator' => null,
                         'respect_response_cache_directives' => ['X-Foo'],
                         'blacklisted_paths' => ['@/path/not-to-be/cached@'],
+                        'cache_listeners' => [
+                            'my_cache_listener_0',
+                            'my_cache_listener_1',
+                        ],
                     ],
                 ],
                 'cookie' => [
@@ -390,6 +395,7 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
                 'methods' => ['GET', 'HEAD'],
                 'respect_cache_headers' => true,
                 'blacklisted_paths' => [],
+                'cache_listeners' => [],
             ],
         ]);
         $this->assertProcessedConfigurationEquals($config, [$file]);
@@ -409,6 +415,7 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
                 'methods' => ['GET', 'HEAD'],
                 'respect_cache_headers' => false,
                 'blacklisted_paths' => [],
+                'cache_listeners' => [],
             ],
         ]);
         $this->assertProcessedConfigurationEquals($config, [$file]);

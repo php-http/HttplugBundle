@@ -263,6 +263,29 @@ class HttplugExtensionTest extends AbstractExtensionTestCase
         $this->assertSame('header_cache_key_generator', (string) $config['cache_key_generator']);
     }
 
+    public function testCachePluginConfigCacheListenersDefinition(): void
+    {
+        $this->load([
+            'plugins' => [
+                'cache' => [
+                    'cache_pool' => 'my_cache_pool',
+                    'config' => [
+                        'cache_listeners' => [
+                            'httplug.plugin.cache.listeners.add_header',
+                        ],
+                    ],
+                ],
+            ],
+        ]);
+
+        $cachePlugin = $this->container->findDefinition('httplug.plugin.cache');
+
+        $config = $cachePlugin->getArgument(2);
+        $this->assertArrayHasKey('cache_listeners', $config);
+        $this->assertContainsOnlyInstancesOf(Reference::class, $config['cache_listeners']);
+        $this->assertSame('httplug.plugin.cache.listeners.add_header', (string) $config['cache_listeners'][0]);
+    }
+
     public function testContentTypePluginAllowedOptions(): void
     {
         $this->load([
