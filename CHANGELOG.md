@@ -8,6 +8,7 @@ The change log describes what is "Added", "Removed", "Changed" or "Fixed" betwee
 
 - Support the symfony/http-client
 - Register PSR-17 / PSR-18 classes as services
+- Allow to configure cache listeners on the cache plugin
 
 ## 1.17.0 - 2019-12-27
 
