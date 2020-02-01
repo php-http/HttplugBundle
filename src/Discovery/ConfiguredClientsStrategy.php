@@ -24,6 +24,8 @@ if (Kernel::MAJOR_VERSION >= 5) {
  * we can use the web debug toolbar for clients found with the discovery.
  *
  * @author Tobias Nyholm <tobias.nyholm@gmail.com>
+ *
+ * @final
  */
 class ConfiguredClientsStrategy implements DiscoveryStrategy, EventSubscriberInterface
 {

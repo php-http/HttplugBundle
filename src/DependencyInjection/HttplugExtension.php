@@ -36,6 +36,8 @@ use Twig\Environment as TwigEnvironment;
 /**
  * @author David Buchmann <mail@davidbu.ch>
  * @author Tobias Nyholm <tobias.nyholm@gmail.com>
+ *
+ * @final
  */
 class HttplugExtension extends Extension
 {

@@ -17,7 +17,7 @@ use Psr\Http\Message\ResponseInterface;
  *
  * @internal
  */
-class ProfilePlugin implements Plugin
+final class ProfilePlugin implements Plugin
 {
     use Plugin\VersionBridgePlugin;
 

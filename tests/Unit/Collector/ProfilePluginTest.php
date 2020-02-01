@@ -12,9 +12,11 @@ use Http\HttplugBundle\Collector\Collector;
 use Http\HttplugBundle\Collector\Formatter;
 use Http\HttplugBundle\Collector\ProfilePlugin;
 use Http\HttplugBundle\Collector\Stack;
+use Http\Message\Formatter as MessageFormatter;
 use Http\Promise\FulfilledPromise;
 use Http\Promise\Promise;
 use Http\Promise\RejectedPromise;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -22,7 +24,7 @@ use Psr\Http\Message\ResponseInterface;
 class ProfilePluginTest extends TestCase
 {
     /**
-     * @var Plugin
+     * @var Plugin|MockObject
      */
     private $plugin;
 
@@ -73,20 +75,17 @@ class ProfilePluginTest extends TestCase
 
     public function setUp(): void
     {
+        $this->collector = new Collector();
+        $messageFormatter = $this->createMock(MessageFormatter::class);
+        $this->formatter = new Formatter($messageFormatter, $this->createMock(MessageFormatter::class));
+
         $this->plugin = $this->getMockBuilder(Plugin::class)->getMock();
-        $this->collector = $this->getMockBuilder(Collector::class)->disableOriginalConstructor()->getMock();
         $this->request = new Request('GET', '/');
         $this->response = new Response();
         $this->fulfilledPromise = new FulfilledPromise($this->response);
         $this->currentStack = new Stack('default', 'FormattedRequest');
         $this->exception = new TransferException();
         $this->rejectedPromise = new RejectedPromise($this->exception);
-        $this->formatter = $this->getMockBuilder(Formatter::class)->disableOriginalConstructor()->getMock();
-
-        $this->collector
-            ->method('getActiveStack')
-            ->willReturn($this->currentStack)
-        ;
 
         $this->plugin
             ->method('handleRequest')
@@ -95,29 +94,22 @@ class ProfilePluginTest extends TestCase
             })
         ;
 
-        $this->formatter
+        $messageFormatter
             ->method('formatRequest')
             ->with($this->identicalTo($this->request))
             ->willReturn('FormattedRequest')
         ;
 
-        $this->formatter
+        $messageFormatter
             ->method('formatResponse')
             ->with($this->identicalTo($this->response))
             ->willReturn('FormattedResponse')
         ;
 
-        $this->formatter
-            ->method('formatException')
-            ->with($this->identicalTo($this->exception))
-            ->willReturn('FormattedException')
-        ;
-
         $this->subject = new ProfilePlugin(
             $this->plugin,
             $this->collector,
-            $this->formatter,
-            'http.plugin.mock'
+            $this->formatter
         );
     }
 
@@ -177,7 +169,9 @@ class ProfilePluginTest extends TestCase
         }, function (): void {
         });
 
+        $this->assertEquals($this->exception, $promise->wait());
+        $profile = $this->currentStack->getProfiles()[0];
         $this->expectException(TransferException::class);
-        $promise->wait();
+        $profile->getResponse();
     }
 }
