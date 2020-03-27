@@ -10,6 +10,9 @@ The change log describes what is "Added", "Removed", "Changed" or "Fixed" betwee
 - Register PSR-17 / PSR-18 classes as services
 - Allow to configure cache listeners on the cache plugin
 
+### Changed
+- tests are excluded from zip releases
+
 ## 1.17.0 - 2019-12-27
 
 ### Added
