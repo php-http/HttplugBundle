@@ -11,7 +11,9 @@ The change log describes what is "Added", "Removed", "Changed" or "Fixed" betwee
 - Allow to configure cache listeners on the cache plugin
 
 ### Changed
-- tests are excluded from zip releases
+
+- Tests are excluded from zip releases
+- Define plugin service templates as abstract to avoid warnings from Symfony
 
 ## 1.17.0 - 2019-12-27
 
