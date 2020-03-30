@@ -53,11 +53,8 @@ class ProfileClient implements HttpClient, HttpAsyncClient
     private $eventNames = [];
 
     /**
-     * @param HttpClient|HttpAsyncClient $client    The client to profile. Client must implement HttpClient or
-     *                                              HttpAsyncClient interface.
-     * @param Collector                  $collector
-     * @param Formatter                  $formatter
-     * @param Stopwatch                  $stopwatch
+     * @param HttpClient|HttpAsyncClient $client The client to profile. Client must implement HttpClient or
+     *                                           HttpAsyncClient interface.
      */
     public function __construct($client, Collector $collector, Formatter $formatter, Stopwatch $stopwatch)
     {
@@ -151,10 +148,6 @@ class ProfileClient implements HttpClient, HttpAsyncClient
         }
     }
 
-    /**
-     * @param RequestInterface $request
-     * @param Stack            $stack
-     */
     private function collectRequestInformations(RequestInterface $request, Stack $stack)
     {
         $stack->setRequestTarget($request->getRequestTarget());
@@ -165,11 +158,6 @@ class ProfileClient implements HttpClient, HttpAsyncClient
         $stack->setCurlCommand($this->formatter->formatAsCurlCommand($request));
     }
 
-    /**
-     * @param ResponseInterface $response
-     * @param StopwatchEvent    $event
-     * @param Stack             $stack
-     */
     private function collectResponseInformations(ResponseInterface $response, StopwatchEvent $event, Stack $stack)
     {
         $stack->setDuration($event->getDuration());
@@ -177,11 +165,6 @@ class ProfileClient implements HttpClient, HttpAsyncClient
         $stack->setClientResponse($this->formatter->formatResponse($response));
     }
 
-    /**
-     * @param \Throwable     $exception
-     * @param StopwatchEvent $event
-     * @param Stack          $stack
-     */
     private function collectExceptionInformations(\Throwable $exception, StopwatchEvent $event, Stack $stack)
     {
         if ($exception instanceof HttpException) {
@@ -194,8 +177,6 @@ class ProfileClient implements HttpClient, HttpAsyncClient
 
     /**
      * Generates the event name.
-     *
-     * @param RequestInterface $request
      *
      * @return string
      */

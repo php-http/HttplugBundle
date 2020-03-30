@@ -32,9 +32,6 @@ final class PluginClientFactoryListener implements EventSubscriberInterface
      */
     private $factory;
 
-    /**
-     * @param PluginClientFactory $factory
-     */
     public function __construct(PluginClientFactory $factory)
     {
         $this->factory = $factory;

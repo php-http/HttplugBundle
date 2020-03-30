@@ -254,9 +254,6 @@ class Configuration implements ConfigurationInterface
         ->end();
     }
 
-    /**
-     * @param ArrayNodeDefinition $root
-     */
     private function configureSharedPlugins(ArrayNodeDefinition $root)
     {
         $pluginsNode = $root

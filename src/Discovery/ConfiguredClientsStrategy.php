@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Http\HttplugBundle\Discovery;
 
-use Http\Client\HttpClient;
 use Http\Client\HttpAsyncClient;
+use Http\Client\HttpClient;
 use Http\Discovery\HttpClientDiscovery;
 use Http\Discovery\Strategy\DiscoveryStrategy;
 use Symfony\Component\EventDispatcher\Event as LegacyEvent;
