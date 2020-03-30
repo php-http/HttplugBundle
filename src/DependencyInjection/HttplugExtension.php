@@ -216,7 +216,9 @@ class HttplugExtension extends Extension
                 $definition
                     ->replaceArgument(0, new Reference($config['cache_pool']))
                     ->replaceArgument(1, new Reference($config['stream_factory']))
-                    ->replaceArgument(2, $options);
+                    ->replaceArgument(2, $options)
+                    ->setAbstract(false)
+                ;
 
                 break;
 
@@ -242,6 +244,7 @@ class HttplugExtension extends Extension
                 if (!empty($config['formatter'])) {
                     $definition->replaceArgument(1, new Reference($config['formatter']));
                 }
+                $definition->setAbstract(false);
 
                 break;
 
@@ -261,7 +264,10 @@ class HttplugExtension extends Extension
                 break;
 
             case 'stopwatch':
-                $definition->replaceArgument(0, new Reference($config['stopwatch']));
+                $definition
+                    ->replaceArgument(0, new Reference($config['stopwatch']))
+                    ->setAbstract(false)
+                ;
 
                 break;
 
