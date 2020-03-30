@@ -23,10 +23,6 @@ class CurlFactory implements ClientFactory
      */
     private $streamFactory;
 
-    /**
-     * @param ResponseFactoryInterface $responseFactory
-     * @param StreamFactoryInterface   $streamFactory
-     */
     public function __construct(ResponseFactoryInterface $responseFactory, StreamFactoryInterface $streamFactory)
     {
         $this->responseFactory = $responseFactory;

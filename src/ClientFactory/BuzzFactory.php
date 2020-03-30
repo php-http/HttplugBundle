@@ -19,9 +19,6 @@ class BuzzFactory implements ClientFactory
      */
     private $messageFactory;
 
-    /**
-     * @param MessageFactory $messageFactory
-     */
     public function __construct(MessageFactory $messageFactory)
     {
         $this->messageFactory = $messageFactory;
@@ -49,8 +46,6 @@ class BuzzFactory implements ClientFactory
 
     /**
      * Get options to configure the Buzz client.
-     *
-     * @param array $config
      */
     private function getOptions(array $config = [])
     {

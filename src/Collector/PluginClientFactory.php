@@ -36,11 +36,6 @@ final class PluginClientFactory
      */
     private $stopwatch;
 
-    /**
-     * @param Collector $collector
-     * @param Formatter $formatter
-     * @param Stopwatch $stopwatch
-     */
     public function __construct(Collector $collector, Formatter $formatter, Stopwatch $stopwatch)
     {
         $this->collector = $collector;

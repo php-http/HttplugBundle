@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
@@ -22,13 +24,13 @@ class AppKernel extends Kernel
      */
     public function registerBundles()
     {
-        $bundles =  [
+        $bundles = [
             new \Symfony\Bundle\FrameworkBundle\FrameworkBundle(),
             new \Symfony\Bundle\TwigBundle\TwigBundle(),
             new \Http\HttplugBundle\HttplugBundle(),
         ];
 
-        if (in_array($this->getEnvironment(), array('dev', 'test', 'psr18'))) {
+        if (in_array($this->getEnvironment(), ['dev', 'test', 'psr18'])) {
             $bundles[] = new Symfony\Bundle\WebProfilerBundle\WebProfilerBundle();
         }
 
@@ -70,6 +72,7 @@ class AppKernel extends Kernel
         if (null === self::$cacheDir) {
             self::$cacheDir = uniqid('cache');
         }
+
         return sys_get_temp_dir().'/httplug-bundle/'.self::$cacheDir;
     }
 
@@ -120,7 +123,6 @@ class PublicServicesForFunctionalTestsPass implements CompilerPassInterface
             if ($container->hasDefinition($service)) {
                 $container->getDefinition($service)->setPublic(true);
             }
-
         }
 
         $aliases = [

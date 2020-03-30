@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Http\HttplugBundle\Tests\Resources;
 
 use GuzzleHttp\Psr7\Response;
@@ -13,5 +15,4 @@ class MyPsr18TestClient implements ClientInterface
     {
         return new Response();
     }
-
 }
