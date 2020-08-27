@@ -21,8 +21,8 @@ branches:
 matrix:
     fast_finish: true
     include:
-          # Minimum supported Symfony version and latest PHP version
-        - php: 7.4
+          # Minimum supported Symfony version and lowest PHP version
+        - php: 7.2
           env: COMPOSER_FLAGS="--prefer-stable --prefer-lowest" SYMFONY_DEPRECATIONS_HELPER="weak"
 
           # Test the latest stable release
