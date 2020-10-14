@@ -10,12 +10,9 @@ use Http\Discovery\HttpAsyncClientDiscovery;
 use Http\Discovery\HttpClientDiscovery;
 use Http\Discovery\Strategy\CommonClassesStrategy;
 use Http\HttplugBundle\Collector\ProfileClient;
-use Http\HttplugBundle\Discovery\ConfiguredClientsStrategy;
+use Http\HttplugBundle\Discovery\ConfiguredClientsStrategyListener;
 use Nyholm\NSA;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Symfony\Component\EventDispatcher\Event as LegacyEvent;
-use Symfony\Component\HttpKernel\Kernel;
-use Symfony\Contracts\EventDispatcher\Event;
 
 class DiscoveredClientsTest extends WebTestCase
 {
@@ -128,9 +125,8 @@ class DiscoveredClientsTest extends WebTestCase
         parent::setUp();
 
         // Reset values
-        $strategy = new ConfiguredClientsStrategy(null, null);
+        $strategy = new ConfiguredClientsStrategyListener(null, null);
         HttpClientDiscovery::setStrategies([CommonClassesStrategy::class]);
-        $class = (Kernel::MAJOR_VERSION >= 5) ? Event::class : LegacyEvent::class;
-        $strategy->onEvent(new $class());
+        $strategy->onEvent();
     }
 }

@@ -7,6 +7,9 @@
         <service id="httplug.strategy" class="Http\HttplugBundle\Discovery\ConfiguredClientsStrategy">
             <argument type="service" id="httplug.auto_discovery.auto_discovered_client" on-invalid="null"/>
             <argument type="service" id="httplug.auto_discovery.auto_discovered_async" on-invalid="null"/>
+        </service>
+
+        <service id="httplug.strategy_listener" class="Http\HttplugBundle\Discovery\ConfiguredClientsStrategyListener">
             <tag name="kernel.event_subscriber"/>
         </service>
 
