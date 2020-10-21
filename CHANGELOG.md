@@ -2,6 +2,14 @@
 
 The change log describes what is "Added", "Removed", "Changed" or "Fixed" between each release.
 
+## 1.19.0 - unreleased
+
+### Changed
+
+- `ConfiguredClientsStrategy` no longer implements `EventSubscriberInterface`,
+  this has been moved to `ConfiguredClientsStrategyListener` to avoid initializing
+  the strategy on every request.
+
 ## 1.18.0 - 2020-03-30
 
 ### Added
