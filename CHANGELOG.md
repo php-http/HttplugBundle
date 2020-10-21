@@ -2,7 +2,7 @@
 
 The change log describes what is "Added", "Removed", "Changed" or "Fixed" between each release.
 
-## 1.19.0 - unreleased
+## 1.19.0 - 2020-10-21
 
 ### Changed
 
