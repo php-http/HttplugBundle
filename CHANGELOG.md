@@ -2,6 +2,10 @@
 
 The change log describes what is "Added", "Removed", "Changed" or "Fixed" between each release.
 
+# 1.20.0 - to be released
+
+- Support PHP 8.
+
 ## 1.19.0 - 2020-10-21
 
 ### Changed

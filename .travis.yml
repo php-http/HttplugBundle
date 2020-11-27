@@ -54,6 +54,8 @@ matrix:
           # Latest commit to master
         - php: 7.4
           env: STABILITY="dev" DEPENDENCIES="php-http/vcr-plugin:^1.0@dev"
+        - php: 8.0
+          env: STABILITY="dev" DEPENDENCIES="php-http/vcr-plugin:^1.0@dev"
 
     allow_failures:
           # dev stability is allowed to fail.
