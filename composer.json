@@ -42,7 +42,6 @@
         "symfony/options-resolver": "^3.4.34 || ^4.2.12 || ^5.0"
     },
     "conflict": {
-        "php-http/guzzle6-adapter": "<1.1",
         "php-http/curl-client": "<2.0"
     },
     "require-dev": {
@@ -50,7 +49,7 @@
         "nyholm/nsa": "^1.1",
         "nyholm/psr7": "^1.2.1",
         "php-http/cache-plugin": "^1.7",
-        "php-http/guzzle6-adapter": "^1.1.1 || ^2.0.1",
+        "php-http/guzzle7-adapter": "^0.1.1",
         "php-http/mock-client": "^1.2",
         "php-http/promise": "^1.0",
         "polishsymfonycommunity/symfony-mocker-container": "^1.0",

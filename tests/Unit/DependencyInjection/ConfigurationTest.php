@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Http\HttplugBundle\Tests\Unit\DependencyInjection;
 
-use Http\Adapter\Guzzle6\Client;
+use Http\Adapter\Guzzle7\Client;
 use Http\HttplugBundle\DependencyInjection\Configuration;
 use Http\HttplugBundle\DependencyInjection\HttplugExtension;
 use Http\Message\MessageFactory\GuzzleMessageFactory;
@@ -158,7 +158,7 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
             ],
             'clients' => [
                 'test' => [
-                    'factory' => 'httplug.factory.guzzle6',
+                    'factory' => 'httplug.factory.guzzle7',
                     'http_methods_client' => true,
                     'service' => null,
                     'public' => null,
