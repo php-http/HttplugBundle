@@ -30,6 +30,7 @@ matrix:
         - php: 7.3
           env: COVERAGE=true TEST_COMMAND="composer test-ci" DEPENDENCIES="php-http/vcr-plugin:^1.0@dev"
         - php: 7.4
+        - php: 8.0snapshot
 
           # Test LTS versions
         - php: 7.3
@@ -55,7 +56,7 @@ matrix:
         - php: 7.4
           env: STABILITY="dev" DEPENDENCIES="php-http/vcr-plugin:^1.0@dev"
         - php: 8.0snapshot
-          env: STABILITY="dev" DEPENDENCIES="php-http/vcr-plugin:^1.0@dev"
+          env: STABILITY="dev"
 
     allow_failures:
           # dev stability is allowed to fail.
