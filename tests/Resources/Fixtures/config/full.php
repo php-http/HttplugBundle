@@ -11,11 +11,11 @@ $container->loadFromExtension('httplug', [
         'stream_factory' => 'my_stream_factory',
     ],
     'classes' => [
-        'client' => 'Http\Adapter\Guzzle6\Client',
+        'client' => 'Http\Adapter\Guzzle7\Client',
         'message_factory' => 'Http\Message\MessageFactory\GuzzleMessageFactory',
         'uri_factory' => 'Http\Message\UriFactory\GuzzleUriFactory',
         'stream_factory' => 'Http\Message\StreamFactory\GuzzleStreamFactory',
-        'psr18_client' => 'Http\Adapter\Guzzle6\Client',
+        'psr18_client' => 'Http\Adapter\Guzzle7\Client',
         'psr17_request_factory' => 'Nyholm\Psr7\Factory\Psr17Factory',
         'psr17_response_factory' => 'Nyholm\Psr7\Factory\Psr17Factory',
         'psr17_stream_factory' => 'Nyholm\Psr7\Factory\Psr17Factory',
@@ -25,7 +25,7 @@ $container->loadFromExtension('httplug', [
     ],
     'clients' => [
         'test' => [
-            'factory' => 'httplug.factory.guzzle6',
+            'factory' => 'httplug.factory.guzzle7',
             'http_methods_client' => true,
             'plugins' => [
                 'httplug.plugin.redirect',

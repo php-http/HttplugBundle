@@ -13,7 +13,6 @@ use Http\HttplugBundle\Collector\Stack;
 use Http\HttplugBundle\Collector\StackPlugin;
 use Http\Promise\FulfilledPromise;
 use Http\Promise\RejectedPromise;
-use PHPUnit\Framework\Error\Warning;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -179,7 +178,7 @@ class StackPluginTest extends TestCase
 
     public function testOnError(): void
     {
-        $this->expectException(Warning::class);
+        $this->expectExceptionMessage('Division by zero');
 
         $this->collector
             ->expects($this->once())
