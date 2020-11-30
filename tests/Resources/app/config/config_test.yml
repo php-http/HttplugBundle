@@ -7,7 +7,7 @@ httplug:
         async_client: auto
     clients:
         acme:
-            factory: httplug.factory.guzzle7
+            factory: httplug.factory.guzzle6
             plugins:
                 -
                     decoder:

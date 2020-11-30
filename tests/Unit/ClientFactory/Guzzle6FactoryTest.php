@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Http\HttplugBundle\Tests\Unit\ClientFactory;
 
-use Http\Adapter\Guzzle7\Client;
-use Http\HttplugBundle\ClientFactory\Guzzle7Factory;
+use Http\Adapter\Guzzle6\Client;
+use Http\HttplugBundle\ClientFactory\Guzzle6Factory;
 use PHPUnit\Framework\TestCase;
 
 /**
  * @author Tobias Nyholm <tobias.nyholm@gmail.com>
  */
-class Guzzle7FactoryTest extends TestCase
+class Guzzle6FactoryTest extends TestCase
 {
     public function testCreateClient(): void
     {
@@ -19,7 +19,7 @@ class Guzzle7FactoryTest extends TestCase
             $this->markTestSkipped('Guzzle6 adapter is not installed');
         }
 
-        $factory = new Guzzle7Factory();
+        $factory = new Guzzle6Factory();
         $client = $factory->createClient();
 
         $this->assertInstanceOf(Client::class, $client);

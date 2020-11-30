@@ -66,8 +66,8 @@
             <argument type="service" id="httplug.collector.formatter"/>
             <argument type="service" id="debug.stopwatch"/>
         </service>
-        <service id="httplug.collector.factory.guzzle7" class="Http\HttplugBundle\Collector\ProfileClientFactory" decorates="httplug.factory.guzzle7" public="false">
-            <argument type="service" id="httplug.collector.factory.guzzle7.inner"/>
+        <service id="httplug.collector.factory.guzzle6" class="Http\HttplugBundle\Collector\ProfileClientFactory" decorates="httplug.factory.guzzle6" public="false">
+            <argument type="service" id="httplug.collector.factory.guzzle6.inner"/>
             <argument type="service" id="httplug.collector.collector"/>
             <argument type="service" id="httplug.collector.formatter"/>
             <argument type="service" id="debug.stopwatch"/>

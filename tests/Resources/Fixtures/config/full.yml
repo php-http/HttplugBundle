@@ -6,11 +6,11 @@ httplug:
         uri_factory: my_uri_factory
         stream_factory: my_stream_factory
     classes:
-        client: Http\Adapter\Guzzle7\Client
+        client: Http\Adapter\Guzzle6\Client
         message_factory: Http\Message\MessageFactory\GuzzleMessageFactory
         uri_factory: Http\Message\UriFactory\GuzzleUriFactory
         stream_factory: Http\Message\StreamFactory\GuzzleStreamFactory
-        psr18_client: Http\Adapter\Guzzle7\Client
+        psr18_client: Http\Adapter\Guzzle6\Client
         psr17_request_factory: Nyholm\Psr7\Factory\Psr17Factory
         psr17_response_factory: Nyholm\Psr7\Factory\Psr17Factory
         psr17_stream_factory: Nyholm\Psr7\Factory\Psr17Factory
@@ -19,7 +19,7 @@ httplug:
         psr17_server_request_factory: Nyholm\Psr7\Factory\Psr17Factory
     clients:
         test:
-            factory: httplug.factory.guzzle7
+            factory: httplug.factory.guzzle6
             http_methods_client: true
             plugins:
                 - 'httplug.plugin.redirect'

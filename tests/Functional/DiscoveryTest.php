@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Http\HttplugBundle\Tests\Unit\DependencyInjection\Compiler;
 
-use Http\Adapter\Guzzle7\Client;
+use Http\Adapter\Guzzle6\Client;
 use Http\Client\HttpAsyncClient;
 use Http\Client\HttpClient;
 use Http\Discovery\HttpClientDiscovery;
