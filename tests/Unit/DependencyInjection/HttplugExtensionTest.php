@@ -353,7 +353,6 @@ class HttplugExtensionTest extends AbstractExtensionTestCase
 
         if (version_compare(Kernel::VERSION, '3.4', '>=')) {
             // Symfony made services private by default starting from 3.4
-            $this->assertTrue($this->container->getDefinition('httplug.client.acme')->isPublic());
             $this->assertTrue($this->container->getDefinition('httplug.client.acme')->isPrivate());
         } else {
             // Legacy Symfony
