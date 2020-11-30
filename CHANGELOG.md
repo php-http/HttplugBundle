@@ -5,6 +5,8 @@ The change log describes what is "Added", "Removed", "Changed" or "Fixed" betwee
 # 1.20.0 - to be released
 
 - Support PHP 8.
+- Support Guzzle 7.
+- BC BREAK: Remove support for Guzzle 6.
 
 ## 1.19.0 - 2020-10-21
 
