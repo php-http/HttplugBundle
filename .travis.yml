@@ -45,11 +45,11 @@ matrix:
 
           # Test with httplug 1.x clients
         - php: 7.3
-          env: DEPENDENCIES="php-http/buzz-adapter:^1.0 php-http/guzzle6-adapter:^1.1.1 php-http/react-adapter:^0.2.1 php-http/socket-client:^1.0"
+          env: DEPENDENCIES="php-http/buzz-adapter:^1.0 php-http/react-adapter:^0.2.1 php-http/socket-client:^1.0"
 
           # Test with httplug 2.x clients
         - php: 7.3
-          env: DEPENDENCIES="php-http/guzzle6-adapter:^2.0.1 php-http/curl-client:^2.0.0 php-http/vcr-plugin:^1.0@dev"
+          env: DEPENDENCIES="php-http/guzzle7-adapter php-http/curl-client:^2.0.0 php-http/vcr-plugin:^1.0@dev"
 
           # Latest commit to master
         - php: 7.4
