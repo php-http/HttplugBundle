@@ -24,7 +24,7 @@ matrix:
     include:
           # Minimum supported Symfony version and lowest PHP version
         - php: 7.3
-          env: COMPOSER_FLAGS="--prefer-stable --prefer-lowest" SYMFONY_DEPRECATIONS_HELPER="weak" DEPENDENCIES="php-http/guzzle6-adapter"
+          env: COMPOSER_FLAGS="--prefer-stable --prefer-lowest" SYMFONY_DEPRECATIONS_HELPER="weak" DEPENDENCIES="php-http/guzzle7-adapter:^0.1.1"
 
           # Test the latest stable release
         - php: 7.3
