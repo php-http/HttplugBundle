@@ -49,6 +49,10 @@ class HttplugExtensionTest extends AbstractExtensionTestCase
 
     public function testConfigLoadClass(): void
     {
+        if (!class_exists(Client::class)) {
+            $this->markTestSkipped('Guzzle 7 adapter is not installed');
+        }
+
         $this->load([
             'classes' => [
                 'client' => Client::class,
