@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Http\HttplugBundle\Tests\Functional;
 
 use GuzzleHttp\Psr7\Request as GuzzleRequest;
+use Http\Adapter\Guzzle7\Client;
 use Http\Client\Common\Plugin\RedirectPlugin;
 use Http\Client\Common\PluginClient;
 use Http\Client\HttpClient;
@@ -29,6 +30,10 @@ class ServiceInstantiationTest extends WebTestCase
 {
     public function testHttpClient(): void
     {
+        if (!class_exists(Client::class)) {
+            $this->markTestSkipped('Guzzle7 adapter is not installed');
+        }
+
         static::bootKernel();
         $container = static::$kernel->getContainer();
         $this->assertTrue($container->has('httplug.client'));
@@ -38,6 +43,10 @@ class ServiceInstantiationTest extends WebTestCase
 
     public function testHttpClientNoDebug(): void
     {
+        if (!class_exists(Client::class)) {
+            $this->markTestSkipped('Guzzle7 adapter is not installed');
+        }
+
         static::bootKernel(['debug' => false]);
         $container = static::$kernel->getContainer();
         $this->assertTrue($container->has('httplug.client'));
@@ -70,6 +79,10 @@ class ServiceInstantiationTest extends WebTestCase
 
     public function testProfilingDecoration(): void
     {
+        if (!class_exists(Client::class)) {
+            $this->markTestSkipped('Guzzle7 adapter is not installed');
+        }
+
         static::bootKernel(['debug' => true]);
         $container = static::$kernel->getContainer();
 
