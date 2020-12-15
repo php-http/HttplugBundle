@@ -17,7 +17,7 @@ class Guzzle7Factory implements ClientFactory
     public function createClient(array $config = [])
     {
         if (!class_exists('Http\Adapter\Guzzle7\Client')) {
-            throw new \LogicException('To use the Guzzle7 adapter you need to install the "php-http/guzzle6-adapter" package.');
+            throw new \LogicException('To use the Guzzle7 adapter you need to install the "php-http/guzzle7-adapter" package.');
         }
 
         return Client::createWithConfig($config);
