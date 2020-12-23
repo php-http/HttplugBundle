@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Http\HttplugBundle\Tests\Unit\DependencyInjection;
 
-use Http\Adapter\Guzzle6\Client;
+use Http\Adapter\Guzzle7\Client;
 use Http\Client\HttpClient;
 use Http\Client\Plugin\Vcr\Recorder\InMemoryRecorder;
 use Http\HttplugBundle\Collector\PluginClientFactoryListener;
@@ -49,6 +49,10 @@ class HttplugExtensionTest extends AbstractExtensionTestCase
 
     public function testConfigLoadClass(): void
     {
+        if (!class_exists(Client::class)) {
+            $this->markTestSkipped('Guzzle 7 adapter is not installed');
+        }
+
         $this->load([
             'classes' => [
                 'client' => Client::class,
@@ -353,7 +357,6 @@ class HttplugExtensionTest extends AbstractExtensionTestCase
 
         if (version_compare(Kernel::VERSION, '3.4', '>=')) {
             // Symfony made services private by default starting from 3.4
-            $this->assertTrue($this->container->getDefinition('httplug.client.acme')->isPublic());
             $this->assertTrue($this->container->getDefinition('httplug.client.acme')->isPrivate());
         } else {
             // Legacy Symfony

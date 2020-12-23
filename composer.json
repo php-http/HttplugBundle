@@ -25,7 +25,7 @@
         }
     ],
     "require": {
-        "php": "^7.2",
+        "php": "^7.3 || ^8.0",
         "php-http/client-common": "^1.9 || ^2.0",
         "php-http/client-implementation": "^1.0",
         "php-http/discovery": "^1.0",
@@ -46,11 +46,11 @@
         "php-http/curl-client": "<2.0"
     },
     "require-dev": {
+        "guzzlehttp/psr7": "^1.7",
         "matthiasnoback/symfony-dependency-injection-test": "^4.0",
         "nyholm/nsa": "^1.1",
         "nyholm/psr7": "^1.2.1",
         "php-http/cache-plugin": "^1.7",
-        "php-http/guzzle6-adapter": "^1.1.1 || ^2.0.1",
         "php-http/mock-client": "^1.2",
         "php-http/promise": "^1.0",
         "polishsymfonycommunity/symfony-mocker-container": "^1.0",

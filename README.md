@@ -28,6 +28,7 @@ Please see the [official documentation](http://docs.php-http.org/en/latest/integ
 ## Testing
 
 ``` bash
+$ composer require --dev php-http/guzzle7-adapter
 $ composer test
 ```
 

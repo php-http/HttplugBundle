@@ -179,7 +179,11 @@ class StackPluginTest extends TestCase
 
     public function testOnError(): void
     {
-        $this->expectException(Warning::class);
+        if (version_compare(PHP_VERSION, '8.0.0', '>=')) {
+            $this->expectException(\DivisionByZeroError::class);
+        } else {
+            $this->expectException(Warning::class);
+        }
 
         $this->collector
             ->expects($this->once())

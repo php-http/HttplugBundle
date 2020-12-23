@@ -13,6 +13,7 @@ env:
         - SYMFONY_PHPUNIT_VERSION="8"
         - SYMFONY_PHPUNIT_DIR="$HOME/symfony-bridge/.phpunit"
         - SYMFONY_DEPRECATIONS_HELPER="max[self]=0"
+        - DEPENDENCIES="php-http/guzzle7-adapter"
 
 branches:
     except:
@@ -22,14 +23,14 @@ matrix:
     fast_finish: true
     include:
           # Minimum supported Symfony version and lowest PHP version
-        - php: 7.2
-          env: COMPOSER_FLAGS="--prefer-stable --prefer-lowest" SYMFONY_DEPRECATIONS_HELPER="weak"
+        - php: 7.3
+          env: COMPOSER_FLAGS="--prefer-stable --prefer-lowest" SYMFONY_DEPRECATIONS_HELPER="weak" DEPENDENCIES="php-http/guzzle6-adapter"
 
           # Test the latest stable release
-        - php: 7.2
         - php: 7.3
-          env: COVERAGE=true TEST_COMMAND="composer test-ci" DEPENDENCIES="php-http/vcr-plugin:^1.0@dev"
+          env: COVERAGE=true TEST_COMMAND="composer test-ci" DEPENDENCIES="php-http/guzzle7-adapter php-http/vcr-plugin:^1.0@dev"
         - php: 7.4
+        - php: 8.0
 
           # Test LTS versions
         - php: 7.3
@@ -39,21 +40,23 @@ matrix:
         - php: 7.3
           env: SYMFONY_REQUIRE=4.3.*
         - php: 7.3
-          env: SYMFONY_REQUIRE=4.4.* DEPENDENCIES="symfony/http-client:^4.4"
+          env: SYMFONY_REQUIRE=4.4.* DEPENDENCIES="php-http/guzzle7-adapter symfony/http-client:^4.4"
         - php: 7.3
-          env: SYMFONY_REQUIRE=5.0.* DEPENDENCIES="symfony/http-client:^5.0"
+          env: SYMFONY_REQUIRE=5.0.* DEPENDENCIES="php-http/guzzle7-adapter symfony/http-client:^5.0"
 
           # Test with httplug 1.x clients
-        - php: 7.2
+        - php: 7.3
           env: DEPENDENCIES="php-http/buzz-adapter:^1.0 php-http/guzzle6-adapter:^1.1.1 php-http/react-adapter:^0.2.1 php-http/socket-client:^1.0"
 
           # Test with httplug 2.x clients
-        - php: 7.2
-          env: DEPENDENCIES="php-http/guzzle6-adapter:^2.0.1 php-http/curl-client:^2.0.0 php-http/vcr-plugin:^1.0@dev"
+        - php: 7.3
+          env: DEPENDENCIES="php-http/guzzle7-adapter php-http/curl-client:^2.0.0 php-http/vcr-plugin:^1.0@dev"
 
           # Latest commit to master
         - php: 7.4
-          env: STABILITY="dev" DEPENDENCIES="php-http/vcr-plugin:^1.0@dev"
+          env: STABILITY="dev" DEPENDENCIES="php-http/guzzle7-adapter php-http/vcr-plugin:^1.0@dev"
+        - php: 8.0
+          env: STABILITY="dev"
 
     allow_failures:
           # dev stability is allowed to fail.
@@ -67,7 +70,6 @@ before_install:
 
 install:
     # To be removed when this issue will be resolved: https://github.com/composer/composer/issues/5355
-    - if [[ "$COMPOSER_FLAGS" == *"--prefer-lowest"* ]]; then composer update --prefer-dist --no-interaction --prefer-stable --quiet; fi
     - COMPOSER_MEMORY_LIMIT=-1 composer update ${COMPOSER_FLAGS} --prefer-dist --no-interaction
     - vendor/bin/simple-phpunit install
 

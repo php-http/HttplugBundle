@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Http\HttplugBundle\Tests\Unit\DependencyInjection;
 
-use Http\Adapter\Guzzle6\Client;
+use Http\Adapter\Guzzle7\Client;
 use Http\HttplugBundle\DependencyInjection\Configuration;
 use Http\HttplugBundle\DependencyInjection\HttplugExtension;
 use Http\Message\MessageFactory\GuzzleMessageFactory;
@@ -128,6 +128,10 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
 
     public function testSupportsAllConfigFormats(): void
     {
+        if (!class_exists(Client::class)) {
+            $this->markTestSkipped('Guzzle 7 adapter is not installed');
+        }
+
         $expectedConfiguration = [
             'default_client_autowiring' => false,
             'main_alias' => [
@@ -158,7 +162,7 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
             ],
             'clients' => [
                 'test' => [
-                    'factory' => 'httplug.factory.guzzle6',
+                    'factory' => 'httplug.factory.guzzle7',
                     'http_methods_client' => true,
                     'service' => null,
                     'public' => null,
@@ -435,7 +439,7 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
         $file = __DIR__.'/../../Resources/Fixtures/config/client_cache_config_with_no_pool.yml';
 
         $this->expectException(InvalidConfigurationException::class);
-        $this->expectExceptionMessage('The child node "cache_pool" at path "httplug.clients.test.plugins.0.cache" must be configured.');
+        $this->expectExceptionMessage('httplug.clients.test.plugins.0.cache');
         $this->assertProcessedConfigurationEquals([], [$file]);
     }
 
@@ -444,7 +448,7 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
         $file = __DIR__.'/../../Resources/Fixtures/config/cache_config_with_no_pool.yml';
 
         $this->expectException(InvalidConfigurationException::class);
-        $this->expectExceptionMessage('The child node "cache_pool" at path "httplug.plugins.cache" must be configured.');
+        $this->expectExceptionMessage('cache_pool');
         $this->assertProcessedConfigurationEquals([], [$file]);
     }
 
