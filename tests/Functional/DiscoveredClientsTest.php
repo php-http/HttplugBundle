@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Http\HttplugBundle\Tests\Functional;
 
+use Http\Adapter\Guzzle7\Client;
 use Http\Client\HttpAsyncClient;
 use Http\Client\HttpClient;
 use Http\Discovery\HttpAsyncClientDiscovery;
@@ -101,6 +102,10 @@ class DiscoveredClientsTest extends WebTestCase
      */
     public function testForcedDiscovery(): void
     {
+        if (!class_exists(Client::class)) {
+            $this->markTestSkipped('Guzzle7 adapter is not installed');
+        }
+
         $container = $this->getContainer(true, 'discovery_forced');
 
         $this->assertFalse($container->has('httplug.auto_discovery.auto_discovered_client'));
