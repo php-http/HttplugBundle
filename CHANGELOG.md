@@ -2,6 +2,10 @@
 
 The change log describes what is "Added", "Removed", "Changed" or "Fixed" between each release.
 
+# 1.20.1 - 2021-02-12
+
+- Added `kernel.reset` tag to the Collector.
+
 # 1.20.0 - 2020-12-23
 
 - Support PHP 8, dropped support for PHP 7.2.
