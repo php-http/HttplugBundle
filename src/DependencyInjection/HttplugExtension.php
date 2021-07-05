@@ -381,6 +381,10 @@ class HttplugExtension extends Extension
     {
         $serviceId = 'httplug.client.'.$clientName;
 
+        if (method_exists($container, 'registerAliasForArgument')) {
+            $container->registerAliasForArgument($serviceId, HttpClient::class, $clientName);
+        }
+
         $plugins = [];
         foreach ($arguments['plugins'] as $plugin) {
             $pluginName = key($plugin);

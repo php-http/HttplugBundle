@@ -2,6 +2,11 @@
 
 The change log describes what is "Added", "Removed", "Changed" or "Fixed" between each release.
 
+# UNRELEASED
+
+- Added support for [Target attribute](https://symfony.com/blog/new-in-symfony-5-3-service-autowiring-with-attributes)
+  available in Symfony 5.3
+
 # 1.20.1 - 2021-02-12
 
 - Added `kernel.reset` tag to the Collector.
