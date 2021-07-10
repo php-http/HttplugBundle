@@ -2,7 +2,7 @@
 
 The change log describes what is "Added", "Removed", "Changed" or "Fixed" between each release.
 
-# UNRELEASED
+# 1.21.0 - 2021-07-10
 
 - Added support for [Target attribute](https://symfony.com/blog/new-in-symfony-5-3-service-autowiring-with-attributes)
   available in Symfony 5.3
