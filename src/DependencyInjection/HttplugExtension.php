@@ -21,6 +21,7 @@ use Http\Message\Authentication\Bearer;
 use Http\Message\Authentication\QueryParam;
 use Http\Message\Authentication\Wsse;
 use Http\Mock\Client as MockClient;
+use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\UriInterface;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Alias;
@@ -383,6 +384,9 @@ class HttplugExtension extends Extension
 
         if (method_exists($container, 'registerAliasForArgument')) {
             $container->registerAliasForArgument($serviceId, HttpClient::class, $clientName);
+            if (interface_exists(ClientInterface::class)) {
+                $container->registerAliasForArgument($serviceId, ClientInterface::class, $clientName);
+            }
         }
 
         $plugins = [];
