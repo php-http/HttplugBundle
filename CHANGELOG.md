@@ -2,6 +2,11 @@
 
 The change log describes what is "Added", "Removed", "Changed" or "Fixed" between each release.
 
+# 1.22.1 - 2021-07-26
+
+- Do not deprecate the service alias for the old Http\Client\HttpClient interface because different Symfony
+  versions expect a different syntax for the deprecation, which triggers an error on some Symfony versions.
+
 # 1.22.0 - 2021-07-26
 
 - Register client as alias for the PSR Psr\Http\Client\ClientInterface
