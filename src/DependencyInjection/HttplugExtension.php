@@ -21,6 +21,7 @@ use Http\Message\Authentication\Bearer;
 use Http\Message\Authentication\QueryParam;
 use Http\Message\Authentication\Wsse;
 use Http\Mock\Client as MockClient;
+use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\UriInterface;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Alias;
@@ -382,7 +383,14 @@ class HttplugExtension extends Extension
         $serviceId = 'httplug.client.'.$clientName;
 
         if (method_exists($container, 'registerAliasForArgument')) {
-            $container->registerAliasForArgument($serviceId, HttpClient::class, $clientName);
+            $alias = $container->registerAliasForArgument($serviceId, HttpClient::class, $clientName);
+
+            $interfaces = class_implements(HttpClient::class) ?? [];
+            if (isset($interfaces[ClientInterface::class])) {
+                $alias->setDeprecated('php-http/httplug-bundle', '1.22', 'The "%alias_id%" alias is deprecated, use "Psr\Http\Client\ClientInterface" instead.');
+
+                $container->registerAliasForArgument($serviceId, ClientInterface::class, $clientName);
+            }
         }
 
         $plugins = [];
