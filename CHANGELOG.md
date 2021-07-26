@@ -2,6 +2,11 @@
 
 The change log describes what is "Added", "Removed", "Changed" or "Fixed" between each release.
 
+# 1.22.0 - 2021-07-26
+
+- Register client as alias for the PSR Psr\Http\Client\ClientInterface
+- Deprecate relying on the Http\Client\HttpClient interface in favor of the PSR ClientInterface
+
 # 1.21.0 - 2021-07-10
 
 - Added support for [Target attribute](https://symfony.com/blog/new-in-symfony-5-3-service-autowiring-with-attributes)
