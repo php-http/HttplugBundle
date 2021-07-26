@@ -384,7 +384,9 @@ class HttplugExtension extends Extension
 
         if (method_exists($container, 'registerAliasForArgument')) {
             $alias = $container->registerAliasForArgument($serviceId, HttpClient::class, $clientName);
-            if (interface_exists(ClientInterface::class)) {
+
+            $interfaces = class_implements(HttpClient::class) ?? [];
+            if (isset($interfaces[ClientInterface::class])) {
                 $alias->setDeprecated('php-http/httplug-bundle', '1.22', 'The "%alias_id%" alias is deprecated, use "Psr\Http\Client\ClientInterface" instead.');
 
                 $container->registerAliasForArgument($serviceId, ClientInterface::class, $clientName);
