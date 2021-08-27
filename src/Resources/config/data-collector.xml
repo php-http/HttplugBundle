@@ -24,6 +24,8 @@
         </service>
 
         <service id="httplug.collector.twig.http_message" class="Http\HttplugBundle\Collector\Twig\HttpMessageMarkupExtension" public="false">
+            <argument type="service" id="var_dumper.cloner" on-invalid="null" />
+            <argument type="service" id="var_dumper.html_dumper" on-invalid="null" />
             <tag name="twig.extension" />
         </service>
 
