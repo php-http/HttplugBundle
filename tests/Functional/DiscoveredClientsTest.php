@@ -19,7 +19,7 @@ class DiscoveredClientsTest extends WebTestCase
 {
     public function testDiscoveredClient(): void
     {
-        $container = $this->getContainer(false);
+        $container = $this->getCustomContainer(false);
 
         $this->assertTrue($container->has('httplug.auto_discovery.auto_discovered_client'));
 
@@ -30,7 +30,7 @@ class DiscoveredClientsTest extends WebTestCase
 
     public function testDiscoveredAsyncClient(): void
     {
-        $container = $this->getContainer(false);
+        $container = $this->getCustomContainer(false);
 
         $this->assertTrue($container->has('httplug.auto_discovery.auto_discovered_async'));
 
@@ -41,7 +41,7 @@ class DiscoveredClientsTest extends WebTestCase
 
     public function testDiscoveredClientWithProfilingEnabled(): void
     {
-        $container = $this->getContainer(true);
+        $container = $this->getCustomContainer(true);
 
         $this->assertTrue($container->has('httplug.auto_discovery.auto_discovered_client'));
 
@@ -53,7 +53,7 @@ class DiscoveredClientsTest extends WebTestCase
 
     public function testDiscoveredAsyncClientWithProfilingEnabled(): void
     {
-        $container = $this->getContainer(true);
+        $container = $this->getCustomContainer(true);
 
         $this->assertTrue($container->has('httplug.auto_discovery.auto_discovered_async'));
 
@@ -68,7 +68,7 @@ class DiscoveredClientsTest extends WebTestCase
      */
     public function testDiscovery(): void
     {
-        $container = $this->getContainer(true);
+        $container = $this->getCustomContainer(true);
 
         $this->assertTrue($container->has('httplug.auto_discovery.auto_discovered_client'));
         $this->assertTrue($container->has('httplug.auto_discovery.auto_discovered_async'));
@@ -90,7 +90,7 @@ class DiscoveredClientsTest extends WebTestCase
      */
     public function testDisabledDiscovery(): void
     {
-        $container = $this->getContainer(true, 'discovery_disabled');
+        $container = $this->getCustomContainer(true, 'discovery_disabled');
 
         $this->assertFalse($container->has('httplug.auto_discovery.auto_discovered_client'));
         $this->assertFalse($container->has('httplug.auto_discovery.auto_discovered_async'));
@@ -106,7 +106,7 @@ class DiscoveredClientsTest extends WebTestCase
             $this->markTestSkipped('Guzzle7 adapter is not installed');
         }
 
-        $container = $this->getContainer(true, 'discovery_forced');
+        $container = $this->getCustomContainer(true, 'discovery_forced');
 
         $this->assertFalse($container->has('httplug.auto_discovery.auto_discovered_client'));
         $this->assertFalse($container->has('httplug.auto_discovery.auto_discovered_async'));
@@ -118,7 +118,7 @@ class DiscoveredClientsTest extends WebTestCase
         $this->assertEquals($container->get('httplug.client.acme'), HttpAsyncClientDiscovery::find());
     }
 
-    private function getContainer($debug, $environment = 'test')
+    private function getCustomContainer($debug, $environment = 'test')
     {
         static::bootKernel(['debug' => $debug, 'environment' => $environment]);
 

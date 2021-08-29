@@ -14,7 +14,7 @@
         {% if row is empty %}
             {% set hasReachedBody = true %}
         {% elseif hasReachedBody %}
-            {% set content = content ~ "\n" ~ row %}
+            {% set content = content ~ row %}
         {% else %}
             {% set row = row|split(':') %}
             {% set value = row|slice(1)|join(':')|trim %}
@@ -33,4 +33,4 @@
     </tbody>
 </table>
 
-<div class='httplug-http-body httplug-hidden'>{{ content|nl2br ?: '(This message has no captured body)' }}</div>
+<div class='httplug-http-body httplug-hidden'>{{ content ? content|httplug_markup_body : '(This message has no captured body)' }}</div>

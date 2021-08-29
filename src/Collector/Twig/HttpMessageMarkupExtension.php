@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace Http\HttplugBundle\Collector\Twig;
 
+use Symfony\Component\VarDumper\Cloner\ClonerInterface;
+use Symfony\Component\VarDumper\Cloner\VarCloner;
+use Symfony\Component\VarDumper\Dumper\DataDumperInterface;
+use Symfony\Component\VarDumper\Dumper\HtmlDumper;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 
@@ -13,6 +17,22 @@ use Twig\TwigFilter;
 class HttpMessageMarkupExtension extends AbstractExtension
 {
     /**
+     * @var ClonerInterface
+     */
+    private $cloner;
+
+    /**
+     * @var HtmlDumper
+     */
+    private $dumper;
+
+    public function __construct(?ClonerInterface $cloner = null, ?DataDumperInterface $dumper)
+    {
+        $this->cloner = $cloner ?: new VarCloner();
+        $this->dumper = $dumper ?: new HtmlDumper();
+    }
+
+    /**
      * {@inheritdoc}
      *
      * @return array
@@ -21,6 +41,7 @@ class HttpMessageMarkupExtension extends AbstractExtension
     {
         return [
             new TwigFilter('httplug_markup', [$this, 'markup'], ['is_safe' => ['html']]),
+            new TwigFilter('httplug_markup_body', [$this, 'markupBody'], ['is_safe' => ['html']]),
         ];
     }
 
@@ -47,6 +68,18 @@ class HttpMessageMarkupExtension extends AbstractExtension
         $headers = preg_replace("|\n(.*?): |si", "\n<b>$1</b>: ", $parts[0]);
 
         return sprintf("%s\n\n<div class='httplug-http-body httplug-hidden'>%s</div>", $headers, $parts[1]);
+    }
+
+    public function markupBody(string $body): ?string
+    {
+        if (in_array(substr($body, 0, 1), ['{','['], true)) {
+            $json = json_decode($body, true);
+            if (json_last_error() === JSON_ERROR_NONE) {
+                $body = $json;
+            }
+        }
+
+        return $this->dumper->dump($this->cloner->cloneVar($body));
     }
 
     public function getName()

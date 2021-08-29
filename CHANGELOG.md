@@ -2,6 +2,10 @@
 
 The change log describes what is "Added", "Removed", "Changed" or "Fixed" between each release.
 
+# 1.23.0 - ?
+
+- Changed the way request/response body is displayed in profiler. symfony/var-dumper is used now.
+
 # 1.22.1 - 2021-07-26
 
 - Do not deprecate the service alias for the old Http\Client\HttpClient interface because different Symfony
