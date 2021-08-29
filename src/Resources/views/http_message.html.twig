@@ -33,4 +33,4 @@
     </tbody>
 </table>
 
-<div class='httplug-http-body httplug-hidden'>{{ content|httplug_markup_body }}</div>
+<div class='httplug-http-body httplug-hidden'>{{ content ? content|httplug_markup_body : '(This message has no captured body)' }}</div>
