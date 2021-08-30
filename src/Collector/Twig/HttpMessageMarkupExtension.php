@@ -72,9 +72,9 @@ class HttpMessageMarkupExtension extends AbstractExtension
 
     public function markupBody(string $body): ?string
     {
-        if (in_array(substr($body, 0, 1), ['{','['], true)) {
+        if (in_array(substr($body, 0, 1), ['{', '['], true)) {
             $json = json_decode($body, true);
-            if (json_last_error() === JSON_ERROR_NONE) {
+            if (JSON_ERROR_NONE === json_last_error()) {
                 $body = $json;
             }
         }

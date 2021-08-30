@@ -1,0 +1,98 @@
+name: "CI"
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+
+jobs:
+  phpunit:
+    name: "PHPUnit"
+    runs-on: "ubuntu-latest"
+    env:
+      SYMFONY_REQUIRE: ${{matrix.symfony-require}}
+      SYMFONY_DEPRECATIONS_HELPER: ${{matrix.symfony-deprecations-helper}}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # Minimum supported Symfony version and lowest PHP version
+          - dependencies: "php-http/guzzle7-adapter"
+            php-version: "7.3"
+            dependency-versions: "lowest"
+            symfony-deprecations-helper: "weak"
+
+          # Test the latest stable release
+          - dependencies: "php-http/guzzle7-adapter php-http/vcr-plugin:^1.0@dev"
+            php-version: "7.3"
+            symfony-deprecations-helper: "weak"
+          - dependencies: "php-http/guzzle6-adapter"
+            php-version: "7.4"
+            symfony-deprecations-helper: "weak"
+          - dependencies: "php-http/guzzle6-adapter"
+            php-version: "8.0"
+            symfony-deprecations-helper: "weak"
+
+          # Test with httplug 1.x clients
+          - dependencies: "php-http/buzz-adapter:^1.0 php-http/guzzle6-adapter:^1.1.1 php-http/react-adapter:^0.2.1 php-http/socket-client:^1.0"
+            php-version: "7.3"
+            symfony-deprecations-helper: "weak"
+          # Test with httplug 2.x clients
+          - dependencies: "php-http/guzzle7-adapter php-http/curl-client:^2.0.0 php-http/vcr-plugin:^1.0@dev"
+            php-version: "7.3"
+            symfony-deprecations-helper: "weak"
+
+          # Latest commit to master
+          - dependencies: "php-http/guzzle7-adapter php-http/vcr-plugin:^1.0@dev"
+            php-version: "8.0"
+            stability: "dev"
+            symfony-deprecations-helper: "weak"
+          - dependencies: "php-http/guzzle7-adapter"
+            php-version: "8.0"
+            stability: "dev"
+            symfony-deprecations-helper: "weak"
+
+          # Test maintained versions of Symfony
+          - dependencies: "php-http/guzzle6-adapter"
+            symfony-require: "3.4.*"
+            php-version: "7.3"
+            symfony-deprecations-helper: "weak"
+          - dependencies: "php-http/guzzle7-adapter symfony/http-client:^4.4"
+            symfony-require: "4.4.*"
+            php-version: "7.3"
+            symfony-deprecations-helper: "weak"
+          - dependencies: "php-http/guzzle7-adapter symfony/http-client:^5.0"
+            symfony-require: "5.4.*"
+            php-version: "7.3"
+            symfony-deprecations-helper: "weak"
+
+    steps:
+      - name: "Checkout"
+        uses: "actions/checkout@v2"
+        with:
+          fetch-depth: 2
+
+      - name: "Install PHP with PCOV"
+        uses: "shivammathur/setup-php@v2"
+        with:
+          php-version: "${{ matrix.php-version }}"
+          coverage: "pcov"
+          ini-values: "zend.assertions=1"
+
+      - name: "Enforce using stable dependencies"
+        run: "composer config minimum-stability stable"
+        if: "${{ matrix.stability == 'stable' }}"
+
+      - name: "Install dependencies"
+        run: "composer require --no-progress --no-scripts --no-plugins symfony/flex ${{ matrix.dependencies }}"
+
+      - name: "Install dependencies with Composer"
+        uses: "ramsey/composer-install@v1"
+        with:
+          dependency-versions: "${{ matrix.dependencies }}"
+          composer-options: "${{ matrix.composer-options }}"
+
+      - name: "Run PHPUnit"
+        run: "composer test"
