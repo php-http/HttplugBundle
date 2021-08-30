@@ -2,9 +2,10 @@
 
 The change log describes what is "Added", "Removed", "Changed" or "Fixed" between each release.
 
-# 1.23.0 - ?
+# 1.23.0 - 2021-08-30
 
 - Changed the way request/response body is displayed in profiler. symfony/var-dumper is used now.
+- Changed badge counter of # of requests on side menu to be always visible
 
 # 1.22.1 - 2021-07-26
 
