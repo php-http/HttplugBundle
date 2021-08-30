@@ -62,11 +62,9 @@
             {{ include('@Httplug/Icon/httplug.svg') }}
         </span>
         <strong>Httplug</strong>
-        {% if collector.failedStacks|length %}
-            <span class="count">
-                <span>{{ collector.failedStacks|length }}</span>
-            </span>
-        {% endif %}
+        <span class="count">
+            <span>{{ (collector.stacks|length - collector.failedStacks|length) ~ '/' ~ collector.stacks|length}}</span>
+        </span>
     </span>
 {% endblock %}
 
