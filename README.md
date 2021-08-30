@@ -2,7 +2,7 @@
 
 [![Latest Version](https://img.shields.io/github/release/php-http/HttplugBundle.svg?style=flat-square)](https://github.com/php-http/HttplugBundle/releases)
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE)
-[![Build Status](https://img.shields.io/travis/php-http/HttplugBundle/master.svg?style=flat-square)](https://travis-ci.org/php-http/HttplugBundle)
+[![Build Status](https://github.com/php-http/HttplugBundle/actions/workflows/continuous-integration.yml/badge.svg)](https://github.com/php-http/HttplugBundle/actions)
 [![Code Coverage](https://img.shields.io/scrutinizer/coverage/g/php-http/HttplugBundle.svg?style=flat-square)](https://scrutinizer-ci.com/g/php-http/HttplugBundle)
 [![Quality Score](https://img.shields.io/scrutinizer/g/php-http/HttplugBundle.svg?style=flat-square)](https://scrutinizer-ci.com/g/php-http/HttplugBundle)
 [![Total Downloads](https://img.shields.io/packagist/dt/php-http/httplug-bundle.svg?style=flat-square)](https://packagist.org/packages/php-http/httplug-bundle)
