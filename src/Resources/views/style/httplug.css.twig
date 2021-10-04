@@ -46,7 +46,7 @@
     border-radius: 2px 0px 0px 2px;
     border: 0;
     line-height: inherit;
-    background-color: #eee;
+    background-color: var(--metric-value-background, #eee);
     opacity: 1;
     font-size: 14px;
     flex: 1;
@@ -88,7 +88,7 @@
     display: flex;
     justify-content: space-between;
 
-    background: #FFF;
+    background: var(--table-background, #FFF);
     border: 1px solid #E0E0E0;
     box-shadow: 0px 0px 1px rgba(128, 128, 128, .2);
     margin: 1em 0;
@@ -108,8 +108,8 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    background: white;
-    color: black;
+    background: var(--table-background, white);
+    color: var(--color-text, black);
     font-size: 0; /*hide line return spacings*/
 }
 
