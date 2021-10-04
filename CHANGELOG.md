@@ -2,6 +2,9 @@
 
 The change log describes what is "Added", "Removed", "Changed" or "Fixed" between each release.
 
+# 1.23.1
+- Fix issue with whitespaces in URL when URL in tab was copied
+
 # 1.23.0 - 2021-08-30
 
 - Changed the way request/response body is displayed in profiler. symfony/var-dumper is used now.
