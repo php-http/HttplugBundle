@@ -2,8 +2,9 @@
 
 The change log describes what is "Added", "Removed", "Changed" or "Fixed" between each release.
 
-# 1.23.1
+# 1.23.1 - unreleased
 - Fix issue with whitespaces in URL when URL in tab was copied
+- Fixed dark mode compatiblity, making some previously invisible elements visible
 
 # 1.23.0 - 2021-08-30
 
