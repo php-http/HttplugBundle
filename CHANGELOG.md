@@ -2,11 +2,12 @@
 
 The change log describes what is "Added", "Removed", "Changed" or "Fixed" between each release.
 
-# 1.23.2 - unreleased
+# 1.24.0 - unreleased
 - Changed stopwatch category from default to "httplug", so it's more prominent on Execution timeline view
+- Changed tab texts inside profiler so that it shows ports in URL in case it's non-standard
 
 # 1.23.1 - 2021-10-13
-- Fix issue with whitespaces in URL when URL in tab was copied
+- Fixed issue with whitespaces in URL when URL in tab was copied
 - Fixed dark mode compatiblity, making some previously invisible elements visible
 
 # 1.23.0 - 2021-08-30
