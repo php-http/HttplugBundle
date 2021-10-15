@@ -52,6 +52,8 @@ class ProfileClient implements HttpClient, HttpAsyncClient
      */
     private $eventNames = [];
 
+    private const STOPWATCH_CATEGORY = 'httplug';
+
     /**
      * @param HttpClient|HttpAsyncClient $client The client to profile. Client must implement HttpClient or
      *                                           HttpAsyncClient interface.
@@ -85,7 +87,7 @@ class ProfileClient implements HttpClient, HttpAsyncClient
         }
 
         $this->collectRequestInformations($request, $stack);
-        $event = $this->stopwatch->start($this->getStopwatchEventName($request));
+        $event = $this->stopwatch->start($this->getStopwatchEventName($request), self::STOPWATCH_CATEGORY);
 
         $onFulfilled = function (ResponseInterface $response) use ($event, $stack) {
             $this->collectResponseInformations($response, $event, $stack);
@@ -128,7 +130,7 @@ class ProfileClient implements HttpClient, HttpAsyncClient
         }
 
         $this->collectRequestInformations($request, $stack);
-        $event = $this->stopwatch->start($this->getStopwatchEventName($request));
+        $event = $this->stopwatch->start($this->getStopwatchEventName($request), self::STOPWATCH_CATEGORY);
 
         try {
             $response = $this->client->sendRequest($request);

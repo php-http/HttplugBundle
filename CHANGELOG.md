@@ -2,6 +2,9 @@
 
 The change log describes what is "Added", "Removed", "Changed" or "Fixed" between each release.
 
+# 1.23.2 - unreleased
+- Changed stopwatch category from default to "httplug", so it's more prominent on Execution timeline view
+
 # 1.23.1 - 2021-10-13
 - Fix issue with whitespaces in URL when URL in tab was copied
 - Fixed dark mode compatiblity, making some previously invisible elements visible
