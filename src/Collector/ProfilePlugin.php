@@ -117,6 +117,7 @@ class ProfilePlugin implements Plugin
      */
     private function collectRequestInformation(RequestInterface $request, Stack $stack = null)
     {
+        $uri = $request->getUri();
         if (empty($stack->getRequestTarget())) {
             $stack->setRequestTarget($request->getRequestTarget());
         }
@@ -124,10 +125,13 @@ class ProfilePlugin implements Plugin
             $stack->setRequestMethod($request->getMethod());
         }
         if (empty($stack->getRequestScheme())) {
-            $stack->setRequestScheme($request->getUri()->getScheme());
+            $stack->setRequestScheme($uri->getScheme());
+        }
+        if (empty($stack->getRequestPort())) {
+            $stack->setRequestPort($uri->getPort());
         }
         if (empty($stack->getRequestHost())) {
-            $stack->setRequestHost($request->getUri()->getHost());
+            $stack->setRequestHost($uri->getHost());
         }
         if (empty($stack->getClientRequest())) {
             $stack->setClientRequest($this->formatter->formatRequest($request));

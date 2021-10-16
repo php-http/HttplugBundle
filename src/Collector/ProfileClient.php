@@ -152,10 +152,12 @@ class ProfileClient implements HttpClient, HttpAsyncClient
 
     private function collectRequestInformations(RequestInterface $request, Stack $stack)
     {
+        $uri = $request->getUri();
         $stack->setRequestTarget($request->getRequestTarget());
         $stack->setRequestMethod($request->getMethod());
-        $stack->setRequestScheme($request->getUri()->getScheme());
-        $stack->setRequestHost($request->getUri()->getHost());
+        $stack->setRequestScheme($uri->getScheme());
+        $stack->setRequestPort($uri->getPort());
+        $stack->setRequestHost($uri->getHost());
         $stack->setClientRequest($this->formatter->formatRequest($request));
         $stack->setCurlCommand($this->formatter->formatAsCurlCommand($request));
     }

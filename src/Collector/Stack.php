@@ -64,6 +64,11 @@ final class Stack
     private $requestScheme;
 
     /**
+     * @var int|null
+     */
+    private $requestPort;
+
+    /**
      * @var string
      */
     private $clientRequest;
@@ -306,6 +311,16 @@ final class Stack
     public function setRequestScheme($requestScheme)
     {
         $this->requestScheme = $requestScheme;
+    }
+
+    public function getRequestPort(): ?int
+    {
+        return $this->requestPort;
+    }
+
+    public function setRequestPort(?int $port)
+    {
+        $this->requestPort = $port;
     }
 
     /**

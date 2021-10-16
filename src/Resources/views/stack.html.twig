@@ -11,6 +11,9 @@
         <div class="label httplug-stack-header-target">
             <span class="httplug-scheme">{{ stack.requestScheme }}://</span>
             <span class="httplug-host">{{ stack.requestHost }}</span>
+            {% if stack.requestPort not in [null, 80, 443] %}
+                <span class="httplug-port">:{{ stack.requestPort }}</span>
+            {% endif %}
             <span class="httplug-target">{{ stack.requestTarget }}</span>
         </div>
     {% endspaceless %}
