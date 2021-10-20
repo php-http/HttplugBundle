@@ -21,6 +21,7 @@
         <service id="httplug.plugin.logger" class="Http\Client\Common\Plugin\LoggerPlugin" public="false" abstract="true">
             <argument />
             <argument>null</argument>
+            <tag name="monolog.logger" channel="httplug" />
         </service>
         <service id="httplug.plugin.redirect" class="Http\Client\Common\Plugin\RedirectPlugin" public="false" />
         <service id="httplug.plugin.retry" class="Http\Client\Common\Plugin\RetryPlugin" public="false" />
