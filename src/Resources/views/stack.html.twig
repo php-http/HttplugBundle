@@ -7,7 +7,7 @@
         {% endif %}
         <span class="label httplug-method httplug-method-{{ stack.requestMethod|lower }}">{{ stack.requestMethod }}</span>
     </div>
-    {% spaceless %}
+    {% apply spaceless %}
         <div class="label httplug-stack-header-target">
             <span class="httplug-scheme">{{ stack.requestScheme }}://</span>
             <span class="httplug-host">{{ stack.requestHost }}</span>
@@ -16,7 +16,7 @@
             {% endif %}
             <span class="httplug-target">{{ stack.requestTarget }}</span>
         </div>
-    {% endspaceless %}
+    {% endapply %}
     <div>
         <span class="label httplug-duration">{{ stack.duration|number_format }} ms</span>
         {% if stack.responseCode >= 400 and stack.responseCode <= 599 %}
