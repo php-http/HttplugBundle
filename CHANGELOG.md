@@ -2,10 +2,11 @@
 
 The change log describes what is "Added", "Removed", "Changed" or "Fixed" between each release.
 
-# 1.24.0 - unreleased
+# 1.24.0 - 2021-10-23
 - Changed stopwatch category from default to "httplug", so it's more prominent on Execution timeline view
 - Changed tab texts inside profiler so that it shows ports in URL in case it's non-standard
 - Changed default logging plugin monolog channel from "app" to "httplug"
+- Fixed compatibility with Twig 3.x
 
 # 1.23.1 - 2021-10-13
 - Fixed issue with whitespaces in URL when URL in tab was copied

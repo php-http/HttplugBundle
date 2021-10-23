@@ -19,7 +19,7 @@ jobs:
       matrix:
         include:
           # Minimum supported Symfony version and lowest PHP version
-          - dependencies: "php-http/guzzle7-adapter"
+          - dependencies: "php-http/guzzle7-adapter php-http/discovery:^1.12"
             php-version: "7.3"
             dependency-versions: "lowest"
             symfony-deprecations-helper: "weak"
@@ -91,7 +91,7 @@ jobs:
       - name: "Install dependencies with Composer"
         uses: "ramsey/composer-install@v1"
         with:
-          dependency-versions: "${{ matrix.dependencies }}"
+          dependency-versions: "${{ matrix.dependency-versions }}"
           composer-options: "${{ matrix.composer-options }}"
 
       - name: "Run PHPUnit"
