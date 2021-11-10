@@ -2,6 +2,9 @@
 
 The change log describes what is "Added", "Removed", "Changed" or "Fixed" between each release.
 
+# 1.24.1 - TBD
+- Fixed deprecation notice in PHP 8.1 by adding `= null` to `\Http\HttplugBundle\Collector\Twig\HttpMessageMarkupExtension` 
+- 
 # 1.24.0 - 2021-10-23
 - Changed stopwatch category from default to "httplug", so it's more prominent on Execution timeline view
 - Changed tab texts inside profiler so that it shows ports in URL in case it's non-standard
