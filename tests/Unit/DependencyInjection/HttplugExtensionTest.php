@@ -11,7 +11,6 @@ use Http\HttplugBundle\Collector\PluginClientFactoryListener;
 use Http\HttplugBundle\DependencyInjection\HttplugExtension;
 use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractExtensionTestCase;
 use Symfony\Component\DependencyInjection\Reference;
-use Symfony\Component\HttpKernel\Kernel;
 
 /**
  * @author David Buchmann <mail@davidbu.ch>
@@ -354,14 +353,6 @@ class HttplugExtensionTest extends AbstractExtensionTestCase
         ]);
 
         $this->assertContainerBuilderHasService('httplug.client.acme');
-
-        if (version_compare(Kernel::VERSION, '3.4', '>=')) {
-            // Symfony made services private by default starting from 3.4
-            $this->assertTrue($this->container->getDefinition('httplug.client.acme')->isPrivate());
-        } else {
-            // Legacy Symfony
-            $this->assertTrue($this->container->getDefinition('httplug.client.acme')->isPublic());
-        }
     }
 
     public function testFlexibleClientShouldBePrivateByDefault(): void
@@ -418,11 +409,6 @@ class HttplugExtensionTest extends AbstractExtensionTestCase
 
         $this->assertContainerBuilderHasService('httplug.client.acme');
         $this->assertTrue($this->container->getDefinition('httplug.client.acme')->isPublic());
-
-        if (version_compare(Kernel::VERSION, '3.4', '>=')) {
-            // Symfony made services private by default starting from 3.4
-            $this->assertFalse($this->container->getDefinition('httplug.client.acme')->isPrivate());
-        }
     }
 
     public function testFlexibleClientCanBePublic(): void
@@ -438,11 +424,6 @@ class HttplugExtensionTest extends AbstractExtensionTestCase
 
         $this->assertContainerBuilderHasService('httplug.client.acme');
         $this->assertTrue($this->container->getDefinition('httplug.client.acme.flexible')->isPublic());
-
-        if (version_compare(Kernel::VERSION, '3.4', '>=')) {
-            // Symfony made services private by default starting from 3.4
-            $this->assertFalse($this->container->getDefinition('httplug.client.acme.flexible')->isPrivate());
-        }
     }
 
     public function testHttpMethodsClientCanBePublic(): void
@@ -458,11 +439,6 @@ class HttplugExtensionTest extends AbstractExtensionTestCase
 
         $this->assertContainerBuilderHasService('httplug.client.acme');
         $this->assertTrue($this->container->getDefinition('httplug.client.acme.http_methods')->isPublic());
-
-        if (version_compare(Kernel::VERSION, '3.4', '>=')) {
-            // Symfony made services private by default starting from 3.4
-            $this->assertFalse($this->container->getDefinition('httplug.client.acme.http_methods')->isPrivate());
-        }
     }
 
     public function testBatchClientCanBePublic(): void
@@ -478,11 +454,6 @@ class HttplugExtensionTest extends AbstractExtensionTestCase
 
         $this->assertContainerBuilderHasService('httplug.client.acme');
         $this->assertTrue($this->container->getDefinition('httplug.client.acme.batch_client')->isPublic());
-
-        if (version_compare(Kernel::VERSION, '3.4', '>=')) {
-            // Symfony made services private by default starting from 3.4
-            $this->assertFalse($this->container->getDefinition('httplug.client.acme.batch_client')->isPrivate());
-        }
     }
 
     public function testClientIsTaggedWithHttplugClientTag(): void

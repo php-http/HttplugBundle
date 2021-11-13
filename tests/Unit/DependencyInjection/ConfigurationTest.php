@@ -111,21 +111,6 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
         return new Configuration(true);
     }
 
-    public function testEmptyConfiguration(): void
-    {
-        $formats = array_map(function ($path) {
-            return __DIR__.'/../../Resources/Fixtures/'.$path;
-        }, [
-            'config/empty.yml',
-            'config/empty.xml',
-            'config/empty.php',
-        ]);
-
-        foreach ($formats as $format) {
-            $this->assertProcessedConfigurationEquals($this->emptyConfig, [$format]);
-        }
-    }
-
     public function testSupportsAllConfigFormats(): void
     {
         if (!class_exists(Client::class)) {

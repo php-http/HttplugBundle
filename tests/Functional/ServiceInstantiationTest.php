@@ -24,6 +24,7 @@ use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\HttpKernel\KernelEvents;
+use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\HttpKernel\Profiler\Profiler;
 
 class ServiceInstantiationTest extends WebTestCase
@@ -125,7 +126,7 @@ class ServiceInstantiationTest extends WebTestCase
     /**
      * {@inheritdoc}
      */
-    protected static function bootKernel(array $options = [])
+    protected static function bootKernel(array $options = []): KernelInterface
     {
         parent::bootKernel($options);
 
@@ -135,11 +136,7 @@ class ServiceInstantiationTest extends WebTestCase
         $class = (Kernel::MAJOR_VERSION >= 5) ? RequestEvent::class : GetResponseEvent::class;
         $event = new $class(static::$kernel, SymfonyRequest::create('/'), HttpKernelInterface::MASTER_REQUEST);
 
-        if (version_compare(Kernel::VERSION, '4.3.0', '>=')) {
-            $dispatcher->dispatch($event, KernelEvents::REQUEST);
-        } else {
-            $dispatcher->dispatch(KernelEvents::REQUEST, $event);
-        }
+        $dispatcher->dispatch($event, KernelEvents::REQUEST);
 
         return static::$kernel;
     }

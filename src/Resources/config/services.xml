@@ -21,7 +21,7 @@
             <factory class="Http\Discovery\HttpAsyncClientDiscovery" method="find" />
         </service>
 
-        <!-- Discovery with autowiring support for Symfony 3.3+ -->
+        <!-- Discovery with autowiring support -->
         <service id="httplug.message_factory.default" class="Http\Message\MessageFactory">
             <factory class="Http\Discovery\MessageFactoryDiscovery" method="find" />
         </service>

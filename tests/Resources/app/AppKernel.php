@@ -2,18 +2,18 @@
 
 declare(strict_types=1);
 
-use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Kernel;
-use Symfony\Component\Routing\RouteCollectionBuilder;
+use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
+use Symfony\Component\Routing\Loader\PhpFileLoader as RoutingPhpFileLoader;
+use Symfony\Component\Routing\Route;
+use Symfony\Component\Routing\RouteCollection;
 
 class AppKernel extends Kernel
 {
-    use MicroKernelTrait;
-
     /**
      * @var string
      */
@@ -22,7 +22,7 @@ class AppKernel extends Kernel
     /**
      * {@inheritdoc}
      */
-    public function registerBundles()
+    public function registerBundles(): iterable
     {
         $bundles = [
             new \Symfony\Bundle\FrameworkBundle\FrameworkBundle(),
@@ -37,37 +37,52 @@ class AppKernel extends Kernel
         return $bundles;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    protected function configureContainer(ContainerBuilder $container, LoaderInterface $loader): void
+    public function registerContainerConfiguration(LoaderInterface $loader)
     {
-        $loader->load(__DIR__.'/config/config_'.$this->getEnvironment().'.yml');
-        if ($this->isDebug()) {
-            $loader->load(__DIR__.'/config/config_debug.yml');
-        }
+        $loader->load(function (ContainerBuilder $container) use ($loader) {
+            $container->loadFromExtension('framework', [
+                'router' => [
+                    'resource' => 'kernel::loadRoutes',
+                    'type' => 'service',
+                    'utf8' => true,
+                ],
+            ]);
+
+            $container->register('kernel', static::class)
+                ->addTag('routing.route_loader')
+                ->setAutoconfigured(true)
+                ->setSynthetic(true)
+                ->setPublic(true)
+            ;
+
+            $loader->load(__DIR__.'/config/config_'.$this->getEnvironment().'.yml');
+            if ($this->isDebug()) {
+                $loader->load(__DIR__.'/config/config_debug.yml');
+            }
+        });
+    }
+
+    public function loadRoutes(LoaderInterface $loader): RouteCollection
+    {
+        $file = (new \ReflectionObject($this))->getFileName();
+        /* @var RoutingPhpFileLoader $kernelLoader */
+        $kernelLoader = $loader->getResolver()->resolve($file, 'php');
+        $kernelLoader->setCurrentDir(\dirname($file));
+
+        $collection = new RouteCollection();
+        $collection->add('/', new Route('/', ['_controller' => 'kernel::indexAction']));
+
+        $routes = new RoutingConfigurator($collection, $kernelLoader, $file, $file);
+        $routes->import('@WebProfilerBundle/Resources/config/routing/wdt.xml')->prefix('_wdt');
+        $routes->import('@WebProfilerBundle/Resources/config/routing/profiler.xml')->prefix('_profiler');
+
+        return $collection;
     }
 
     /**
      * {@inheritdoc}
      */
-    protected function configureRoutes(RouteCollectionBuilder $routes): void
-    {
-        $routes->import('@WebProfilerBundle/Resources/config/routing/wdt.xml', '/_wdt');
-        $routes->import('@WebProfilerBundle/Resources/config/routing/profiler.xml', '/_profiler');
-
-        if (Kernel::MAJOR_VERSION < 4 || (Kernel::MAJOR_VERSION === 4 && Kernel::MINOR_VERSION === 0)) {
-            $routes->add('/', 'kernel:indexAction');
-        } else {
-            // If 4.1+
-            $routes->add('/', 'kernel::indexAction');
-        }
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getCacheDir()
+    public function getCacheDir(): string
     {
         if (null === self::$cacheDir) {
             self::$cacheDir = uniqid('cache');
@@ -79,17 +94,9 @@ class AppKernel extends Kernel
     /**
      * {@inheritdoc}
      */
-    public function getLogDir()
+    public function getLogDir(): string
     {
         return sys_get_temp_dir().'/httplug-bundle/logs';
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function getContainerBaseClass()
-    {
-        return '\PSS\SymfonyMockerContainer\DependencyInjection\MockerContainer';
     }
 
     public function indexAction()
