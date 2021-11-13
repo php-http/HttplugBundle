@@ -46,11 +46,11 @@ jobs:
 
           # Latest commit to master
           - dependencies: "php-http/guzzle7-adapter php-http/vcr-plugin:^1.0@dev"
-            php-version: "8.0"
+            php-version: "8.1"
             stability: "dev"
             symfony-deprecations-helper: "weak"
           - dependencies: "php-http/guzzle7-adapter"
-            php-version: "8.0"
+            php-version: "8.1"
             stability: "dev"
             symfony-deprecations-helper: "weak"
 
