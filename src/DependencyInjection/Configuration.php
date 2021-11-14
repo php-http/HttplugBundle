@@ -54,15 +54,10 @@ class Configuration implements ConfigurationInterface
     /**
      * {@inheritdoc}
      */
-    public function getConfigTreeBuilder()
+    public function getConfigTreeBuilder(): TreeBuilder
     {
         $treeBuilder = new TreeBuilder('httplug');
-        // Keep compatibility with symfony/config < 4.2
-        if (!method_exists($treeBuilder, 'getRootNode')) {
-            $rootNode = $treeBuilder->root('httplug');
-        } else {
-            $rootNode = $treeBuilder->getRootNode();
-        }
+        $rootNode = $treeBuilder->getRootNode();
 
         $this->configureClients($rootNode);
         $this->configureSharedPlugins($rootNode);
@@ -274,12 +269,7 @@ class Configuration implements ConfigurationInterface
     private function createClientPluginNode()
     {
         $treeBuilder = new TreeBuilder('plugins');
-        // Keep compatibility with symfony/config < 4.2
-        if (!method_exists($treeBuilder, 'getRootNode')) {
-            $node = $treeBuilder->root('plugins');
-        } else {
-            $node = $treeBuilder->getRootNode();
-        }
+        $node = $treeBuilder->getRootNode();
 
         /** @var ArrayNodeDefinition $pluginList */
         $pluginList = $node
@@ -610,12 +600,7 @@ class Configuration implements ConfigurationInterface
     private function createAuthenticationPluginNode()
     {
         $treeBuilder = new TreeBuilder('authentication');
-        // Keep compatibility with symfony/config < 4.2
-        if (!method_exists($treeBuilder, 'getRootNode')) {
-            $node = $treeBuilder->root('authentication');
-        } else {
-            $node = $treeBuilder->getRootNode();
-        }
+        $node = $treeBuilder->getRootNode();
 
         $node
             ->useAttributeAsKey('name')
@@ -707,12 +692,7 @@ class Configuration implements ConfigurationInterface
     private function createCachePluginNode()
     {
         $builder = new TreeBuilder('config');
-        // Keep compatibility with symfony/config < 4.2
-        if (!method_exists($builder, 'getRootNode')) {
-            $config = $builder->root('config');
-        } else {
-            $config = $builder->getRootNode();
-        }
+        $config = $builder->getRootNode();
 
         $config
             ->fixXmlConfig('method')
@@ -805,12 +785,7 @@ class Configuration implements ConfigurationInterface
         ;
 
         $treeBuilder = new TreeBuilder('cache');
-        // Keep compatibility with symfony/config < 4.2
-        if (!method_exists($treeBuilder, 'getRootNode')) {
-            $cache = $treeBuilder->root('cache');
-        } else {
-            $cache = $treeBuilder->getRootNode();
-        }
+        $cache = $treeBuilder->getRootNode();
 
         $cache
             ->canBeEnabled()

@@ -55,10 +55,6 @@ jobs:
             symfony-deprecations-helper: "weak"
 
           # Test maintained versions of Symfony
-          - dependencies: "php-http/guzzle6-adapter"
-            symfony-require: "3.4.*"
-            php-version: "7.3"
-            symfony-deprecations-helper: "weak"
           - dependencies: "php-http/guzzle7-adapter symfony/http-client:^4.4"
             symfony-require: "4.4.*"
             php-version: "7.3"
