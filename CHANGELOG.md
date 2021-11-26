@@ -2,7 +2,7 @@
 
 The change log describes what is "Added", "Removed", "Changed" or "Fixed" between each release.
 
-# 1.25.0 - TBD
+# 1.25.0 - 2021-11-26
 - Added PHP 8.1 support
 - Added Symfony 6 support
 - Removed Symfony 3.x support
