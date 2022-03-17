@@ -1,0 +1,9 @@
+httplug:
+    clients:
+        test:
+            plugins:
+                -
+                    cache:
+                        cache_pool: my_custom_cache_pull
+                        config:
+                            default_ttl: null

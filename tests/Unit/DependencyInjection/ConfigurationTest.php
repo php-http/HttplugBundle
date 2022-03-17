@@ -453,4 +453,37 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
         $this->expectExceptionMessage('The child node "captured_body_length" at path "httplug.profiling" must be an integer or null');
         $this->assertProcessedConfigurationEquals([], [$file]);
     }
+
+    public function testNullDefaultTtl(): void
+    {
+        $file = __DIR__.'/../../Resources/Fixtures/config/ttl_null.yml';
+        $config = $this->emptyConfig;
+        $config['clients'] = [
+            'test' => [
+                'factory' => 'httplug.factory.auto',
+                'service' => null,
+                'public' => null,
+                'flexible_client' => false,
+                'http_methods_client' => false,
+                'batch_client' => false,
+                'config' => [],
+                'plugins' => [
+                    [
+                        'cache' => [
+                            'config' => [
+                                'default_ttl' => null,
+                                'blacklisted_paths' => [],
+                                'methods' => ['GET', 'HEAD'],
+                                'cache_listeners' => [],
+                            ],
+                            'cache_pool' => 'my_custom_cache_pull',
+                            'enabled' => true,
+                            'stream_factory' => 'httplug.stream_factory',
+                        ],
+                    ],
+                ],
+            ],
+        ];
+        $this->assertProcessedConfigurationEquals($config, [$file]);
+    }
 }
