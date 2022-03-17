@@ -23,6 +23,7 @@ jobs:
             php-version: "7.3"
             dependency-versions: "lowest"
             symfony-deprecations-helper: "weak"
+            stability: "stable"
 
           # Test the latest stable release
           - dependencies: "php-http/guzzle7-adapter php-http/vcr-plugin:^1.0@dev"
