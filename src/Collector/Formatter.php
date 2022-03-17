@@ -65,6 +65,15 @@ class Formatter implements MessageFormatter
         return $this->formatter->formatRequest($request);
     }
 
+    public function formatResponseForRequest(ResponseInterface $response, RequestInterface $request)
+    {
+        if (method_exists($this->formatter, 'formatResponseForRequest')) {
+            return $this->formatter->formatResponseForRequest($response, $request);
+        }
+
+        return $this->formatter->formatResponse($response);
+    }
+
     /**
      * {@inheritdoc}
      */
