@@ -2,6 +2,10 @@
 
 The change log describes what is "Added", "Removed", "Changed" or "Fixed" between each release.
 
+# 1.26.0 - 2022-03-17
+
+- Fixed you can now configure the cache plugin default_ttl with `null`.
+
 # 1.25.0 - 2021-11-26
 - Added PHP 8.1 support
 - Added Symfony 6 support
