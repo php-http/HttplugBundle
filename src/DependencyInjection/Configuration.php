@@ -779,7 +779,7 @@ class Configuration implements ConfigurationInterface
                     ->info('A list of cache directives to respect when caching responses')
                     ->validate()
                         ->always(function ($v) {
-                            if (is_null($v) || is_array($v)) {
+                            if (is_array($v)) {
                                 return $v;
                             }
 
