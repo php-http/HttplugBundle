@@ -198,6 +198,9 @@ class HttplugExtension extends Extension
         switch ($name) {
             case 'cache':
                 $options = $config['config'];
+                if (\array_key_exists('respect_response_cache_directives', $options) && null === $options['respect_response_cache_directives']) {
+                    unset($options['respect_response_cache_directives']);
+                }
                 if (!empty($options['cache_key_generator'])) {
                     $options['cache_key_generator'] = new Reference($options['cache_key_generator']);
                 }
