@@ -776,7 +776,7 @@ class Configuration implements ConfigurationInterface
                     ->end()
                 ->end()
                 ->variableNode('respect_response_cache_directives')
-                    ->info('A list of cache directives to respect when caching responses')
+                    ->info('A list of cache directives to respect when caching responses. Omit or set to null to respect the default set of directives.')
                     ->validate()
                         ->always(function ($v) {
                             if (is_null($v) || is_array($v)) {

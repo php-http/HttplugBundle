@@ -2,6 +2,11 @@
 
 The change log describes what is "Added", "Removed", "Changed" or "Fixed" between each release.
 
+# 1.26.1 - 2022-04-29
+
+- Fixed: Setting the cache plugin option `respect_response_cache_directives` to `null` makes the
+  plugin use the default set of directives instead of triggering an error.
+
 # 1.26.0 - 2022-03-17
 
 - Fixed you can now configure the cache plugin default_ttl with `null`.
