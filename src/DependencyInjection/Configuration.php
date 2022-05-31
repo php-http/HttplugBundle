@@ -725,7 +725,6 @@ class Configuration implements ConfigurationInterface
                             return null !== $v && !is_int($v);
                         })
                         ->thenInvalid('default_ttl must be an integer or null, got %s')
-                    ->end()
                 ->end()
                 ->arrayNode('blacklisted_paths')
                     ->info('An array of regular expression patterns for paths not to be cached. Defaults to an empty array.')
