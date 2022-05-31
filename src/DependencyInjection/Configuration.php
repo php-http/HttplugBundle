@@ -713,11 +713,12 @@ class Configuration implements ConfigurationInterface
                 ->scalarNode('cache_lifetime')
                     ->info('The minimum time we should store a cache item')
                     ->validate()
-                        ->ifTrue(function ($v) {
-                            return null !== $v && !is_int($v);
-                        })
-                        ->thenInvalid('cache_lifetime must be an integer or null, got %s')
+                    ->ifTrue(function ($v) {
+                        return null !== $v && !is_int($v);
+                    })
+                    ->thenInvalid('cache_lifetime must be an integer or null, got %s')
                     ->end()
+                ->end()
                 ->scalarNode('default_ttl')
                     ->info('The default max age of a Response')
                     ->validate()
@@ -725,6 +726,7 @@ class Configuration implements ConfigurationInterface
                             return null !== $v && !is_int($v);
                         })
                         ->thenInvalid('default_ttl must be an integer or null, got %s')
+                    ->end()
                 ->end()
                 ->arrayNode('blacklisted_paths')
                     ->info('An array of regular expression patterns for paths not to be cached. Defaults to an empty array.')
