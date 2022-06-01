@@ -2,7 +2,7 @@
 
 The change log describes what is "Added", "Removed", "Changed" or "Fixed" between each release.
 
-# 1.xx.yy- YYYY-MM-JJ
+# 1.26.2 - 2022-06-01
 
 - Fixed: You can now configure the cache plugin option `cache_lifetime` to `null` (which makes the plugin not add to the maxAge).
 
