@@ -710,8 +710,14 @@ class Configuration implements ConfigurationInterface
                 ->scalarNode('cache_key_generator')
                     ->info('This must be a service id to a service implementing '.CacheKeyGenerator::class)
                 ->end()
-                ->integerNode('cache_lifetime')
+                ->scalarNode('cache_lifetime')
                     ->info('The minimum time we should store a cache item')
+                    ->validate()
+                    ->ifTrue(function ($v) {
+                        return null !== $v && !is_int($v);
+                    })
+                    ->thenInvalid('cache_lifetime must be an integer or null, got %s')
+                    ->end()
                 ->end()
                 ->scalarNode('default_ttl')
                     ->info('The default max age of a Response')
