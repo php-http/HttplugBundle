@@ -275,6 +275,13 @@ class HttplugExtension extends Extension
 
                 break;
 
+            case 'error':
+                $definition->addArgument([
+                    'only_server_exception' => $config['only_server_exception'],
+                ]);
+
+                break;
+
             /* client specific plugins */
 
             case 'add_host':

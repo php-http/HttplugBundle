@@ -2,6 +2,10 @@
 
 The change log describes what is "Added", "Removed", "Changed" or "Fixed" between each release.
 
+# 1.27.0 -
+
+- Added support for configuring options of error plugin via configuration
+
 # 1.26.2 - 2022-06-01
 
 - Fixed: You can now configure the cache plugin option `cache_lifetime` to `null` (which makes the plugin not add to the maxAge).
