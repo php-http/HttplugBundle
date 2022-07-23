@@ -70,7 +70,10 @@
         "twig/twig": "Add this to your require-dev section when using the WebProfilerBundle"
     },
     "config": {
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "symfony/flex": true
+        }
     },
     "extra": {
         "branch-alias": {
