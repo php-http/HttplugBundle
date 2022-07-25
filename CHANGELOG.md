@@ -2,9 +2,9 @@
 
 The change log describes what is "Added", "Removed", "Changed" or "Fixed" between each release.
 
-# 1.27.0 -
+# 1.27.0 - 2022-07-25
 
-- Added support for configuring options of error plugin via configuration
+- Added support for configuring the error plugin via configuration
 
 # 1.26.2 - 2022-06-01
 
