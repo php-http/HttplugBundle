@@ -139,6 +139,11 @@ class HttplugExtensionTest extends AbstractExtensionTestCase
                                 'cache_pool' => 'my_cache_pool',
                             ],
                         ],
+                        [
+                            'error' => [
+                                'only_server_exception' => true,
+                            ],
+                        ],
                     ],
                 ],
             ],
@@ -156,6 +161,7 @@ class HttplugExtensionTest extends AbstractExtensionTestCase
             'httplug.client.acme.plugin.query_defaults',
             'httplug.client.acme.authentication.my_basic',
             'httplug.client.acme.plugin.cache',
+            'httplug.client.acme.plugin.error',
         ];
         $pluginReferences = array_map(function ($id) {
             return new Reference($id);

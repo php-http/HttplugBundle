@@ -590,6 +590,15 @@ class Configuration implements ConfigurationInterface
             ->end()
         ->end();
         // End stopwatch plugin
+
+        $error = $children->arrayNode('error')
+            ->canBeEnabled()
+            ->addDefaultsIfNotSet()
+            ->children()
+                ->scalarNode('only_server_exception')->defaultFalse()->end()
+            ->end()
+        ->end();
+        // End error plugin
     }
 
     /**

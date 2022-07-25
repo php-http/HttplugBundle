@@ -94,6 +94,10 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
                 'enabled' => true,
                 'stopwatch' => 'debug.stopwatch',
             ],
+            'error' => [
+                'enabled' => false,
+                'only_server_exception' => false,
+            ],
         ],
         'discovery' => [
             'client' => 'auto',
@@ -293,6 +297,10 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
                 'stopwatch' => [
                     'enabled' => false,
                     'stopwatch' => 'debug.stopwatch',
+                ],
+                'error' => [
+                    'enabled' => false,
+                    'only_server_exception' => false,
                 ],
             ],
             'discovery' => [
