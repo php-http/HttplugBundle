@@ -31,6 +31,6 @@ class SocketFactory implements ClientFactory
             throw new \LogicException('To use the Socket client you need to install the "php-http/socket-client" package.');
         }
 
-        return new Client($this->messageFactory, $config);
+        return new Client($config);
     }
 }

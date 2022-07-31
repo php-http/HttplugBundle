@@ -43,7 +43,8 @@
     },
     "conflict": {
         "php-http/guzzle6-adapter": "<1.1",
-        "php-http/curl-client": "<2.0"
+        "php-http/curl-client": "<2.0",
+        "php-http/socket-client": "<2.0"
     },
     "require-dev": {
         "guzzlehttp/psr7": "^1.7",
