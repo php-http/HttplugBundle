@@ -1,6 +1,7 @@
 framework:
   secret: php-http
   test: ~
+  http_method_override: false
 
 httplug:
     discovery:
