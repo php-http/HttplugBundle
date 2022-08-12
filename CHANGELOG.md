@@ -2,6 +2,11 @@
 
 The change log describes what is "Added", "Removed", "Changed" or "Fixed" between each release.
 
+# unreleased
+
+- If captured_body_length is set to 0 (default value), show a special message rather than the
+  generic message `This message has no captured body`.
+
 # 1.27.0 - 2022-07-25
 
 - Added support for configuring the error plugin via configuration

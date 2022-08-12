@@ -41,7 +41,7 @@ class ProfilingTest extends TestCase
 
     public function setUp(): void
     {
-        $this->collector = new Collector([]);
+        $this->collector = new Collector();
         $this->formatter = new Formatter(new FullHttpMessageFormatter(), new CurlCommandFormatter());
         $this->stopwatch = new Stopwatch();
     }

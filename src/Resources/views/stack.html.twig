@@ -39,10 +39,10 @@
     </div>
     <div class="httplug-messages">
         <div class="httplug-message card">
-            {{ include('@Httplug/http_message.html.twig', { data: stack.clientRequest, header: 'Request' }, with_context=false) }}
+            {{ include('@Httplug/http_message.html.twig', { data: stack.clientRequest, capturedBodyLength: collector.capturedBodyLength, header: 'Request' }, with_context=false) }}
         </div>
         <div class="httplug-message card">
-            {{ include('@Httplug/http_message.html.twig', { data: stack.clientResponse, header: 'Response' }, with_context=false) }}
+            {{ include('@Httplug/http_message.html.twig', { data: stack.clientResponse, capturedBodyLength: collector.capturedBodyLength, header: 'Response' }, with_context=false) }}
         </div>
     </div>
     {% if stack.profiles %}
@@ -51,10 +51,10 @@
                 <h3 class="httplug-plugin-name">{{ profile.plugin }}</h3>
                 <div class="httplug-messages">
                     <div class="httplug-message">
-                        {{ include('@Httplug/http_message.html.twig', { data: profile.request, header: 'Request' }, with_context=false) }}
+                        {{ include('@Httplug/http_message.html.twig', { data: profile.request, capturedBodyLength: collector.capturedBodyLength, header: 'Request' }, with_context=false) }}
                     </div>
                     <div class="httplug-message">
-                        {{ include('@Httplug/http_message.html.twig', { data: profile.response, header: 'Response' }, with_context=false) }}
+                        {{ include('@Httplug/http_message.html.twig', { data: profile.response, capturedBodyLength: collector.capturedBodyLength, header: 'Response' }, with_context=false) }}
                     </div>
                 </div>
                 {% if not loop.last %}

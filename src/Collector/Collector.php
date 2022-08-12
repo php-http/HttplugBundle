@@ -9,8 +9,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\DataCollector\DataCollector;
 
 /**
- * The Collector hold profiled Stacks pushed by StackPlugin. It also have a list of configured clients.
- * All those data are used to display the HTTPlug panel in the Symfony profiler.
+ * The Collector holds profiled Stacks pushed by the StackPlugin. It also has a list of the configured clients.
+ * This data is used to display the HTTPlug panel in the Symfony profiler.
  *
  * The collector is not designed for execution in a threaded application and does not support plugins that execute an
  * other request before the current one is sent by the client.
@@ -26,9 +26,15 @@ class Collector extends DataCollector
      */
     private $activeStack;
 
-    public function __construct()
+    /**
+     * @var int|null
+     */
+    private $capturedBodyLength;
+
+    public function __construct(?int $capturedBodyLength = null)
     {
         $this->reset();
+        $this->capturedBodyLength = $capturedBodyLength;
     }
 
     /**
@@ -46,6 +52,11 @@ class Collector extends DataCollector
     public function getName(): string
     {
         return 'httplug';
+    }
+
+    public function getCapturedBodyLength(): ?int
+    {
+        return $this->capturedBodyLength;
     }
 
     /**

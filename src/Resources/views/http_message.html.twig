@@ -2,7 +2,7 @@
 {% set content = '' %}
 {% set data = data|split("\n")|slice(1) %}
 {% set xdebugTokenLink = data|filter(v => 'x-debug-token-link:' in v|lower)|first|split(': ')|last %}
-
+{% set noContent = 0 is same as capturedBodyLength ? '(captured_body_length is set to 0, no body captured)' : '(This message has no captured body)' %}
 <table>
     <thead>
     <tr>
@@ -33,4 +33,4 @@
     </tbody>
 </table>
 
-<div class='httplug-http-body httplug-hidden'>{{ content ? content|httplug_markup_body : '(This message has no captured body)' }}</div>
+<div class='httplug-http-body httplug-hidden'>{{ content ? content|httplug_markup_body : noContent }}</div>
