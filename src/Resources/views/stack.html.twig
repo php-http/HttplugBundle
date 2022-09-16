@@ -14,7 +14,7 @@
             {% if stack.requestPort not in [null, 80, 443] %}
                 <span class="httplug-port">:{{ stack.requestPort }}</span>
             {% endif %}
-            <span class="httplug-target">{{ stack.requestTarget }}</span>
+            <span class="httplug-target">{{ (stack.requestTarget|default('/') starts with '/' ? '' : '/')  ~ stack.requestTarget }}</span>
         </div>
     {% endapply %}
     <div>
