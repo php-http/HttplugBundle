@@ -40,7 +40,7 @@ class Collector extends DataCollector
     /**
      * {@inheritdoc}
      */
-    public function reset()
+    public function reset(): void
     {
         $this->data['stacks'] = [];
         $this->activeStack = null;
