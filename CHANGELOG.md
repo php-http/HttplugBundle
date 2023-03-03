@@ -2,15 +2,16 @@
 
 The change log describes what is "Added", "Removed", "Changed" or "Fixed" between each release.
 
-# unreleased
+# 1.27.1 - 2023-03-03
 
-- If captured_body_length is set to 0 (default value), show a special message rather than the
+- Added `: void` to `Collector::reset` to avoid PHP warning.
+- If `captured_body_length` is set to 0 (default value), show a special message rather than the
   generic message `This message has no captured body`.
-- Fixed: Add slash in profiler if there is none between host and path
+- Fixed: Add slash in profiler if there is none between host and path.
 
 # 1.27.0 - 2022-07-25
 
-- Added support for configuring the error plugin via configuration
+- Added support for configuring the error plugin via configuration.
 
 # 1.26.2 - 2022-06-01
 
@@ -23,7 +24,7 @@ The change log describes what is "Added", "Removed", "Changed" or "Fixed" betwee
 
 # 1.26.0 - 2022-03-17
 
-- Fixed you can now configure the cache plugin default_ttl with `null`.
+- Fixed you can now configure the cache plugin `default_ttl` with `null`.
 
 # 1.25.0 - 2021-11-26
 - Added PHP 8.1 support
@@ -144,9 +145,9 @@ The change log describes what is "Added", "Removed", "Changed" or "Fixed" betwee
 - Autowiring support for FlexibleClient, HttpMethodsClientInterface and
   BatchClientInterface if they are enabled on the default/first client.
   (Only available with Httplug 2)
-- Configuration for the content_type plugin
+- Configuration for the `content_type` plugin
 - Support for namespaced Twig classes.
-- Configuration option default_client_autowiring that you can set to false
+- Configuration option `default_client_autowiring` that you can set to false
   to prevent autowiring the HttpClient and HttpAsyncClient
 
 ### Changed
