@@ -2,6 +2,11 @@
 
 The change log describes what is "Added", "Removed", "Changed" or "Fixed" between each release.
 
+# unreleased
+
+- Deprecated `Http\Client\HttpClient` in favor of `Psr\Http\Client\ClientInterface` (#425).
+- Added alias to autowire `Psr\Http\Client\ClientInterface` service (#425).
+
 # 1.27.1 - 2023-03-03
 
 - Added `: void` to `Collector::reset` to avoid PHP warning.
