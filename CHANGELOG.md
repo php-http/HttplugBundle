@@ -2,6 +2,11 @@
 
 The change log describes what is "Added", "Removed", "Changed" or "Fixed" between each release.
 
+# unreleased
+
+- Marked `Http\Client\HttpClient` service as deprecated (#425).
+- Added `Psr\Http\Client\ClientInterface` service (#425).
+
 # 1.27.1 - 2023-03-03
 
 - Added `: void` to `Collector::reset` to avoid PHP warning.
