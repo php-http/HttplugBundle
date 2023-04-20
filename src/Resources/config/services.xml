@@ -48,7 +48,7 @@
             <factory class="Http\Discovery\HttpClientDiscovery" method="find" />
         </service>
         <service id="Http\Client\HttpClient" alias="httplug.client" public="false">
-            <deprecated />
+            <deprecated version="1.28" />
         </service>
         <service id="Psr\Http\Client\ClientInterface" alias="httplug.client" public="false" />
 
