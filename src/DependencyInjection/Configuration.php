@@ -190,7 +190,7 @@ class Configuration implements ConfigurationInterface
         return $treeBuilder;
     }
 
-    private function configureClients(ArrayNodeDefinition $root)
+    private function configureClients(ArrayNodeDefinition $root): void
     {
         $root->children()
             ->arrayNode('clients')
@@ -249,7 +249,7 @@ class Configuration implements ConfigurationInterface
         ->end();
     }
 
-    private function configureSharedPlugins(ArrayNodeDefinition $root)
+    private function configureSharedPlugins(ArrayNodeDefinition $root): void
     {
         $pluginsNode = $root
             ->children()
@@ -262,11 +262,9 @@ class Configuration implements ConfigurationInterface
     }
 
     /**
-     * Createplugins node of a client.
-     *
-     * @return ArrayNodeDefinition The plugin node
+     * Create plugins node of a client.
      */
-    private function createClientPluginNode()
+    private function createClientPluginNode(): ArrayNodeDefinition
     {
         $treeBuilder = new TreeBuilder('plugins');
         $node = $treeBuilder->getRootNode();
@@ -527,7 +525,7 @@ class Configuration implements ConfigurationInterface
      * @param ArrayNodeDefinition $pluginNode the node to add to
      * @param bool                $disableAll Some shared plugins are enabled by default. On the client, all are disabled by default.
      */
-    private function addSharedPluginNodes(ArrayNodeDefinition $pluginNode, $disableAll = false)
+    private function addSharedPluginNodes(ArrayNodeDefinition $pluginNode, $disableAll = false): void
     {
         $children = $pluginNode->children();
 
@@ -633,7 +631,7 @@ class Configuration implements ConfigurationInterface
      *
      * @return NodeDefinition definition for the authentication node in the plugins list
      */
-    private function createAuthenticationPluginNode()
+    private function createAuthenticationPluginNode(): NodeDefinition
     {
         $treeBuilder = new TreeBuilder('authentication');
         $node = $treeBuilder->getRootNode();
@@ -697,7 +695,7 @@ class Configuration implements ConfigurationInterface
      *
      * @throws InvalidConfigurationException If $actual does not have exactly the keys specified in $expected (plus 'type')
      */
-    private function validateAuthenticationType(array $expected, array $actual, $authName)
+    private function validateAuthenticationType(array $expected, array $actual, $authName): void
     {
         unset($actual['type']);
         // Empty array is always provided, even if the config is not filled.
@@ -725,7 +723,7 @@ class Configuration implements ConfigurationInterface
      *
      * @return NodeDefinition definition for the cache node in the plugins list
      */
-    private function createCachePluginNode()
+    private function createCachePluginNode(): NodeDefinition
     {
         $builder = new TreeBuilder('config');
         $config = $builder->getRootNode();

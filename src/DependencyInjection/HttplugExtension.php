@@ -24,6 +24,7 @@ use Http\Mock\Client as MockClient;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\UriInterface;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
+use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Alias;
 use Symfony\Component\DependencyInjection\ChildDefinition;
@@ -50,10 +51,7 @@ class HttplugExtension extends Extension
      */
     private $useVcrPlugin = false;
 
-    /**
-     * {@inheritdoc}
-     */
-    public function load(array $configs, ContainerBuilder $container)
+    public function load(array $configs, ContainerBuilder $container): void
     {
         $configuration = $this->getConfiguration($configs, $container);
         $config = $this->processConfiguration($configuration, $configs);
@@ -122,7 +120,7 @@ class HttplugExtension extends Extension
 
         if ($this->useVcrPlugin) {
             if (!\class_exists(RecordPlugin::class)) {
-                throw new \Exception('You need to require the VCR plugin to be able to use it: "composer require --dev php-http/vcr-plugin".');
+                throw new InvalidConfigurationException('You need to require the VCR plugin to be able to use it: "composer require --dev php-http/vcr-plugin".');
             }
 
             $loader->load('vcr-plugin.xml');
@@ -132,7 +130,7 @@ class HttplugExtension extends Extension
     /**
      * Configure client services.
      */
-    private function configureClients(ContainerBuilder $container, array $config)
+    private function configureClients(ContainerBuilder $container, array $config): void
     {
         $first = null;
         $clients = [];
@@ -182,7 +180,7 @@ class HttplugExtension extends Extension
     /**
      * Configure all Httplug plugins or remove their service definition.
      */
-    private function configurePlugins(ContainerBuilder $container, array $config)
+    private function configurePlugins(ContainerBuilder $container, array $config): void
     {
         if (!empty($config['authentication'])) {
             $this->configureAuthentication($container, $config['authentication']);
@@ -204,7 +202,7 @@ class HttplugExtension extends Extension
      * @param ContainerBuilder $container In case we need to add additional services for this plugin
      * @param string           $serviceId service id of the plugin, in case we need to add additional services for this plugin
      */
-    private function configurePluginByName($name, Definition $definition, array $config, ContainerBuilder $container, $serviceId)
+    private function configurePluginByName($name, Definition $definition, array $config, ContainerBuilder $container, $serviceId): void
     {
         switch ($name) {
             case 'cache':
@@ -352,9 +350,9 @@ class HttplugExtension extends Extension
     }
 
     /**
-     * @return array list of service ids for the authentication plugins
+     * @return string[] list of service ids for the authentication plugins
      */
-    private function configureAuthentication(ContainerBuilder $container, array $config, $servicePrefix = 'httplug.plugin.authentication')
+    private function configureAuthentication(ContainerBuilder $container, array $config, $servicePrefix = 'httplug.plugin.authentication'): array
     {
         $pluginServices = [];
 
@@ -404,7 +402,7 @@ class HttplugExtension extends Extension
     /**
      * @param string $clientName
      */
-    private function configureClient(ContainerBuilder $container, $clientName, array $arguments)
+    private function configureClient(ContainerBuilder $container, $clientName, array $arguments): void
     {
         $serviceId = 'httplug.client.'.$clientName;
 
@@ -502,7 +500,7 @@ class HttplugExtension extends Extension
      * @param string $serviceId Name of the private service to create
      * @param string $uri       String representation of the URI
      */
-    private function createUri(ContainerBuilder $container, $serviceId, $uri)
+    private function createUri(ContainerBuilder $container, $serviceId, $uri): void
     {
         $container
             ->register($serviceId, UriInterface::class)
@@ -516,7 +514,7 @@ class HttplugExtension extends Extension
      * Make the user can select what client is used for auto discovery. If none is provided, a service will be created
      * by finding a client using auto discovery.
      */
-    private function configureAutoDiscoveryClients(ContainerBuilder $container, array $config)
+    private function configureAutoDiscoveryClients(ContainerBuilder $container, array $config): void
     {
         $httpClient = $config['discovery']['client'];
         if ('auto' !== $httpClient) {
@@ -563,7 +561,7 @@ class HttplugExtension extends Extension
      *
      * @return string configured service id
      */
-    private function configurePlugin(ContainerBuilder $container, $serviceId, $pluginName, array $pluginConfig)
+    private function configurePlugin(ContainerBuilder $container, $serviceId, $pluginName, array $pluginConfig): string
     {
         $pluginServiceId = $serviceId.'.plugin.'.$pluginName;
 
@@ -575,7 +573,7 @@ class HttplugExtension extends Extension
         return $pluginServiceId;
     }
 
-    private function configureVcrPlugin(ContainerBuilder $container, array $config, $prefix)
+    private function configureVcrPlugin(ContainerBuilder $container, array $config, $prefix): array
     {
         $recorder = $config['recorder'];
         $recorderId = in_array($recorder, ['filesystem', 'in_memory']) ? 'httplug.plugin.vcr.recorder.'.$recorder : $recorder;
