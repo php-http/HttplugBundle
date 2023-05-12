@@ -47,7 +47,7 @@
         <service id="httplug.client.default" class="Http\Client\HttpClient">
             <factory class="Http\Discovery\HttpClientDiscovery" method="find" />
         </service>
-        <service id="Http\Client\HttpClient" alias="httplug.client" public="false" />
+        <service id="Psr\Http\Client\ClientInterface" alias="httplug.client" public="false" />
 
         <!-- Discovery for PSR-18 -->
         <service id="httplug.psr18_client.default" class="Psr\Http\Client\ClientInterface">
