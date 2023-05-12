@@ -60,6 +60,12 @@
         <service id="httplug.plugin.query_defaults" class="Http\Client\Common\Plugin\QueryDefaultsPlugin" public="false" abstract="true">
             <argument/>
         </service>
+        <service id="httplug.plugin.request_seekable_body" class="Http\Client\Common\Plugin\RequestSeekableBodyPlugin" public="false" abstract="true">
+            <argument/>
+        </service>
+        <service id="httplug.plugin.response_seekable_body" class="Http\Client\Common\Plugin\ResponseSeekableBodyPlugin" public="false" abstract="true">
+            <argument/>
+        </service>
 
     </services>
 </container>
