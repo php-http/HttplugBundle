@@ -96,6 +96,16 @@ class HttplugExtensionTest extends AbstractExtensionTestCase
                             ],
                         ],
                         [
+                            'add_path' => [
+                                'path' => '/v1',
+                            ],
+                        ],
+                        [
+                            'base_uri' => [
+                                'uri' => 'https://localhost:8000/v1',
+                            ],
+                        ],
+                        [
                             'content_type' => [
                                 'skip_detection' => true,
                             ],
@@ -125,7 +135,9 @@ class HttplugExtensionTest extends AbstractExtensionTestCase
                                 'use_file_buffer' => true,
                             ],
                         ],
-//                        'response_seekable_body',
+                        [
+                            'response_seekable_body' => true,
+                        ],
                         [
                             'query_defaults' => [
                                 'parameters' => ['locale' => 'en'],
@@ -159,11 +171,15 @@ class HttplugExtensionTest extends AbstractExtensionTestCase
             'httplug.client.acme.plugin.decoder',
             'httplug.plugin.redirect',
             'httplug.client.acme.plugin.add_host',
+            'httplug.client.acme.plugin.add_path',
+            'httplug.client.acme.plugin.base_uri',
             'httplug.client.acme.plugin.content_type',
             'httplug.client.acme.plugin.header_append',
             'httplug.client.acme.plugin.header_defaults',
             'httplug.client.acme.plugin.header_set',
             'httplug.client.acme.plugin.header_remove',
+            'httplug.client.acme.plugin.request_seekable_body',
+            'httplug.client.acme.plugin.response_seekable_body',
             'httplug.client.acme.plugin.query_defaults',
             'httplug.client.acme.authentication.my_basic',
             'httplug.client.acme.plugin.cache',

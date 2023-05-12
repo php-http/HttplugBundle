@@ -4,10 +4,11 @@ The change log describes what is "Added", "Removed", "Changed" or "Fixed" betwee
 
 # 1.28.0 - 2023-05-12
 
-- Added PHP 8.2 support
-- Allow installation with PSR-7 `psr/http-message` 2.x
+- Added: Configure the seekable body plugins.
+- Added: PHP 8.2 support.
+- Added: Allow installation with PSR-7 `psr/http-message` 2.x.
+- Added: alias to autowire `Psr\Http\Client\ClientInterface` service (#425).
 - Deprecated `Http\Client\HttpClient` in favor of `Psr\Http\Client\ClientInterface` (#425).
-- Added alias to autowire `Psr\Http\Client\ClientInterface` service (#425).
 
 # 1.27.1 - 2023-03-03
 
