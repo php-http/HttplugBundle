@@ -2,8 +2,10 @@
 
 The change log describes what is "Added", "Removed", "Changed" or "Fixed" between each release.
 
-# unreleased
+# 1.28.0 - 2023-05-12
 
+- Added PHP 8.2 support
+- Allow installation with PSR-7 `psr/http-message` 2.x
 - Deprecated `Http\Client\HttpClient` in favor of `Psr\Http\Client\ClientInterface` (#425).
 - Added alias to autowire `Psr\Http\Client\ClientInterface` service (#425).
 

@@ -34,8 +34,14 @@ jobs:
           - dependencies: "php-http/guzzle6-adapter"
             php-version: "7.4"
             symfony-deprecations-helper: "weak"
-          - dependencies: "php-http/guzzle6-adapter"
+          - dependencies: "php-http/guzzle7-adapter"
             php-version: "8.0"
+            symfony-deprecations-helper: "weak"
+          - dependencies: "php-http/guzzle7-adapter"
+            php-version: "8.1"
+            symfony-deprecations-helper: "weak"
+          - dependencies: "php-http/guzzle7-adapter"
+            php-version: "8.2"
             symfony-deprecations-helper: "weak"
 
           # Test with httplug 1.x clients
@@ -49,11 +55,11 @@ jobs:
 
           # Latest commit to master
           - dependencies: "php-http/guzzle7-adapter php-http/vcr-plugin:^1.0@dev"
-            php-version: "8.1"
+            php-version: "8.2"
             stability: "dev"
             symfony-deprecations-helper: "weak"
           - dependencies: "php-http/guzzle7-adapter"
-            php-version: "8.1"
+            php-version: "8.2"
             stability: "dev"
             symfony-deprecations-helper: "weak"
 
