@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Http\HttplugBundle\ClientFactory;
 
-use Http\Client\HttpClient;
 use Http\Mock\Client;
+use Psr\Http\Client\ClientInterface;
 
 /**
  * @author Gary PEGEOT <garypegeot@gmail.com>
@@ -13,7 +13,7 @@ use Http\Mock\Client;
 final class MockFactory implements ClientFactory
 {
     /**
-     * @var HttpClient
+     * @var ClientInterface
      */
     private $client;
 
@@ -22,7 +22,7 @@ final class MockFactory implements ClientFactory
      *
      * Note that this can be any client, not only a mock client.
      */
-    public function setClient(HttpClient $client)
+    public function setClient(ClientInterface $client)
     {
         $this->client = $client;
     }
