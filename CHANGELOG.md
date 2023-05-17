@@ -2,6 +2,11 @@
 
 The change log describes what is "Added", "Removed", "Changed" or "Fixed" between each release.
 
+# 1.29.0 - 2023-05-17
+
+- Support PSR-18 ClientInterface in MockFactory.
+- Removed support for php-http/httplug 1.
+
 # 1.28.0 - 2023-05-12
 
 - Added: Configure the seekable body plugins.
