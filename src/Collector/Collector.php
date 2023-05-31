@@ -195,7 +195,7 @@ class Collector extends DataCollector
     /**
      * {@inheritdoc}
      */
-    public function collect(Request $request, Response $response, $exception = null)
+    public function collect(Request $request, Response $response, $exception = null): void
     {
         // We do not need to collect any data from the Symfony Request and Response
     }
