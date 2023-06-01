@@ -19,25 +19,17 @@ class AppKernel extends Kernel
      */
     private static $cacheDir;
 
-    /**
-     * {@inheritdoc}
-     */
     public function registerBundles(): iterable
     {
-        $bundles = [
+        return [
             new \Symfony\Bundle\FrameworkBundle\FrameworkBundle(),
             new \Symfony\Bundle\TwigBundle\TwigBundle(),
             new \Http\HttplugBundle\HttplugBundle(),
+            new Symfony\Bundle\WebProfilerBundle\WebProfilerBundle(),
         ];
-
-        if (in_array($this->getEnvironment(), ['dev', 'test', 'psr18'])) {
-            $bundles[] = new Symfony\Bundle\WebProfilerBundle\WebProfilerBundle();
-        }
-
-        return $bundles;
     }
 
-    public function registerContainerConfiguration(LoaderInterface $loader)
+    public function registerContainerConfiguration(LoaderInterface $loader): void
     {
         $loader->load(function (ContainerBuilder $container) use ($loader) {
             $container->loadFromExtension('framework', [
@@ -54,8 +46,12 @@ class AppKernel extends Kernel
                 ->setSynthetic(true)
                 ->setPublic(true)
             ;
+            // hack around problem with lowest versions build
+            if ('dev' === ($env = $this->getEnvironment())) {
+                $env = 'test';
+            }
 
-            $loader->load(__DIR__.'/config/config_'.$this->getEnvironment().'.yml');
+            $loader->load(__DIR__."/config/config_$env.yml");
             if ($this->isDebug()) {
                 $loader->load(__DIR__.'/config/config_debug.yml');
             }
@@ -79,9 +75,6 @@ class AppKernel extends Kernel
         return $collection;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getCacheDir(): string
     {
         if (null === self::$cacheDir) {
@@ -91,15 +84,12 @@ class AppKernel extends Kernel
         return sys_get_temp_dir().'/httplug-bundle/'.self::$cacheDir;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getLogDir(): string
     {
         return sys_get_temp_dir().'/httplug-bundle/logs';
     }
 
-    public function indexAction()
+    public function indexAction(): Response
     {
         return new Response();
     }
