@@ -2,6 +2,10 @@
 
 The change log describes what is "Added", "Removed", "Changed" or "Fixed" between each release.
 
+# 1.29.1 - 2023-06-01
+
+- Fixed deprecation from Symfony 6.3
+
 # 1.29.0 - 2023-05-17
 
 - Support PSR-18 ClientInterface in MockFactory.
