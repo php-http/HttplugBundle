@@ -2,7 +2,7 @@
 
 The change log describes what is "Added", "Removed", "Changed" or "Fixed" between each release.
 
-# 1.30.1 - 2023-08-31
+# 1.30.0 - 2023-08-31
 
 - Adjusted phpdoc on ClientFactory to reflect that it usually returns a PSR ClientInterface.
 
