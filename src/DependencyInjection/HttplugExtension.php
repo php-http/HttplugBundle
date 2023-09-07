@@ -408,6 +408,7 @@ class HttplugExtension extends Extension
 
         $container->registerAliasForArgument($serviceId, HttpClient::class, $clientName);
         $container->registerAliasForArgument($serviceId, ClientInterface::class, $clientName);
+        $container->registerAliasForArgument($serviceId, HttpAsyncClient::class, $clientName);
 
         $plugins = [];
         foreach ($arguments['plugins'] as $plugin) {
