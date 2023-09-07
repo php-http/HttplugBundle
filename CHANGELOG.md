@@ -2,6 +2,10 @@
 
 The change log describes what is "Added", "Removed", "Changed" or "Fixed" between each release.
 
+# 1.30.1 - 2023-09-07
+
+- Added alias to allow autowiring the `AsyncHttpClient` interface (#436).
+
 # 1.30.0 - 2023-08-31
 
 - Adjusted phpdoc on ClientFactory to reflect that it usually returns a PSR ClientInterface.
