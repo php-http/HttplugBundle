@@ -663,6 +663,10 @@ class Configuration implements ConfigurationInterface
                                 $this->validateAuthenticationType(['params'], $config, 'query_param');
 
                                 break;
+                            case 'header':
+                                $this->validateAuthenticationType(['header_name', 'header_value'], $config, 'header');
+
+                                break;
                         }
 
                         return $config;
@@ -670,7 +674,7 @@ class Configuration implements ConfigurationInterface
                 ->end()
                 ->children()
                     ->enumNode('type')
-                        ->values(['basic', 'bearer', 'wsse', 'service', 'query_param'])
+                        ->values(['basic', 'bearer', 'wsse', 'service', 'query_param', 'header'])
                         ->isRequired()
                         ->cannotBeEmpty()
                     ->end()
@@ -678,6 +682,8 @@ class Configuration implements ConfigurationInterface
                     ->scalarNode('password')->end()
                     ->scalarNode('token')->end()
                     ->scalarNode('service')->end()
+                    ->scalarNode('header_name')->end()
+                    ->scalarNode('header_value')->end()
                     ->arrayNode('params')->prototype('scalar')->end()
                     ->end()
                 ->end()

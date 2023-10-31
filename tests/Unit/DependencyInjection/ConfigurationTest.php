@@ -244,6 +244,12 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
                         'token' => 'foo',
                         'params' => [],
                     ],
+                    'my_header' => [
+                        'type' => 'header',
+                        'header_name' => 'foo',
+                        'header_value' => 'bar',
+                        'params' => [],
+                    ],
                     'my_service' => [
                         'type' => 'service',
                         'service' => 'my_auth_service',

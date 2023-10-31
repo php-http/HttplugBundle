@@ -18,6 +18,7 @@ use Http\Client\Plugin\Vcr\RecordPlugin;
 use Http\Client\Plugin\Vcr\ReplayPlugin;
 use Http\Message\Authentication\BasicAuth;
 use Http\Message\Authentication\Bearer;
+use Http\Message\Authentication\Header;
 use Http\Message\Authentication\QueryParam;
 use Http\Message\Authentication\Wsse;
 use Http\Mock\Client as MockClient;
@@ -379,6 +380,12 @@ class HttplugExtension extends Extension
                 case 'query_param':
                     $container->register($authServiceKey, QueryParam::class)
                         ->addArgument($values['params']);
+
+                    break;
+                case 'header':
+                    $container->register($authServiceKey, Header::class)
+                        ->addArgument($values['header_name'])
+                        ->addArgument($values['header_value']);
 
                     break;
                 case 'service':
