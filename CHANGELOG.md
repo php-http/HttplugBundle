@@ -2,6 +2,8 @@
 
 The change log describes what is "Added", "Removed", "Changed" or "Fixed" between each release.
 
+- Added configuration for the `header` authentication plugin (#437).
+
 # 1.30.1 - 2023-09-07
 
 - Added alias to allow autowiring the `AsyncHttpClient` interface (#436).
