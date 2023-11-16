@@ -5,8 +5,7 @@ declare(strict_types=1);
 namespace Http\HttplugBundle\ClientFactory;
 
 use Buzz\Client\FileGetContents;
-use Http\Adapter\Buzz\Client as Adapter;
-use Http\Message\MessageFactory;
+use Psr\Http\Message\ResponseFactoryInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
@@ -15,13 +14,13 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class BuzzFactory implements ClientFactory
 {
     /**
-     * @var MessageFactory
+     * @var ResponseFactoryInterface
      */
-    private $messageFactory;
+    private $responseFactory;
 
-    public function __construct(MessageFactory $messageFactory)
+    public function __construct(ResponseFactoryInterface $responseFactory)
     {
-        $this->messageFactory = $messageFactory;
+        $this->responseFactory = $responseFactory;
     }
 
     /**
@@ -29,19 +28,11 @@ class BuzzFactory implements ClientFactory
      */
     public function createClient(array $config = [])
     {
-        if (!class_exists('Http\Adapter\Buzz\Client')) {
-            throw new \LogicException('To use the Buzz adapter you need to install the "php-http/buzz-adapter" package.');
+        if (!class_exists('Buzz\Client\FileGetContents')) {
+            throw new \LogicException('To use the Buzz you need to install the "kriswallsmith/buzz" package.');
         }
 
-        $client = new FileGetContents();
-        $options = $this->getOptions($config);
-
-        $client->setTimeout($options['timeout']);
-        $client->setVerifyPeer($options['verify_peer']);
-        $client->setVerifyHost($options['verify_host']);
-        $client->setProxy($options['proxy']);
-
-        return new Adapter($client, $this->messageFactory);
+        return new FileGetContents($this->responseFactory, $this->getOptions($config));
     }
 
     /**
@@ -53,14 +44,12 @@ class BuzzFactory implements ClientFactory
 
         $resolver->setDefaults([
           'timeout' => 5,
-          'verify_peer' => true,
-          'verify_host' => 2,
+          'verify' => true,
           'proxy' => null,
         ]);
 
         $resolver->setAllowedTypes('timeout', 'int');
-        $resolver->setAllowedTypes('verify_peer', 'bool');
-        $resolver->setAllowedTypes('verify_host', 'int');
+        $resolver->setAllowedTypes('verify', 'bool');
         $resolver->setAllowedTypes('proxy', ['string', 'null']);
 
         return $resolver->resolve($config);

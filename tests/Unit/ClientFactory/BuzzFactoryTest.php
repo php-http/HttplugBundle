@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Http\HttplugBundle\Tests\Unit\ClientFactory;
 
-use Http\Adapter\Buzz\Client;
+use Buzz\Client\FileGetContents;
 use Http\HttplugBundle\ClientFactory\BuzzFactory;
-use Http\Message\MessageFactory;
 use PHPUnit\Framework\TestCase;
+use Psr\Http\Message\ResponseFactoryInterface;
 
 /**
  * @author Tobias Nyholm <tobias.nyholm@gmail.com>
@@ -16,13 +16,13 @@ class BuzzFactoryTest extends TestCase
 {
     public function testCreateClient(): void
     {
-        if (!class_exists(Client::class)) {
-            $this->markTestSkipped('Buzz adapter is not installed');
+        if (!class_exists(FileGetContents::class)) {
+            $this->markTestSkipped('Buzz client is not installed');
         }
 
-        $factory = new BuzzFactory($this->getMockBuilder(MessageFactory::class)->getMock());
+        $factory = new BuzzFactory($this->getMockBuilder(ResponseFactoryInterface::class)->getMock());
         $client = $factory->createClient();
 
-        $this->assertInstanceOf(Client::class, $client);
+        $this->assertInstanceOf(FileGetContents::class, $client);
     }
 }
