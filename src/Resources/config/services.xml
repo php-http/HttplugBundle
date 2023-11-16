@@ -91,9 +91,7 @@
         </service>
         <service id="httplug.factory.guzzle6" class="Http\HttplugBundle\ClientFactory\Guzzle6Factory" public="false" />
         <service id="httplug.factory.guzzle7" class="Http\HttplugBundle\ClientFactory\Guzzle7Factory" public="false" />
-        <service id="httplug.factory.react" class="Http\HttplugBundle\ClientFactory\ReactFactory" public="false">
-            <argument type="service" id="httplug.message_factory"/>
-        </service>
+        <service id="httplug.factory.react" class="Http\HttplugBundle\ClientFactory\ReactFactory" public="false" />
         <service id="httplug.factory.socket" class="Http\HttplugBundle\ClientFactory\SocketFactory" public="false">
             <argument type="service" id="httplug.message_factory"/>
         </service>
