@@ -5,23 +5,12 @@ declare(strict_types=1);
 namespace Http\HttplugBundle\ClientFactory;
 
 use Http\Client\Socket\Client;
-use Http\Message\MessageFactory;
 
 /**
  * @author Tobias Nyholm <tobias.nyholm@gmail.com>
  */
 class SocketFactory implements ClientFactory
 {
-    /**
-     * @var MessageFactory
-     */
-    private $messageFactory;
-
-    public function __construct(MessageFactory $messageFactory)
-    {
-        $this->messageFactory = $messageFactory;
-    }
-
     /**
      * {@inheritdoc}
      */

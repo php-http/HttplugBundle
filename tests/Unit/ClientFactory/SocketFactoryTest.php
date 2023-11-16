@@ -6,7 +6,6 @@ namespace Http\HttplugBundle\Tests\Unit\ClientFactory;
 
 use Http\Client\Socket\Client;
 use Http\HttplugBundle\ClientFactory\SocketFactory;
-use Http\Message\MessageFactory;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -20,7 +19,7 @@ class SocketFactoryTest extends TestCase
             $this->markTestSkipped('Socket client is not installed');
         }
 
-        $factory = new SocketFactory($this->getMockBuilder(MessageFactory::class)->getMock());
+        $factory = new SocketFactory();
         $client = $factory->createClient();
 
         $this->assertInstanceOf(Client::class, $client);
