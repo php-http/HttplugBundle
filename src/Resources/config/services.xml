@@ -22,23 +22,6 @@
         </service>
 
         <!-- Discovery with autowiring support -->
-        <service id="httplug.message_factory.default" class="Http\Message\MessageFactory">
-            <factory class="Http\Discovery\MessageFactoryDiscovery" method="find" />
-        </service>
-        <service id="Http\Message\MessageFactory" alias="httplug.message_factory" public="false" />
-        <service id="Http\Message\RequestFactory" alias="httplug.message_factory" public="false" />
-        <service id="Http\Message\ResponseFactory" alias="httplug.message_factory" public="false" />
-
-        <service id="httplug.stream_factory.default" class="Http\Message\StreamFactory">
-            <factory class="Http\Discovery\StreamFactoryDiscovery" method="find" />
-        </service>
-        <service id="Http\Message\StreamFactory" alias="httplug.stream_factory" public="false" />
-
-        <service id="httplug.uri_factory.default" class="Http\Message\UriFactory">
-            <factory class="Http\Discovery\UriFactoryDiscovery" method="find" />
-        </service>
-        <service id="Http\Message\UriFactory" alias="httplug.uri_factory" public="false" />
-
         <service id="httplug.async_client.default" class="Http\Client\HttpAsyncClient">
             <factory class="Http\Discovery\HttpAsyncClientDiscovery" method="find" />
         </service>

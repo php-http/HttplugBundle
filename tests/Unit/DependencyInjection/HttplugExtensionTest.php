@@ -41,7 +41,7 @@ class HttplugExtensionTest extends AbstractExtensionTestCase
     {
         $this->load();
 
-        foreach (['client', 'message_factory', 'uri_factory', 'stream_factory'] as $type) {
+        foreach (['client', 'psr17_request_factory', 'psr17_response_factory', 'psr17_uri_factory', 'psr17_stream_factory'] as $type) {
             $this->assertContainerBuilderHasAlias("httplug.$type", "httplug.$type.default");
         }
     }
@@ -66,13 +66,14 @@ class HttplugExtensionTest extends AbstractExtensionTestCase
         $this->load([
             'main_alias' => [
                 'client' => 'my_client_service',
-                'message_factory' => 'my_message_factory_service',
-                'uri_factory' => 'my_uri_factory_service',
-                'stream_factory' => 'my_stream_factory_service',
+                'psr17_request_factory' => 'my_psr17_request_factory_service',
+                'psr17_response_factory' => 'my_psr17_response_factory_service',
+                'psr17_uri_factory' => 'my_psr17_uri_factory_service',
+                'psr17_stream_factory' => 'my_psr17_stream_factory_service',
             ],
         ]);
 
-        foreach (['client', 'message_factory', 'uri_factory', 'stream_factory'] as $type) {
+        foreach (['client', 'psr17_request_factory', 'psr17_response_factory', 'psr17_uri_factory', 'psr17_stream_factory'] as $type) {
             $this->assertContainerBuilderHasAlias("httplug.$type", "my_{$type}_service");
         }
     }

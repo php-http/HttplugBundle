@@ -2,6 +2,16 @@
 
 The change log describes what is "Added", "Removed", "Changed" or "Fixed" between each release.
 
+# Version 2
+
+# 2.0.0 - (unreleased)
+- Fixed a deprecation when creating a `HttpMethodsClient` via `http_methods_client: true`. Only PSR-17 factories are now passed as constructor arguments.
+- Changed the default stream factory argument for the cache plugin. This now requires a PSR-17 StreamFactoryInterface instance.
+- Creating a client using the `BuzzFactory` no longer accepts `verify_peer` and `verify_host` config options. Only a boolean `verify` flag is accepted, covering both previous options.
+- Removed support of deprecated PHP-HTTP factories, only PSR-17 factories are now supported and used.
+- Removed `message_factory`, `uri_factory`, and `stream_factory` classes config option. You can configure your own factories via psr17_*_factory classes config
+- Removed support for guzzle5-adapter
+
 # Version 1
 
 # 1.31.0 - 2023-11-06

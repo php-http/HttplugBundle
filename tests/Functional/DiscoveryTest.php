@@ -9,12 +9,13 @@ use Http\Client\HttpAsyncClient;
 use Http\Client\HttpClient;
 use Http\Discovery\HttpClientDiscovery;
 use Http\HttplugBundle\DependencyInjection\HttplugExtension;
-use Http\Message\MessageFactory;
-use Http\Message\StreamFactory;
-use Http\Message\UriFactory;
 use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractExtensionTestCase;
 use Matthias\SymfonyDependencyInjectionTest\PhpUnit\ContainerBuilderHasAliasConstraint;
 use PHPUnit\Framework\Constraint\LogicalNot;
+use Psr\Http\Message\RequestFactoryInterface;
+use Psr\Http\Message\ResponseFactoryInterface;
+use Psr\Http\Message\StreamFactoryInterface;
+use Psr\Http\Message\UriFactoryInterface;
 use Symfony\Component\DependencyInjection\Definition;
 
 /**
@@ -44,9 +45,10 @@ final class DiscoveryTest extends AbstractExtensionTestCase
         $this->load();
 
         $this->assertContainerBuilderHasService('httplug.client.default', HttpClient::class);
-        $this->assertContainerBuilderHasService('httplug.message_factory.default', MessageFactory::class);
-        $this->assertContainerBuilderHasService('httplug.uri_factory.default', UriFactory::class);
-        $this->assertContainerBuilderHasService('httplug.stream_factory.default', StreamFactory::class);
+        $this->assertContainerBuilderHasService('httplug.psr17_request_factory.default', RequestFactoryInterface::class);
+        $this->assertContainerBuilderHasService('httplug.psr17_response_factory.default', ResponseFactoryInterface::class);
+        $this->assertContainerBuilderHasService('httplug.psr17_uri_factory.default', UriFactoryInterface::class);
+        $this->assertContainerBuilderHasService('httplug.psr17_stream_factory.default', StreamFactoryInterface::class);
         $this->assertContainerBuilderHasService('httplug.async_client.default', HttpAsyncClient::class);
     }
 
@@ -56,18 +58,19 @@ final class DiscoveryTest extends AbstractExtensionTestCase
         $this->setDefinition('httplug.client.default', new Definition(Client::class));
 
         $this->assertContainerBuilderHasService('httplug.client.default', Client::class);
-        $this->assertContainerBuilderHasService('httplug.message_factory.default', MessageFactory::class);
-        $this->assertContainerBuilderHasService('httplug.uri_factory.default', UriFactory::class);
-        $this->assertContainerBuilderHasService('httplug.stream_factory.default', StreamFactory::class);
+        $this->assertContainerBuilderHasService('httplug.psr17_request_factory.default', RequestFactoryInterface::class);
+        $this->assertContainerBuilderHasService('httplug.psr17_response_factory.default', ResponseFactoryInterface::class);
+        $this->assertContainerBuilderHasService('httplug.psr17_uri_factory.default', UriFactoryInterface::class);
+        $this->assertContainerBuilderHasService('httplug.psr17_stream_factory.default', StreamFactoryInterface::class);
         $this->assertContainerBuilderHasService('httplug.async_client.default', HttpAsyncClient::class);
     }
 
     public function testNoDiscoveryFallbacks(): void
     {
         $this->setDefinition('httplug.client.default', new Definition(HttpClient::class));
-        $this->setDefinition('httplug.message_factory.default', new Definition(MessageFactory::class));
-        $this->setDefinition('httplug.uri_factory.default', new Definition(UriFactory::class));
-        $this->setDefinition('httplug.stream_factory.default', new Definition(StreamFactory::class));
+        $this->setDefinition('httplug.psr17_request_factory.default', new Definition(RequestFactoryInterface::class));
+        $this->setDefinition('httplug.psr17_uri_factory.default', new Definition(UriFactoryInterface::class));
+        $this->setDefinition('httplug.psr17_stream_factory.default', new Definition(StreamFactoryInterface::class));
         $this->setDefinition('httplug.async_client.default', new Definition(HttpAsyncClient::class));
 
         $this->load();

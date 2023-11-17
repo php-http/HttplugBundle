@@ -10,6 +10,7 @@ use Http\Client\HttpClient;
 use Http\Discovery\HttpAsyncClientDiscovery;
 use Http\Discovery\HttpClientDiscovery;
 use Http\Discovery\Strategy\CommonClassesStrategy;
+use Http\Discovery\Strategy\CommonPsr17ClassesStrategy;
 use Http\HttplugBundle\Collector\ProfileClient;
 use Http\HttplugBundle\Discovery\ConfiguredClientsStrategyListener;
 use Nyholm\NSA;
@@ -131,7 +132,7 @@ class DiscoveredClientsTest extends WebTestCase
 
         // Reset values
         $strategy = new ConfiguredClientsStrategyListener(null, null);
-        HttpClientDiscovery::setStrategies([CommonClassesStrategy::class]);
+        HttpClientDiscovery::setStrategies([CommonClassesStrategy::class, CommonPsr17ClassesStrategy::class]);
         $strategy->onEvent();
     }
 }

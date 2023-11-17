@@ -513,7 +513,7 @@ class HttplugExtension extends Extension
         $container
             ->register($serviceId, UriInterface::class)
             ->setPublic(false)
-            ->setFactory([new Reference('httplug.uri_factory'), 'createUri'])
+            ->setFactory([new Reference('httplug.psr17_uri_factory'), 'createUri'])
             ->addArgument($uri)
         ;
     }
