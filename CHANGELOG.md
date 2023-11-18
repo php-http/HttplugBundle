@@ -2,6 +2,8 @@
 
 The change log describes what is "Added", "Removed", "Changed" or "Fixed" between each release.
 
+# Version 1
+
 # 1.31.0 - 2023-11-06
 
 - Added configuration for the `header` authentication plugin (#437).
