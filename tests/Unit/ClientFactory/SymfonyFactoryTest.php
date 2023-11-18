@@ -22,8 +22,8 @@ class SymfonyFactoryTest extends TestCase
         }
 
         $factory = new SymfonyFactory(
-            $this->getMockBuilder(ResponseFactoryInterface::class)->getMock(),
-            $this->getMockBuilder(StreamFactoryInterface::class)->getMock()
+            $this->createMock(ResponseFactoryInterface::class),
+            $this->createMock(StreamFactoryInterface::class)
         );
         $client = $factory->createClient();
 

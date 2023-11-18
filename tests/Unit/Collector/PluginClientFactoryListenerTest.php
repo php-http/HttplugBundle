@@ -9,6 +9,7 @@ use Http\HttplugBundle\Collector\Collector;
 use Http\HttplugBundle\Collector\Formatter;
 use Http\HttplugBundle\Collector\PluginClientFactory;
 use Http\HttplugBundle\Collector\PluginClientFactoryListener;
+use Http\Message\Formatter as MessageFormatter;
 use Nyholm\NSA;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\EventDispatcher\Event as LegacyEvent;
@@ -20,9 +21,9 @@ final class PluginClientFactoryListenerTest extends TestCase
 {
     public function testRegisterPluginClientFactory(): void
     {
-        $collector = $this->getMockBuilder(Collector::class)->getMock();
-        $formatter = $this->getMockBuilder(Formatter::class)->disableOriginalConstructor()->getMock();
-        $stopwatch = $this->getMockBuilder(Stopwatch::class)->getMock();
+        $collector = new Collector();
+        $formatter = new Formatter($this->createMock(MessageFormatter::class), $this->createMock(MessageFormatter::class));
+        $stopwatch = $this->createMock(Stopwatch::class);
 
         $factory = new PluginClientFactory($collector, $formatter, $stopwatch);
 
@@ -31,6 +32,6 @@ final class PluginClientFactoryListenerTest extends TestCase
         $class = (Kernel::MAJOR_VERSION >= 5) ? Event::class : LegacyEvent::class;
         $listener->onEvent(new $class());
 
-        $this->assertTrue(is_callable(NSA::getProperty(DefaultPluginClientFactory::class, 'factory')));
+        $this->assertIsCallable(NSA::getProperty(DefaultPluginClientFactory::class, 'factory'));
     }
 }
