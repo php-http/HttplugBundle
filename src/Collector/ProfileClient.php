@@ -23,7 +23,7 @@ use Symfony\Component\Stopwatch\StopwatchEvent;
  *
  * @internal
  */
-class ProfileClient implements HttpClient, HttpAsyncClient
+final class ProfileClient implements HttpClient, HttpAsyncClient
 {
     use VersionBridgeClient;
 

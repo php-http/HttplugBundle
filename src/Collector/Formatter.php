@@ -4,11 +4,9 @@ declare(strict_types=1);
 
 namespace Http\HttplugBundle\Collector;
 
-use Exception;
 use Http\Client\Exception\HttpException;
 use Http\Client\Exception\TransferException;
 use Http\Message\Formatter as MessageFormatter;
-use Http\Message\Formatter\CurlCommandFormatter;
 use Psr\Http\Client\NetworkExceptionInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -21,7 +19,7 @@ use Psr\Http\Message\ResponseInterface;
  *
  * @internal
  */
-class Formatter implements MessageFormatter
+final class Formatter implements MessageFormatter
 {
     /**
      * @var MessageFormatter
@@ -29,11 +27,11 @@ class Formatter implements MessageFormatter
     private $formatter;
 
     /**
-     * @var CurlCommandFormatter
+     * @var MessageFormatter
      */
     private $curlFormatter;
 
-    public function __construct(MessageFormatter $formatter, CurlCommandFormatter $curlFormatter)
+    public function __construct(MessageFormatter $formatter, MessageFormatter $curlFormatter)
     {
         $this->formatter = $formatter;
         $this->curlFormatter = $curlFormatter;
