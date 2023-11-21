@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Http\HttplugBundle\ClientFactory;
 
-use Http\Discovery\HttpClientDiscovery;
+use Http\Discovery\Psr18ClientDiscovery;
 
 /**
  * Use auto discovery to find a HTTP client.
@@ -18,6 +18,6 @@ class AutoDiscoveryFactory implements ClientFactory
      */
     public function createClient(array $config = [])
     {
-        return HttpClientDiscovery::find();
+        return Psr18ClientDiscovery::find();
     }
 }

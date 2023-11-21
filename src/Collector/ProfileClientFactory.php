@@ -6,7 +6,6 @@ namespace Http\HttplugBundle\Collector;
 
 use Http\Client\Common\FlexibleHttpClient;
 use Http\Client\HttpAsyncClient;
-use Http\Client\HttpClient;
 use Http\HttplugBundle\ClientFactory\ClientFactory;
 use Psr\Http\Client\ClientInterface;
 use Symfony\Component\Stopwatch\Stopwatch;
@@ -61,7 +60,7 @@ class ProfileClientFactory implements ClientFactory
     {
         $client = is_callable($this->factory) ? call_user_func($this->factory, $config) : $this->factory->createClient($config);
 
-        if (!(($client instanceof HttpClient || $client instanceof ClientInterface) && $client instanceof HttpAsyncClient)) {
+        if (!($client instanceof ClientInterface && $client instanceof HttpAsyncClient)) {
             $client = new FlexibleHttpClient($client);
         }
 

@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace Http\HttplugBundle\Tests\Unit\DependencyInjection;
 
 use Http\Adapter\Guzzle7\Client;
-use Http\Client\HttpClient;
 use Http\Client\Plugin\Vcr\Recorder\InMemoryRecorder;
 use Http\HttplugBundle\Collector\PluginClientFactoryListener;
 use Http\HttplugBundle\DependencyInjection\HttplugExtension;
 use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractExtensionTestCase;
+use Psr\Http\Client\ClientInterface;
 use Symfony\Component\DependencyInjection\Reference;
 
 /**
@@ -362,7 +362,7 @@ class HttplugExtensionTest extends AbstractExtensionTestCase
     private function verifyProfilingDisabled(): void
     {
         $def = $this->container->findDefinition('httplug.client');
-        $this->assertTrue(is_subclass_of($def->getClass(), HttpClient::class));
+        $this->assertTrue(is_subclass_of($def->getClass(), ClientInterface::class));
         $arguments = $def->getArguments();
 
         if (isset($arguments[3])) {

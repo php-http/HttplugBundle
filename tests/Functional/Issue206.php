@@ -7,8 +7,8 @@ namespace Http\HttplugBundle\Tests\Functional;
 use Http\Client\Common\HttpMethodsClient;
 use Http\Client\Common\PluginClient;
 use Http\Client\Common\PluginClientFactory;
-use Http\Discovery\HttpClientDiscovery;
-use Http\Discovery\MessageFactoryDiscovery;
+use Http\Discovery\Psr18ClientDiscovery;
+use Nyholm\Psr7\Factory\Psr17Factory;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class Issue206 extends WebTestCase
@@ -20,7 +20,7 @@ class Issue206 extends WebTestCase
         PluginClientFactory::setFactory([$container->get(PluginClientFactory::class), 'createClient']);
 
         // Create a client
-        $myCustomClient = new HttpMethodsClient(HttpClientDiscovery::find(), MessageFactoryDiscovery::find());
+        $myCustomClient = new HttpMethodsClient(Psr18ClientDiscovery::find(), new Psr17Factory(), new Psr17Factory());
         $pluginClient = (new PluginClientFactory())->createClient($myCustomClient, []);
 
         // If we get to this line, no exceptions has been thrown.

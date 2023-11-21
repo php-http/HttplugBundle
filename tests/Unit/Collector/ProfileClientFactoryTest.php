@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Http\HttplugBundle\Tests\Unit\Collector;
 
-use Http\Client\HttpClient;
 use Http\HttplugBundle\ClientFactory\ClientFactory;
 use Http\HttplugBundle\Collector\Collector;
 use Http\HttplugBundle\Collector\Formatter;
 use Http\HttplugBundle\Collector\ProfileClient;
 use Http\HttplugBundle\Collector\ProfileClientFactory;
 use PHPUnit\Framework\TestCase;
+use Psr\Http\Client\ClientInterface;
 use Symfony\Component\Stopwatch\Stopwatch;
 
 class ProfileClientFactoryTest extends TestCase
@@ -31,7 +31,7 @@ class ProfileClientFactoryTest extends TestCase
     private $stopwatch;
 
     /**
-     * @var HttpClient
+     * @var ClientInterface
      */
     private $client;
 
@@ -40,7 +40,7 @@ class ProfileClientFactoryTest extends TestCase
         $this->collector = $this->getMockBuilder(Collector::class)->disableOriginalConstructor()->getMock();
         $this->formatter = $this->getMockBuilder(Formatter::class)->disableOriginalConstructor()->getMock();
         $this->stopwatch = $this->getMockBuilder(Stopwatch::class)->getMock();
-        $this->client = $this->getMockBuilder(HttpClient::class)->getMock();
+        $this->client = $this->getMockBuilder(ClientInterface::class)->getMock();
     }
 
     public function testCreateClientFromClientFactory(): void

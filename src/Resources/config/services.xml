@@ -13,8 +13,8 @@
             <tag name="kernel.event_subscriber"/>
         </service>
 
-        <service id="httplug.auto_discovery.auto_discovered_client" class="Http\Client\HttpClient">
-            <factory class="Http\Discovery\HttpClientDiscovery" method="find" />
+        <service id="httplug.auto_discovery.auto_discovered_client" class="Psr\Http\Client\ClientInterface">
+            <factory class="Http\Discovery\Psr18ClientDiscovery" method="find" />
         </service>
 
         <service id="httplug.auto_discovery.auto_discovered_async" class="Http\Client\HttpAsyncClient">
@@ -27,8 +27,8 @@
         </service>
         <service id="Http\Client\HttpAsyncClient" alias="httplug.async_client.default" public="false" />
 
-        <service id="httplug.client.default" class="Http\Client\HttpClient">
-            <factory class="Http\Discovery\HttpClientDiscovery" method="find" />
+        <service id="httplug.client.default" class="Psr\Http\Client\ClientInterface">
+            <factory class="Http\Discovery\Psr18ClientDiscovery" method="find" />
         </service>
         <service id="Psr\Http\Client\ClientInterface" alias="httplug.client" public="false" />
 

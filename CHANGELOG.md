@@ -12,6 +12,9 @@ The change log describes what is "Added", "Removed", "Changed" or "Fixed" betwee
 - Removed `message_factory`, `uri_factory`, and `stream_factory` classes config option. You can configure your own factories via psr17_*_factory classes config
 - Removed support for guzzle5-adapter
 - Removed support for Symfony versions <5.4
+- Changed the return type of `ClientFactory` to return a `ClientInterface` instead of `ClientInterface|HttpClient`
+- Changed the type of `httplug.client.default` to `ClientInterface` instead of `HttpClient`
+- Removed the `DummyClient` interface
 
 # Version 1
 

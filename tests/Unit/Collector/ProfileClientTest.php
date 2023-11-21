@@ -8,7 +8,6 @@ use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
 use GuzzleHttp\Psr7\Uri;
 use Http\Client\HttpAsyncClient;
-use Http\Client\HttpClient;
 use Http\HttplugBundle\Collector\Collector;
 use Http\HttplugBundle\Collector\Formatter;
 use Http\HttplugBundle\Collector\ProfileClient;
@@ -18,6 +17,7 @@ use Http\Promise\Promise;
 use Http\Promise\RejectedPromise;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\UriInterface;
@@ -37,7 +37,7 @@ class ProfileClientTest extends TestCase
     private $activeStack;
 
     /**
-     * @var HttpClient|MockObject
+     * @var CombinedClientInterface|MockObject
      */
     private $client;
 
@@ -95,7 +95,7 @@ class ProfileClientTest extends TestCase
     {
         $this->collector = $this->getMockBuilder(Collector::class)->disableOriginalConstructor()->getMock();
         $this->activeStack = new Stack('default', 'FormattedRequest');
-        $this->client = $this->getMockBuilder(ClientInterface::class)->getMock();
+        $this->client = $this->getMockBuilder(CombinedClientInterface::class)->getMock();
         $this->uri = new Uri('https://example.com/target');
         $this->request = new Request('GET', $this->uri);
         $this->formatter = $this->getMockBuilder(Formatter::class)->disableOriginalConstructor()->getMock();
@@ -240,6 +240,6 @@ class ProfileClientTest extends TestCase
     }
 }
 
-interface ClientInterface extends HttpClient, HttpAsyncClient
+interface CombinedClientInterface extends ClientInterface, HttpAsyncClient
 {
 }
