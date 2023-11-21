@@ -11,6 +11,7 @@ The change log describes what is "Added", "Removed", "Changed" or "Fixed" betwee
 - Removed support of deprecated PHP-HTTP factories, only PSR-17 factories are now supported and used.
 - Removed `message_factory`, `uri_factory`, and `stream_factory` classes config option. You can configure your own factories via psr17_*_factory classes config
 - Removed support for guzzle5-adapter
+- Removed support for Symfony versions <5.4
 
 # Version 1
 
