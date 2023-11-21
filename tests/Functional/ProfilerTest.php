@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Http\HttplugBundle\Tests\Functional;
 
 use GuzzleHttp\Psr7\Request;
-use Http\Client\HttpClient;
+use Psr\Http\Client\ClientInterface;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class ProfilerTest extends WebTestCase
@@ -18,7 +18,7 @@ class ProfilerTest extends WebTestCase
         $client = static::createClient();
         $httpClient = $client->getContainer()->get('httplug.client.acme');
 
-        assert($httpClient instanceof HttpClient);
+        assert($httpClient instanceof ClientInterface);
 
         $httpClient->sendRequest(new Request('GET', '/posts/1'));
 

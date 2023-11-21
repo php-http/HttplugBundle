@@ -6,14 +6,14 @@ namespace Http\HttplugBundle\Tests\Functional;
 
 use Http\Adapter\Guzzle7\Client;
 use Http\Client\HttpAsyncClient;
-use Http\Client\HttpClient;
 use Http\Discovery\HttpAsyncClientDiscovery;
-use Http\Discovery\HttpClientDiscovery;
+use Http\Discovery\Psr18ClientDiscovery;
 use Http\Discovery\Strategy\CommonClassesStrategy;
 use Http\Discovery\Strategy\CommonPsr17ClassesStrategy;
 use Http\HttplugBundle\Collector\ProfileClient;
 use Http\HttplugBundle\Discovery\ConfiguredClientsStrategyListener;
 use Nyholm\NSA;
+use Psr\Http\Client\ClientInterface;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class DiscoveredClientsTest extends WebTestCase
@@ -26,7 +26,7 @@ class DiscoveredClientsTest extends WebTestCase
 
         $service = $container->get('httplug.auto_discovery.auto_discovered_client');
 
-        $this->assertInstanceOf(HttpClient::class, $service);
+        $this->assertInstanceOf(ClientInterface::class, $service);
     }
 
     public function testDiscoveredAsyncClient(): void
@@ -49,7 +49,7 @@ class DiscoveredClientsTest extends WebTestCase
         $service = $container->get('httplug.auto_discovery.auto_discovered_client');
 
         $this->assertInstanceOf(ProfileClient::class, $service);
-        $this->assertInstanceOf(HttpClient::class, NSA::getProperty($service, 'client'));
+        $this->assertInstanceOf(ClientInterface::class, NSA::getProperty($service, 'client'));
     }
 
     public function testDiscoveredAsyncClientWithProfilingEnabled(): void
@@ -81,7 +81,7 @@ class DiscoveredClientsTest extends WebTestCase
         $httpAsyncClient = $container->get('httplug.auto_discovery.auto_discovered_async');
 
         $this->assertInstanceOf(ProfileClient::class, $httpClient);
-        $this->assertSame(HttpClientDiscovery::find(), $httpClient);
+        $this->assertSame(Psr18ClientDiscovery::find(), $httpClient);
         $this->assertInstanceOf(ProfileClient::class, $httpAsyncClient);
         $this->assertSame(HttpAsyncClientDiscovery::find(), $httpAsyncClient);
     }
@@ -115,7 +115,7 @@ class DiscoveredClientsTest extends WebTestCase
 
         $container->get('httplug.strategy');
 
-        $this->assertEquals($container->get('httplug.client.acme'), HttpClientDiscovery::find());
+        $this->assertEquals($container->get('httplug.client.acme'), Psr18ClientDiscovery::find());
         $this->assertEquals($container->get('httplug.client.acme'), HttpAsyncClientDiscovery::find());
     }
 
@@ -132,7 +132,7 @@ class DiscoveredClientsTest extends WebTestCase
 
         // Reset values
         $strategy = new ConfiguredClientsStrategyListener(null, null);
-        HttpClientDiscovery::setStrategies([CommonClassesStrategy::class, CommonPsr17ClassesStrategy::class]);
+        Psr18ClientDiscovery::setStrategies([CommonClassesStrategy::class, CommonPsr17ClassesStrategy::class]);
         $strategy->onEvent();
     }
 }

@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Http\HttplugBundle\Discovery;
 
 use Http\Client\HttpAsyncClient;
-use Http\Client\HttpClient;
-use Http\Discovery\HttpClientDiscovery;
+use Http\Discovery\Psr18ClientDiscovery;
 use Http\Discovery\Strategy\DiscoveryStrategy;
+use Psr\Http\Client\ClientInterface;
 
 /**
  * A strategy that provide clients configured with HTTPlug bundle. With help from this strategy
@@ -18,7 +18,7 @@ use Http\Discovery\Strategy\DiscoveryStrategy;
 class ConfiguredClientsStrategy implements DiscoveryStrategy
 {
     /**
-     * @var HttpClient
+     * @var ClientInterface
      */
     private static $client;
 
@@ -28,14 +28,14 @@ class ConfiguredClientsStrategy implements DiscoveryStrategy
     private static $asyncClient;
 
     /**
-     * @param HttpClient      $httpClient
+     * @param ClientInterface $httpClient
      * @param HttpAsyncClient $asyncClient
      */
-    public function __construct(HttpClient $httpClient = null, HttpAsyncClient $asyncClient = null)
+    public function __construct(ClientInterface $httpClient = null, HttpAsyncClient $asyncClient = null)
     {
         self::$client = $httpClient;
         self::$asyncClient = $asyncClient;
-        HttpClientDiscovery::clearCache();
+        Psr18ClientDiscovery::clearCache();
     }
 
     /**
@@ -43,7 +43,7 @@ class ConfiguredClientsStrategy implements DiscoveryStrategy
      */
     public static function getCandidates($type)
     {
-        if (HttpClient::class === $type && null !== self::$client) {
+        if (ClientInterface::class === $type && null !== self::$client) {
             return [['class' => function () {
                 return self::$client;
             }]];

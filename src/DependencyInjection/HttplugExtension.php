@@ -13,7 +13,6 @@ use Http\Client\Common\Plugin\AuthenticationPlugin;
 use Http\Client\Common\PluginClient;
 use Http\Client\Common\PluginClientFactory;
 use Http\Client\HttpAsyncClient;
-use Http\Client\HttpClient;
 use Http\Client\Plugin\Vcr\RecordPlugin;
 use Http\Client\Plugin\Vcr\ReplayPlugin;
 use Http\Message\Authentication\BasicAuth;
@@ -116,7 +115,7 @@ class HttplugExtension extends Extension
 
         if (!$config['default_client_autowiring']) {
             $container->removeAlias(HttpAsyncClient::class);
-            $container->removeAlias(HttpClient::class);
+            $container->removeAlias(ClientInterface::class);
         }
 
         if ($this->useVcrPlugin) {
@@ -413,7 +412,6 @@ class HttplugExtension extends Extension
     {
         $serviceId = 'httplug.client.'.$clientName;
 
-        $container->registerAliasForArgument($serviceId, HttpClient::class, $clientName);
         $container->registerAliasForArgument($serviceId, ClientInterface::class, $clientName);
         $container->registerAliasForArgument($serviceId, HttpAsyncClient::class, $clientName);
 
@@ -440,7 +438,7 @@ class HttplugExtension extends Extension
 
         if (empty($arguments['service'])) {
             $container
-                ->register($serviceId.'.client', HttpClient::class)
+                ->register($serviceId.'.client', ClientInterface::class)
                 ->setFactory([new Reference($arguments['factory']), 'createClient'])
                 ->addArgument($arguments['config'])
                 ->setPublic(false);

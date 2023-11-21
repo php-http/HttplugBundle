@@ -112,7 +112,7 @@ class Configuration implements ConfigurationInterface
             ->children()
                 ->booleanNode('default_client_autowiring')
                     ->defaultTrue()
-                    ->info('Set to false to not autowire HttpClient and HttpAsyncClient.')
+                    ->info('Set to false to not autowire ClientInterface and HttpAsyncClient.')
                 ->end()
                 ->arrayNode('main_alias')
                     ->addDefaultsIfNotSet()

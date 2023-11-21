@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Http\HttplugBundle\ClientFactory;
 
-use Http\Client\HttpClient;
 use Psr\Http\Client\ClientInterface;
 
 /**
@@ -13,9 +12,9 @@ use Psr\Http\Client\ClientInterface;
 interface ClientFactory
 {
     /**
-     * Input an array of configuration to be able to create a HttpClient.
+     * Input an array of configuration to be able to create a ClientInterface.
      *
-     * @return HttpClient|ClientInterface
+     * @return ClientInterface
      */
     public function createClient(array $config = []);
 }

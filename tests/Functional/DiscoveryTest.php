@@ -6,12 +6,12 @@ namespace Http\HttplugBundle\Tests\Unit\DependencyInjection\Compiler;
 
 use Http\Adapter\Guzzle7\Client;
 use Http\Client\HttpAsyncClient;
-use Http\Client\HttpClient;
-use Http\Discovery\HttpClientDiscovery;
+use Http\Discovery\Psr18ClientDiscovery;
 use Http\HttplugBundle\DependencyInjection\HttplugExtension;
 use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractExtensionTestCase;
 use Matthias\SymfonyDependencyInjectionTest\PhpUnit\ContainerBuilderHasAliasConstraint;
 use PHPUnit\Framework\Constraint\LogicalNot;
+use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\StreamFactoryInterface;
@@ -44,7 +44,7 @@ final class DiscoveryTest extends AbstractExtensionTestCase
     {
         $this->load();
 
-        $this->assertContainerBuilderHasService('httplug.client.default', HttpClient::class);
+        $this->assertContainerBuilderHasService('httplug.client.default', ClientInterface::class);
         $this->assertContainerBuilderHasService('httplug.psr17_request_factory.default', RequestFactoryInterface::class);
         $this->assertContainerBuilderHasService('httplug.psr17_response_factory.default', ResponseFactoryInterface::class);
         $this->assertContainerBuilderHasService('httplug.psr17_uri_factory.default', UriFactoryInterface::class);
@@ -67,7 +67,7 @@ final class DiscoveryTest extends AbstractExtensionTestCase
 
     public function testNoDiscoveryFallbacks(): void
     {
-        $this->setDefinition('httplug.client.default', new Definition(HttpClient::class));
+        $this->setDefinition('httplug.client.default', new Definition(ClientInterface::class));
         $this->setDefinition('httplug.psr17_request_factory.default', new Definition(RequestFactoryInterface::class));
         $this->setDefinition('httplug.psr17_uri_factory.default', new Definition(UriFactoryInterface::class));
         $this->setDefinition('httplug.psr17_stream_factory.default', new Definition(StreamFactoryInterface::class));
@@ -75,9 +75,9 @@ final class DiscoveryTest extends AbstractExtensionTestCase
 
         $this->load();
 
-        $this->assertContainerBuilderHasService('httplug.client.default', HttpClient::class);
+        $this->assertContainerBuilderHasService('httplug.client.default', ClientInterface::class);
         $clientDefinition = $this->container->getDefinition('httplug.client.default');
-        $this->assertEquals([HttpClientDiscovery::class, 'find'], $clientDefinition->getFactory());
+        $this->assertEquals([Psr18ClientDiscovery::class, 'find'], $clientDefinition->getFactory());
     }
 
     public function testEnableAutowiring(): void
@@ -88,7 +88,7 @@ final class DiscoveryTest extends AbstractExtensionTestCase
 
         $this->assertContainerBuilderHasService('httplug.client.default');
         $this->assertContainerBuilderHasService('httplug.async_client.default');
-        $this->assertContainerBuilderHasAlias(HttpClient::class);
+        $this->assertContainerBuilderHasAlias(ClientInterface::class);
         $this->assertContainerBuilderHasAlias(HttpAsyncClient::class);
     }
 
@@ -107,7 +107,7 @@ final class DiscoveryTest extends AbstractExtensionTestCase
 
         self::assertThat(
             $this->container,
-            new LogicalNot(new ContainerBuilderHasAliasConstraint(HttpClient::class))
+            new LogicalNot(new ContainerBuilderHasAliasConstraint(ClientInterface::class))
         );
         self::assertThat(
             $this->container,

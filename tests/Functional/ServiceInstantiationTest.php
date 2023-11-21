@@ -8,7 +8,6 @@ use GuzzleHttp\Psr7\Request as GuzzleRequest;
 use Http\Adapter\Guzzle7\Client;
 use Http\Client\Common\Plugin\RedirectPlugin;
 use Http\Client\Common\PluginClient;
-use Http\Client\HttpClient;
 use Http\HttplugBundle\Collector\Collector;
 use Http\HttplugBundle\Collector\ProfileClient;
 use Http\HttplugBundle\Collector\ProfilePlugin;
@@ -39,7 +38,7 @@ class ServiceInstantiationTest extends WebTestCase
         $container = static::$kernel->getContainer();
         $this->assertTrue($container->has('httplug.client'));
         $client = $container->get('httplug.client');
-        $this->assertInstanceOf(HttpClient::class, $client);
+        $this->assertInstanceOf(ClientInterface::class, $client);
     }
 
     public function testHttpClientNoDebug(): void
@@ -52,7 +51,7 @@ class ServiceInstantiationTest extends WebTestCase
         $container = static::$kernel->getContainer();
         $this->assertTrue($container->has('httplug.client'));
         $client = $container->get('httplug.client');
-        $this->assertInstanceOf(HttpClient::class, $client);
+        $this->assertInstanceOf(ClientInterface::class, $client);
     }
 
     /**

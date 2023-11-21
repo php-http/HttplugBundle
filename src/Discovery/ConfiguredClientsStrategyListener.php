@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Http\HttplugBundle\Discovery;
 
-use Http\Discovery\HttpClientDiscovery;
+use Http\Discovery\Psr18ClientDiscovery;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -17,7 +17,7 @@ class ConfiguredClientsStrategyListener implements EventSubscriberInterface
      */
     public function onEvent()
     {
-        HttpClientDiscovery::prependStrategy(ConfiguredClientsStrategy::class);
+        Psr18ClientDiscovery::prependStrategy(ConfiguredClientsStrategy::class);
     }
 
     /**

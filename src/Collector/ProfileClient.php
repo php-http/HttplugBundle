@@ -8,7 +8,6 @@ use Http\Client\Common\FlexibleHttpClient;
 use Http\Client\Common\VersionBridgeClient;
 use Http\Client\Exception\HttpException;
 use Http\Client\HttpAsyncClient;
-use Http\Client\HttpClient;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -16,19 +15,19 @@ use Symfony\Component\Stopwatch\Stopwatch;
 use Symfony\Component\Stopwatch\StopwatchEvent;
 
 /**
- * The ProfileClient decorates any client that implement both HttpClient and HttpAsyncClient interfaces to gather target
+ * The ProfileClient decorates any client that implement both ClientInterface and HttpAsyncClient interfaces to gather target
  * url and response status code.
  *
  * @author Fabien Bourigault <bourigaultfabien@gmail.com>
  *
  * @internal
  */
-class ProfileClient implements HttpClient, HttpAsyncClient
+class ProfileClient implements ClientInterface, HttpAsyncClient
 {
     use VersionBridgeClient;
 
     /**
-     * @var HttpClient|HttpAsyncClient
+     * @var ClientInterface|HttpAsyncClient
      */
     private $client;
 
@@ -55,12 +54,12 @@ class ProfileClient implements HttpClient, HttpAsyncClient
     private const STOPWATCH_CATEGORY = 'httplug';
 
     /**
-     * @param HttpClient|HttpAsyncClient $client The client to profile. Client must implement HttpClient or
-     *                                           HttpAsyncClient interface.
+     * @param ClientInterface|HttpAsyncClient $client The client to profile. Client must implement HttpClient or
+     *                                                HttpAsyncClient interface.
      */
     public function __construct($client, Collector $collector, Formatter $formatter, Stopwatch $stopwatch)
     {
-        if (!(($client instanceof ClientInterface || $client instanceof HttpClient) && $client instanceof HttpAsyncClient)) {
+        if (!($client instanceof ClientInterface && $client instanceof HttpAsyncClient)) {
             $client = new FlexibleHttpClient($client);
         }
 
