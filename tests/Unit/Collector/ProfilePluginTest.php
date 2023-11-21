@@ -12,6 +12,8 @@ use Http\HttplugBundle\Collector\Collector;
 use Http\HttplugBundle\Collector\Formatter;
 use Http\HttplugBundle\Collector\ProfilePlugin;
 use Http\HttplugBundle\Collector\Stack;
+use Http\Message\Formatter as MessageFormatter;
+use Http\Message\Formatter\SimpleFormatter;
 use Http\Promise\FulfilledPromise;
 use Http\Promise\Promise;
 use Http\Promise\RejectedPromise;
@@ -25,11 +27,6 @@ class ProfilePluginTest extends TestCase
      * @var Plugin
      */
     private $plugin;
-
-    /**
-     * @var Collector
-     */
-    private $collector;
 
     /**
      * @var RequestInterface
@@ -47,11 +44,6 @@ class ProfilePluginTest extends TestCase
     private $fulfilledPromise;
 
     /**
-     * @var Stack
-     */
-    private $currentStack;
-
-    /**
      * @var TransferException
      */
     private $exception;
@@ -62,31 +54,25 @@ class ProfilePluginTest extends TestCase
     private $rejectedPromise;
 
     /**
-     * @var Formatter
-     */
-    private $formatter;
-
-    /**
      * @var ProfilePlugin
      */
     private $subject;
+    private $collector;
 
     public function setUp(): void
     {
-        $this->plugin = $this->getMockBuilder(Plugin::class)->getMock();
-        $this->collector = $this->getMockBuilder(Collector::class)->disableOriginalConstructor()->getMock();
+        $this->collector = new Collector();
+        $messageFormatter = $this->createMock(SimpleFormatter::class);
+        $formatter = new Formatter($messageFormatter, $this->createMock(MessageFormatter::class));
+
+        $this->plugin = $this->createMock(Plugin::class);
         $this->request = new Request('GET', '/');
         $this->response = new Response();
         $this->fulfilledPromise = new FulfilledPromise($this->response);
-        $this->currentStack = new Stack('default', 'FormattedRequest');
+        $currentStack = new Stack('default', 'FormattedRequest');
+        $this->collector->activateStack($currentStack);
         $this->exception = new TransferException();
         $this->rejectedPromise = new RejectedPromise($this->exception);
-        $this->formatter = $this->getMockBuilder(Formatter::class)->disableOriginalConstructor()->getMock();
-
-        $this->collector
-            ->method('getActiveStack')
-            ->willReturn($this->currentStack)
-        ;
 
         $this->plugin
             ->method('handleRequest')
@@ -95,29 +81,22 @@ class ProfilePluginTest extends TestCase
             })
         ;
 
-        $this->formatter
+        $messageFormatter
             ->method('formatRequest')
             ->with($this->identicalTo($this->request))
             ->willReturn('FormattedRequest')
         ;
 
-        $this->formatter
-            ->method('formatResponse')
-            ->with($this->identicalTo($this->response))
+        $messageFormatter
+            ->method('formatResponseForRequest')
+            ->with($this->identicalTo($this->response), $this->identicalTo($this->request))
             ->willReturn('FormattedResponse')
-        ;
-
-        $this->formatter
-            ->method('formatException')
-            ->with($this->identicalTo($this->exception))
-            ->willReturn('FormattedException')
         ;
 
         $this->subject = new ProfilePlugin(
             $this->plugin,
             $this->collector,
-            $this->formatter,
-            'http.plugin.mock'
+            $formatter
         );
     }
 
@@ -142,8 +121,9 @@ class ProfilePluginTest extends TestCase
         }, function (): void {
         });
 
-        $this->assertCount(1, $this->currentStack->getProfiles());
-        $profile = $this->currentStack->getProfiles()[0];
+        $activeStack = $this->collector->getActiveStack();
+        $this->assertCount(1, $activeStack->getProfiles());
+        $profile = $activeStack->getProfiles()[0];
         $this->assertEquals(get_class($this->plugin), $profile->getPlugin());
     }
 
@@ -154,7 +134,9 @@ class ProfilePluginTest extends TestCase
         }, function (): void {
         });
 
-        $profile = $this->currentStack->getProfiles()[0];
+        $activeStack = $this->collector->getActiveStack();
+        $this->assertCount(1, $activeStack->getProfiles());
+        $profile = $activeStack->getProfiles()[0];
         $this->assertEquals('FormattedRequest', $profile->getRequest());
     }
 
@@ -166,7 +148,10 @@ class ProfilePluginTest extends TestCase
         });
 
         $this->assertEquals($this->response, $promise->wait());
-        $profile = $this->currentStack->getProfiles()[0];
+
+        $activeStack = $this->collector->getActiveStack();
+        $this->assertCount(1, $activeStack->getProfiles());
+        $profile = $activeStack->getProfiles()[0];
         $this->assertEquals('FormattedResponse', $profile->getResponse());
     }
 
@@ -176,6 +161,9 @@ class ProfilePluginTest extends TestCase
             return $this->rejectedPromise;
         }, function (): void {
         });
+
+        $activeStack = $this->collector->getActiveStack();
+        $this->assertCount(1, $activeStack->getProfiles());
 
         $this->expectException(TransferException::class);
         $promise->wait();

@@ -33,7 +33,7 @@ class Formatter implements MessageFormatter
      */
     private $curlFormatter;
 
-    public function __construct(MessageFormatter $formatter, CurlCommandFormatter $curlFormatter)
+    public function __construct(MessageFormatter $formatter, MessageFormatter $curlFormatter)
     {
         $this->formatter = $formatter;
         $this->curlFormatter = $curlFormatter;
@@ -47,7 +47,7 @@ class Formatter implements MessageFormatter
     public function formatException(\Throwable $exception)
     {
         if ($exception instanceof HttpException) {
-            return $this->formatter->formatResponse($exception->getResponse());
+            return $this->formatter->formatResponseForRequest($exception->getResponse(), $exception->getRequest());
         }
 
         if ($exception instanceof TransferException || $exception instanceof NetworkExceptionInterface) {
@@ -74,9 +74,6 @@ class Formatter implements MessageFormatter
         return $this->formatter->formatResponse($response);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function formatResponse(ResponseInterface $response)
     {
         return $this->formatter->formatResponse($response);

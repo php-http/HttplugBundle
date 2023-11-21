@@ -10,6 +10,8 @@ use Http\HttplugBundle\Collector\Collector;
 use Http\HttplugBundle\Collector\Formatter;
 use Http\HttplugBundle\Collector\ProfileClient;
 use Http\HttplugBundle\Collector\ProfileClientFactory;
+use Http\Message\Formatter as MessageFormatter;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Stopwatch\Stopwatch;
 
@@ -26,21 +28,21 @@ class ProfileClientFactoryTest extends TestCase
     private $formatter;
 
     /**
-     * @var Stopwatch
+     * @var Stopwatch&MockObject
      */
     private $stopwatch;
 
     /**
-     * @var HttpClient
+     * @var HttpClient&MockObject
      */
     private $client;
 
     public function setUp(): void
     {
-        $this->collector = $this->getMockBuilder(Collector::class)->disableOriginalConstructor()->getMock();
-        $this->formatter = $this->getMockBuilder(Formatter::class)->disableOriginalConstructor()->getMock();
-        $this->stopwatch = $this->getMockBuilder(Stopwatch::class)->getMock();
-        $this->client = $this->getMockBuilder(HttpClient::class)->getMock();
+        $this->collector = new Collector();
+        $this->formatter = new Formatter($this->createMock(MessageFormatter::class), $this->createMock(MessageFormatter::class));
+        $this->stopwatch = $this->createMock(Stopwatch::class);
+        $this->client = $this->createMock(HttpClient::class);
     }
 
     public function testCreateClientFromClientFactory(): void
