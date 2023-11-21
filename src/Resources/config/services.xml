@@ -22,23 +22,6 @@
         </service>
 
         <!-- Discovery with autowiring support -->
-        <service id="httplug.message_factory.default" class="Http\Message\MessageFactory">
-            <factory class="Http\Discovery\MessageFactoryDiscovery" method="find" />
-        </service>
-        <service id="Http\Message\MessageFactory" alias="httplug.message_factory" public="false" />
-        <service id="Http\Message\RequestFactory" alias="httplug.message_factory" public="false" />
-        <service id="Http\Message\ResponseFactory" alias="httplug.message_factory" public="false" />
-
-        <service id="httplug.stream_factory.default" class="Http\Message\StreamFactory">
-            <factory class="Http\Discovery\StreamFactoryDiscovery" method="find" />
-        </service>
-        <service id="Http\Message\StreamFactory" alias="httplug.stream_factory" public="false" />
-
-        <service id="httplug.uri_factory.default" class="Http\Message\UriFactory">
-            <factory class="Http\Discovery\UriFactoryDiscovery" method="find" />
-        </service>
-        <service id="Http\Message\UriFactory" alias="httplug.uri_factory" public="false" />
-
         <service id="httplug.async_client.default" class="Http\Client\HttpAsyncClient">
             <factory class="Http\Discovery\HttpAsyncClientDiscovery" method="find" />
         </service>
@@ -80,23 +63,16 @@
         <!-- ClientFactories -->
         <service id="httplug.factory.auto" class="Http\HttplugBundle\ClientFactory\AutoDiscoveryFactory" public="false" />
         <service id="httplug.factory.buzz" class="Http\HttplugBundle\ClientFactory\BuzzFactory" public="false">
-            <argument type="service" id="httplug.message_factory"/>
+            <argument type="service" id="httplug.psr17_response_factory"/>
         </service>
         <service id="httplug.factory.curl" class="Http\HttplugBundle\ClientFactory\CurlFactory" public="false">
             <argument type="service" id="httplug.psr17_response_factory"/>
             <argument type="service" id="httplug.psr17_stream_factory"/>
         </service>
-        <service id="httplug.factory.guzzle5" class="Http\HttplugBundle\ClientFactory\Guzzle5Factory" public="false">
-            <argument type="service" id="httplug.message_factory"/>
-        </service>
         <service id="httplug.factory.guzzle6" class="Http\HttplugBundle\ClientFactory\Guzzle6Factory" public="false" />
         <service id="httplug.factory.guzzle7" class="Http\HttplugBundle\ClientFactory\Guzzle7Factory" public="false" />
-        <service id="httplug.factory.react" class="Http\HttplugBundle\ClientFactory\ReactFactory" public="false">
-            <argument type="service" id="httplug.message_factory"/>
-        </service>
-        <service id="httplug.factory.socket" class="Http\HttplugBundle\ClientFactory\SocketFactory" public="false">
-            <argument type="service" id="httplug.message_factory"/>
-        </service>
+        <service id="httplug.factory.react" class="Http\HttplugBundle\ClientFactory\ReactFactory" public="false" />
+        <service id="httplug.factory.socket" class="Http\HttplugBundle\ClientFactory\SocketFactory" public="false" />
         <service id="httplug.factory.symfony" class="Http\HttplugBundle\ClientFactory\SymfonyFactory" public="false">
             <argument type="service" id="httplug.psr17_response_factory"/>
             <argument type="service" id="httplug.psr17_stream_factory"/>

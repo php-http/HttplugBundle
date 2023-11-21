@@ -486,7 +486,7 @@ class HttplugExtension extends Extension
         if ($arguments['http_methods_client']) {
             $container
                 ->register($serviceId.'.http_methods', HttpMethodsClient::class)
-                ->setArguments([new Reference($serviceId.'.http_methods.inner'), new Reference('httplug.message_factory')])
+                ->setArguments([new Reference($serviceId.'.http_methods.inner'), new Reference('httplug.psr17_request_factory'), new Reference('httplug.psr17_stream_factory')])
                 ->setPublic($arguments['public'] ? true : false)
                 ->setDecoratedService($serviceId)
             ;
@@ -513,7 +513,7 @@ class HttplugExtension extends Extension
         $container
             ->register($serviceId, UriInterface::class)
             ->setPublic(false)
-            ->setFactory([new Reference('httplug.uri_factory'), 'createUri'])
+            ->setFactory([new Reference('httplug.psr17_uri_factory'), 'createUri'])
             ->addArgument($uri)
         ;
     }

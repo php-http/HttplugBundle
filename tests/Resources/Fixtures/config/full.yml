@@ -2,14 +2,12 @@ httplug:
     default_client_autowiring: false
     main_alias:
         client: my_client
-        message_factory: my_message_factory
-        uri_factory: my_uri_factory
-        stream_factory: my_stream_factory
+        psr17_request_factory: my_psr17_request_factory
+        psr17_response_factory: my_psr17_response_factory
+        psr17_uri_factory: my_psr17_uri_factory
+        psr17_stream_factory: my_psr17_stream_factory
     classes:
         client: Http\Adapter\Guzzle7\Client
-        message_factory: Http\Message\MessageFactory\GuzzleMessageFactory
-        uri_factory: Http\Message\UriFactory\GuzzleUriFactory
-        stream_factory: Http\Message\StreamFactory\GuzzleStreamFactory
         psr18_client: Http\Adapter\Guzzle7\Client
         psr17_request_factory: Nyholm\Psr7\Factory\Psr17Factory
         psr17_response_factory: Nyholm\Psr7\Factory\Psr17Factory

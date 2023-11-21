@@ -66,9 +66,10 @@ class Configuration implements ConfigurationInterface
             ->validate()
                 ->ifTrue(function ($v) {
                     return !empty($v['classes']['client'])
-                        || !empty($v['classes']['message_factory'])
-                        || !empty($v['classes']['uri_factory'])
-                        || !empty($v['classes']['stream_factory']);
+                        || !empty($v['classes']['psr17_request_factory'])
+                        || !empty($v['classes']['psr17_response_factory'])
+                        || !empty($v['classes']['psr17_uri_factory'])
+                        || !empty($v['classes']['psr17_stream_factory']);
                 })
                 ->then(function ($v) {
                     foreach ($v['classes'] as $key => $class) {
@@ -119,9 +120,6 @@ class Configuration implements ConfigurationInterface
                     ->children()
                         ->scalarNode('client')->defaultValue('httplug.client.default')->end()
                         ->scalarNode('psr18_client')->defaultValue('httplug.psr18_client.default')->end()
-                        ->scalarNode('message_factory')->defaultValue('httplug.message_factory.default')->end()
-                        ->scalarNode('uri_factory')->defaultValue('httplug.uri_factory.default')->end()
-                        ->scalarNode('stream_factory')->defaultValue('httplug.stream_factory.default')->end()
                         ->scalarNode('psr17_request_factory')->defaultValue('httplug.psr17_request_factory.default')->end()
                         ->scalarNode('psr17_response_factory')->defaultValue('httplug.psr17_response_factory.default')->end()
                         ->scalarNode('psr17_stream_factory')->defaultValue('httplug.psr17_stream_factory.default')->end()
@@ -136,9 +134,6 @@ class Configuration implements ConfigurationInterface
                     ->children()
                         ->scalarNode('client')->defaultNull()->end()
                         ->scalarNode('psr18_client')->defaultNull()->end()
-                        ->scalarNode('message_factory')->defaultNull()->end()
-                        ->scalarNode('uri_factory')->defaultNull()->end()
-                        ->scalarNode('stream_factory')->defaultNull()->end()
                         ->scalarNode('psr17_request_factory')->defaultNull()->end()
                         ->scalarNode('psr17_response_factory')->defaultNull()->end()
                         ->scalarNode('psr17_stream_factory')->defaultNull()->end()
@@ -857,7 +852,7 @@ class Configuration implements ConfigurationInterface
                 ->end()
                 ->scalarNode('stream_factory')
                     ->info('This must be a service id to a service implementing '.StreamFactory::class)
-                    ->defaultValue('httplug.stream_factory')
+                    ->defaultValue('httplug.psr17_stream_factory')
                     ->cannotBeEmpty()
                 ->end()
             ->end()

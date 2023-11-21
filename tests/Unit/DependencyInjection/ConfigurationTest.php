@@ -7,9 +7,6 @@ namespace Http\HttplugBundle\Tests\Unit\DependencyInjection;
 use Http\Adapter\Guzzle7\Client;
 use Http\HttplugBundle\DependencyInjection\Configuration;
 use Http\HttplugBundle\DependencyInjection\HttplugExtension;
-use Http\Message\MessageFactory\GuzzleMessageFactory;
-use Http\Message\StreamFactory\GuzzleStreamFactory;
-use Http\Message\UriFactory\GuzzleUriFactory;
 use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractExtensionConfigurationTestCase;
 use Nyholm\Psr7\Factory\Psr17Factory;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
@@ -25,9 +22,6 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
         'default_client_autowiring' => true,
         'main_alias' => [
             'client' => 'httplug.client.default',
-            'message_factory' => 'httplug.message_factory.default',
-            'uri_factory' => 'httplug.uri_factory.default',
-            'stream_factory' => 'httplug.stream_factory.default',
             'psr18_client' => 'httplug.psr18_client.default',
             'psr17_request_factory' => 'httplug.psr17_request_factory.default',
             'psr17_response_factory' => 'httplug.psr17_response_factory.default',
@@ -39,9 +33,6 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
         'classes' => [
             'client' => null,
             'psr18_client' => null,
-            'message_factory' => null,
-            'uri_factory' => null,
-            'stream_factory' => null,
             'psr17_request_factory' => null,
             'psr17_response_factory' => null,
             'psr17_stream_factory' => null,
@@ -59,7 +50,7 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
             'authentication' => [],
             'cache' => [
                 'enabled' => false,
-                'stream_factory' => 'httplug.stream_factory',
+                'stream_factory' => 'httplug.psr17_stream_factory',
                 'config' => [
                     'methods' => ['GET', 'HEAD'],
                     'blacklisted_paths' => [],
@@ -125,22 +116,16 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
             'default_client_autowiring' => false,
             'main_alias' => [
                 'client' => 'my_client',
-                'message_factory' => 'my_message_factory',
-                'uri_factory' => 'my_uri_factory',
-                'stream_factory' => 'my_stream_factory',
                 'psr18_client' => 'httplug.psr18_client.default',
-                'psr17_request_factory' => 'httplug.psr17_request_factory.default',
-                'psr17_response_factory' => 'httplug.psr17_response_factory.default',
-                'psr17_stream_factory' => 'httplug.psr17_stream_factory.default',
-                'psr17_uri_factory' => 'httplug.psr17_uri_factory.default',
+                'psr17_request_factory' => 'my_psr17_request_factory',
+                'psr17_response_factory' => 'my_psr17_response_factory',
+                'psr17_stream_factory' => 'my_psr17_stream_factory',
+                'psr17_uri_factory' => 'my_psr17_uri_factory',
                 'psr17_uploaded_file_factory' => 'httplug.psr17_uploaded_file_factory.default',
                 'psr17_server_request_factory' => 'httplug.psr17_server_request_factory.default',
             ],
             'classes' => [
                 'client' => Client::class,
-                'message_factory' => GuzzleMessageFactory::class,
-                'uri_factory' => GuzzleUriFactory::class,
-                'stream_factory' => GuzzleStreamFactory::class,
                 'psr18_client' => Client::class,
                 'psr17_request_factory' => Psr17Factory::class,
                 'psr17_response_factory' => Psr17Factory::class,
@@ -492,7 +477,7 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
                             ],
                             'cache_pool' => 'my_custom_cache_pull',
                             'enabled' => true,
-                            'stream_factory' => 'httplug.stream_factory',
+                            'stream_factory' => 'httplug.psr17_stream_factory',
                         ],
                     ],
                 ],

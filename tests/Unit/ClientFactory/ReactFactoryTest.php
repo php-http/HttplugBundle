@@ -6,7 +6,6 @@ namespace Http\HttplugBundle\Tests\Unit\ClientFactory;
 
 use Http\Adapter\React\Client;
 use Http\HttplugBundle\ClientFactory\ReactFactory;
-use Http\Message\MessageFactory;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -20,7 +19,7 @@ class ReactFactoryTest extends TestCase
             $this->markTestSkipped('React adapter is not installed');
         }
 
-        $factory = new ReactFactory($this->getMockBuilder(MessageFactory::class)->getMock());
+        $factory = new ReactFactory();
         $client = $factory->createClient();
 
         $this->assertInstanceOf(Client::class, $client);

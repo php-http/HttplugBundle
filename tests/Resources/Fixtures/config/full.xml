@@ -5,15 +5,13 @@
         <default-client-autowiring>false</default-client-autowiring>
         <main-alias>
             <client>my_client</client>
-            <message-factory>my_message_factory</message-factory>
-            <uri-factory>my_uri_factory</uri-factory>
-            <stream-factory>my_stream_factory</stream-factory>
+            <psr17-request-factory>my_psr17_request_factory</psr17-request-factory>
+            <psr17-response-factory>my_psr17_response_factory</psr17-response-factory>
+            <psr17-uri-factory>my_psr17_uri_factory</psr17-uri-factory>
+            <psr17-stream-factory>my_psr17_stream_factory</psr17-stream-factory>
         </main-alias>
         <classes>
             <client>Http\Adapter\Guzzle7\Client</client>
-            <message-factory>Http\Message\MessageFactory\GuzzleMessageFactory</message-factory>
-            <uri-factory>Http\Message\UriFactory\GuzzleUriFactory</uri-factory>
-            <stream-factory>Http\Message\StreamFactory\GuzzleStreamFactory</stream-factory>
             <psr18-client>Http\Adapter\Guzzle7\Client</psr18-client>
             <psr17-request-factory>Nyholm\Psr7\Factory\Psr17Factory</psr17-request-factory>
             <psr17-response-factory>Nyholm\Psr7\Factory\Psr17Factory</psr17-response-factory>

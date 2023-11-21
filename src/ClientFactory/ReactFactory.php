@@ -5,23 +5,12 @@ declare(strict_types=1);
 namespace Http\HttplugBundle\ClientFactory;
 
 use Http\Adapter\React\Client;
-use Http\Message\MessageFactory;
 
 /**
  * @author Tobias Nyholm <tobias.nyholm@gmail.com>
  */
 class ReactFactory implements ClientFactory
 {
-    /**
-     * @var MessageFactory
-     */
-    private $messageFactory;
-
-    public function __construct(MessageFactory $messageFactory)
-    {
-        $this->messageFactory = $messageFactory;
-    }
-
     /**
      * {@inheritdoc}
      */
@@ -31,6 +20,6 @@ class ReactFactory implements ClientFactory
             throw new \LogicException('To use the React adapter you need to install the "php-http/react-adapter" package.');
         }
 
-        return new Client($this->messageFactory);
+        return new Client();
     }
 }
