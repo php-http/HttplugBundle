@@ -58,8 +58,6 @@ class HttplugExtension extends Extension
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
 
         $loader->load('services.xml');
-        // TODO: Move this back into services.xml when we drop support for Symfony 4, or completely remove the service in the next major version.
-        $loader->load('services_legacy.xml');
         $loader->load('plugins.xml');
         if (\class_exists(MockClient::class)) {
             $loader->load('mock-client.xml');
