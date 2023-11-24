@@ -33,7 +33,6 @@ use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
-use Symfony\Component\HttpKernel\Kernel;
 use Twig\Environment as TwigEnvironment;
 
 /**
@@ -59,12 +58,6 @@ class HttplugExtension extends Extension
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
 
         $loader->load('services.xml');
-        // TODO: Move this back into services.xml when we drop support for Symfony 4, or completely remove the service in the next major version.
-        if (Kernel::MAJOR_VERSION >= 5) {
-            $loader->load('services_legacy.xml');
-        } else {
-            $loader->load('services_legacy_sf4.xml');
-        }
         $loader->load('plugins.xml');
         if (\class_exists(MockClient::class)) {
             $loader->load('mock-client.xml');

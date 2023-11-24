@@ -18,10 +18,8 @@ use Psr\Http\Message\ResponseInterface;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
-use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\HttpKernel\Profiler\Profiler;
@@ -132,8 +130,7 @@ class ServiceInstantiationTest extends WebTestCase
         /** @var EventDispatcherInterface $dispatcher */
         $dispatcher = static::$kernel->getContainer()->get('event_dispatcher');
 
-        $class = (Kernel::MAJOR_VERSION >= 5) ? RequestEvent::class : GetResponseEvent::class;
-        $event = new $class(static::$kernel, SymfonyRequest::create('/'), HttpKernelInterface::MASTER_REQUEST);
+        $event = new RequestEvent(static::$kernel, SymfonyRequest::create('/'), HttpKernelInterface::MAIN_REQUEST);
 
         $dispatcher->dispatch($event, KernelEvents::REQUEST);
 

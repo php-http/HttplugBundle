@@ -11,8 +11,6 @@ use Http\HttplugBundle\Collector\PluginClientFactory;
 use Http\HttplugBundle\Collector\PluginClientFactoryListener;
 use Nyholm\NSA;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\EventDispatcher\Event as LegacyEvent;
-use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Stopwatch\Stopwatch;
 use Symfony\Contracts\EventDispatcher\Event;
 
@@ -28,8 +26,7 @@ final class PluginClientFactoryListenerTest extends TestCase
 
         $listener = new PluginClientFactoryListener($factory);
 
-        $class = (Kernel::MAJOR_VERSION >= 5) ? Event::class : LegacyEvent::class;
-        $listener->onEvent(new $class());
+        $listener->onEvent(new Event());
 
         $this->assertTrue(is_callable(NSA::getProperty(DefaultPluginClientFactory::class, 'factory')));
     }
