@@ -15,7 +15,7 @@ The change log describes what is "Added", "Removed", "Changed" or "Fixed" betwee
 - Changed the return type of `ClientFactory` to return a `ClientInterface` instead of `ClientInterface|HttpClient`
 - Changed the type of `httplug.client.default` to `ClientInterface` instead of `HttpClient`
 - Removed the `DummyClient` interface
-- Removed the `Http\Client\HttpClient` alias use the `ClientInterface` typehint in your services for autowiring.
+- Removed the `Http\Client\HttpClient` alias use the `Psr\Http\Client\ClientInterface` typehint in your services for autowiring.
 
 # Version 1
 
