@@ -134,7 +134,8 @@ class ServiceInstantiationTest extends WebTestCase
         $dispatcher = static::$kernel->getContainer()->get('event_dispatcher');
 
         $class = (Kernel::MAJOR_VERSION >= 5) ? RequestEvent::class : GetResponseEvent::class;
-        $event = new $class(static::$kernel, SymfonyRequest::create('/'), HttpKernelInterface::MASTER_REQUEST);
+        $requestType = (Kernel::MAJOR_VERSION >= 6) ? HttpKernelInterface::MAIN_REQUEST : HttpKernelInterface::MASTER_REQUEST;
+        $event = new $class(static::$kernel, SymfonyRequest::create('/'), $requestType);
 
         $dispatcher->dispatch($event, KernelEvents::REQUEST);
 
