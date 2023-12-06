@@ -4,6 +4,8 @@ The change log describes what is "Added", "Removed", "Changed" or "Fixed" betwee
 
 # Version 1
 
+# 1.32.0 - 2023-12-06
+
 - Added support for Symfony 7
 
 # 1.31.0 - 2023-11-06
