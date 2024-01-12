@@ -93,8 +93,10 @@ jobs:
         run: "composer config minimum-stability stable"
         if: "${{ matrix.stability == 'stable' }}"
 
-      - name: "Install dependencies"
-        run: "composer require --no-progress --no-scripts --no-plugins symfony/flex ${{ matrix.dependencies }}"
+      - name: "Add dependencies and enable flex"
+        run: |
+          composer require --no-update symfony/flex ${{ matrix.dependencies }}
+          composer config --no-plugins allow-plugins.symfony/flex true
 
       - name: "Install dependencies with Composer"
         uses: "ramsey/composer-install@v2"
