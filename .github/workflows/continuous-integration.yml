@@ -43,6 +43,9 @@ jobs:
           - dependencies: "php-http/guzzle7-adapter"
             php-version: "8.2"
             symfony-deprecations-helper: "weak"
+          - dependencies: "php-http/guzzle7-adapter"
+            php-version: "8.3"
+            symfony-deprecations-helper: "weak"
 
           # Test with httplug 2.x clients
           - dependencies: "php-http/guzzle7-adapter php-http/curl-client:^2.0.0 php-http/vcr-plugin:^1.0@dev php-http/socket-client:^2.0"
@@ -68,6 +71,10 @@ jobs:
             symfony-require: "6.3.*"
             php-version: "8.2"
             symfony-deprecations-helper: "weak"
+          - dependencies: "php-http/guzzle7-adapter symfony/http-client:^6.0"
+            symfony-require: "6.4.*"
+            php-version: "8.1"
+            symfony-deprecations-helper: "weak"
 
     steps:
       - name: "Checkout"
@@ -86,8 +93,10 @@ jobs:
         run: "composer config minimum-stability stable"
         if: "${{ matrix.stability == 'stable' }}"
 
-      - name: "Install dependencies"
-        run: "composer require --no-progress --no-scripts --no-plugins symfony/flex ${{ matrix.dependencies }}"
+      - name: "Add dependencies and enable flex"
+        run: |
+          composer require --no-update symfony/flex ${{ matrix.dependencies }}
+          composer config --no-plugins allow-plugins.symfony/flex true
 
       - name: "Install dependencies with Composer"
         uses: "ramsey/composer-install@v2"

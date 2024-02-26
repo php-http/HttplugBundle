@@ -12,6 +12,8 @@ use Http\HttplugBundle\Collector\Collector;
 use Http\HttplugBundle\Collector\Formatter;
 use Http\HttplugBundle\Collector\ProfileClient;
 use Http\HttplugBundle\Collector\Stack;
+use Http\Message\Formatter as MessageFormatter;
+use Http\Message\Formatter\SimpleFormatter;
 use Http\Promise\FulfilledPromise;
 use Http\Promise\Promise;
 use Http\Promise\RejectedPromise;
@@ -20,7 +22,6 @@ use PHPUnit\Framework\TestCase;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\UriInterface;
 use Symfony\Component\Stopwatch\Stopwatch;
 use Symfony\Component\Stopwatch\StopwatchEvent;
 
@@ -32,12 +33,7 @@ class ProfileClientTest extends TestCase
     private $collector;
 
     /**
-     * @var Stack
-     */
-    private $activeStack;
-
-    /**
-     * @var CombinedClientInterface|MockObject
+     * @var CombinedClientInterface&MockObject
      */
     private $client;
 
@@ -45,16 +41,6 @@ class ProfileClientTest extends TestCase
      * @var RequestInterface
      */
     private $request;
-
-    /**
-     * @var Formatter|MockObject
-     */
-    private $formatter;
-
-    /**
-     * @var Stopwatch
-     */
-    private $stopwatch;
 
     /**
      * @var StopwatchEvent
@@ -77,44 +63,36 @@ class ProfileClientTest extends TestCase
     private $fulfilledPromise;
 
     /**
-     * @var \Exception
-     */
-    private $exception;
-
-    /**
      * @var RejectedPromise
      */
     private $rejectedPromise;
 
-    /**
-     * @var UriInterface
-     */
-    private $uri;
-
     public function setUp(): void
     {
-        $this->collector = $this->getMockBuilder(Collector::class)->disableOriginalConstructor()->getMock();
-        $this->activeStack = new Stack('default', 'FormattedRequest');
-        $this->client = $this->getMockBuilder(CombinedClientInterface::class)->getMock();
-        $this->uri = new Uri('https://example.com/target');
-        $this->request = new Request('GET', $this->uri);
-        $this->formatter = $this->getMockBuilder(Formatter::class)->disableOriginalConstructor()->getMock();
-        $this->stopwatch = $this->getMockBuilder(Stopwatch::class)->disableOriginalConstructor()->getMock();
-        $this->stopwatchEvent = $this->getMockBuilder(StopwatchEvent::class)->disableOriginalConstructor()->getMock();
-        $this->subject = new ProfileClient($this->client, $this->collector, $this->formatter, $this->stopwatch);
-        $this->response = new Response();
-        $this->exception = new \Exception();
-        $this->fulfilledPromise = new FulfilledPromise($this->response);
-        $this->rejectedPromise = new RejectedPromise($this->exception);
+        $messageFormatter = $this->createMock(SimpleFormatter::class);
+        $formatter = new Formatter($messageFormatter, $this->createMock(MessageFormatter::class));
+        $this->collector = new Collector();
+        $stopwatch = $this->createMock(Stopwatch::class);
 
-        $this->collector->method('getActiveStack')->willReturn($this->activeStack);
-        $this->formatter
-            ->method('formatResponse')
-            ->with($this->response)
+        $activeStack = new Stack('default', 'FormattedRequest');
+        $this->collector->activateStack($activeStack);
+        $this->client = $this->getMockBuilder(CombinedClientInterface::class)->getMock();
+        $uri = new Uri('https://example.com/target');
+        $this->request = new Request('GET', $uri);
+        $this->stopwatchEvent = $this->createMock(StopwatchEvent::class);
+        $this->subject = new ProfileClient($this->client, $this->collector, $formatter, $stopwatch);
+        $this->response = new Response();
+        $exception = new \Exception('test');
+        $this->fulfilledPromise = new FulfilledPromise($this->response);
+        $this->rejectedPromise = new RejectedPromise($exception);
+
+        $messageFormatter
+            ->method('formatResponseForRequest')
+            ->with($this->response, $this->request)
             ->willReturn('FormattedResponse')
         ;
 
-        $this->stopwatch
+        $stopwatch
             ->method('start')
             ->willReturn($this->stopwatchEvent)
         ;
@@ -137,10 +115,12 @@ class ProfileClientTest extends TestCase
         $response = $this->subject->sendRequest($this->request);
 
         $this->assertEquals($this->response, $response);
-        $this->assertEquals('GET', $this->activeStack->getRequestMethod());
-        $this->assertEquals('/target', $this->activeStack->getRequestTarget());
-        $this->assertEquals('example.com', $this->activeStack->getRequestHost());
-        $this->assertEquals('https', $this->activeStack->getRequestScheme());
+        $activeStack = $this->collector->getActiveStack();
+        $this->assertInstanceOf(Stack::class, $activeStack);
+        $this->assertEquals('GET', $activeStack->getRequestMethod());
+        $this->assertEquals('/target', $activeStack->getRequestTarget());
+        $this->assertEquals('example.com', $activeStack->getRequestHost());
+        $this->assertEquals('https', $activeStack->getRequestScheme());
     }
 
     public function testSendRequestTypeError()
@@ -151,10 +131,6 @@ class ProfileClientTest extends TestCase
             ->willReturnCallback(function () {
                 throw new \Error('You set string to int prop');
             });
-        $this->formatter
-            ->expects($this->once())
-            ->method('formatException')
-            ->with($this->isInstanceOf(\Error::class));
 
         $this->expectException(\Error::class);
         $this->expectExceptionMessage('You set string to int prop');
@@ -170,28 +146,19 @@ class ProfileClientTest extends TestCase
             ->willReturn($this->fulfilledPromise)
         ;
 
-        $this->collector
-            ->expects($this->once())
-            ->method('deactivateStack')
-        ;
-
         $promise = $this->subject->sendAsyncRequest($this->request);
 
         $this->assertEquals($this->fulfilledPromise, $promise);
-        $this->assertEquals('GET', $this->activeStack->getRequestMethod());
-        $this->assertEquals('/target', $this->activeStack->getRequestTarget());
-        $this->assertEquals('example.com', $this->activeStack->getRequestHost());
-        $this->assertEquals('https', $this->activeStack->getRequestScheme());
+        $activeStack = $this->collector->getActiveStack();
+        $this->assertInstanceOf(Stack::class, $activeStack);
+        $this->assertEquals('GET', $activeStack->getRequestMethod());
+        $this->assertEquals('/target', $activeStack->getRequestTarget());
+        $this->assertEquals('example.com', $activeStack->getRequestHost());
+        $this->assertEquals('https', $activeStack->getRequestScheme());
     }
 
     public function testOnFulfilled(): void
     {
-        $this->collector
-            ->expects($this->once())
-            ->method('activateStack')
-            ->with($this->activeStack)
-        ;
-
         $this->stopwatchEvent
             ->expects($this->once())
             ->method('stop')
@@ -204,19 +171,15 @@ class ProfileClientTest extends TestCase
 
         $this->subject->sendAsyncRequest($this->request);
 
-        $this->assertEquals(42, $this->activeStack->getDuration());
-        $this->assertEquals(200, $this->activeStack->getResponseCode());
-        $this->assertEquals('FormattedResponse', $this->activeStack->getClientResponse());
+        $activeStack = $this->collector->getActiveStack();
+        $this->assertInstanceOf(Stack::class, $activeStack);
+        $this->assertEquals(42, $activeStack->getDuration());
+        $this->assertEquals(200, $activeStack->getResponseCode());
+        $this->assertEquals('FormattedResponse', $activeStack->getClientResponse());
     }
 
     public function testOnRejected(): void
     {
-        $this->collector
-            ->expects($this->once())
-            ->method('activateStack')
-            ->with($this->activeStack)
-        ;
-
         $this->stopwatchEvent
             ->expects($this->once())
             ->method('stop')
@@ -227,16 +190,12 @@ class ProfileClientTest extends TestCase
             ->willReturn($this->rejectedPromise)
         ;
 
-        $this->formatter
-            ->method('formatException')
-            ->with($this->exception)
-            ->willReturn('FormattedException')
-        ;
-
         $this->subject->sendAsyncRequest($this->request);
 
-        $this->assertEquals(42, $this->activeStack->getDuration());
-        $this->assertEquals('FormattedException', $this->activeStack->getClientException());
+        $activeStack = $this->collector->getActiveStack();
+        $this->assertInstanceOf(Stack::class, $activeStack);
+        $this->assertEquals(42, $activeStack->getDuration());
+        $this->assertEquals('Unexpected exception of type "Exception": test', $activeStack->getClientException());
     }
 }
 

@@ -22,8 +22,8 @@ class CurlFactoryTest extends TestCase
         }
 
         $factory = new CurlFactory(
-            $this->getMockBuilder(ResponseFactoryInterface::class)->getMock(),
-            $this->getMockBuilder(StreamFactoryInterface::class)->getMock()
+            $this->createMock(ResponseFactoryInterface::class),
+            $this->createMock(StreamFactoryInterface::class)
         );
         $client = $factory->createClient();
 

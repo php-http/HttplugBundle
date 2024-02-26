@@ -11,18 +11,19 @@ use Http\Client\Exception\TransferException;
 use Http\HttplugBundle\Collector\Formatter;
 use Http\Message\Formatter as MessageFormatter;
 use Http\Message\Formatter\CurlCommandFormatter;
+use Http\Message\Formatter\SimpleFormatter;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 class FormatterTest extends TestCase
 {
     /**
-     * @var MessageFormatter|MockObject
+     * @var MessageFormatter&MockObject
      */
     private $formatter;
 
     /**
-     * @var CurlCommandFormatter|MockObject
+     * @var CurlCommandFormatter&MockObject
      */
     private $curlFormatter;
 
@@ -33,8 +34,8 @@ class FormatterTest extends TestCase
 
     public function setUp(): void
     {
-        $this->formatter = $this->getMockBuilder(MessageFormatter::class)->getMock();
-        $this->curlFormatter = $this->getMockBuilder(CurlCommandFormatter::class)->getMock();
+        $this->formatter = $this->createMock(MessageFormatter::class);
+        $this->curlFormatter = $this->createMock(CurlCommandFormatter::class);
 
         $this->subject = new Formatter($this->formatter, $this->curlFormatter);
     }
@@ -52,6 +53,26 @@ class FormatterTest extends TestCase
         $this->subject->formatRequest($request);
     }
 
+    public function testFormatResponseForRequest(): void
+    {
+        $formatter = $this->createMock(SimpleFormatter::class);
+        $subject = new Formatter($formatter, $this->curlFormatter);
+
+        $response = new Response();
+        $request = new Request('GET', '/');
+
+        $formatter
+            ->expects($this->once())
+            ->method('formatResponseForRequest')
+            ->with($this->identicalTo($response), $this->identicalTo($request))
+        ;
+
+        $subject->formatResponseForRequest($response, $request);
+    }
+
+    /**
+     * @group legacy
+     */
     public function testFormatResponse(): void
     {
         $response = new Response();
@@ -67,18 +88,21 @@ class FormatterTest extends TestCase
 
     public function testFormatHttpException(): void
     {
+        $formatter = $this->createMock(SimpleFormatter::class);
+        $subject = new Formatter($formatter, $this->curlFormatter);
+
         $request = new Request('GET', '/');
         $response = new Response();
         $exception = new HttpException('', $request, $response);
 
-        $this->formatter
+        $formatter
             ->expects($this->once())
-            ->method('formatResponse')
-            ->with($this->identicalTo($response))
+            ->method('formatResponseForRequest')
+            ->with($this->identicalTo($response), $this->identicalTo($request))
             ->willReturn('FormattedException')
         ;
 
-        $this->assertEquals('FormattedException', $this->subject->formatException($exception));
+        $this->assertEquals('FormattedException', $subject->formatException($exception));
     }
 
     public function testFormatTransferException(): void
