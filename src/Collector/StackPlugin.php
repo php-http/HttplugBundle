@@ -53,8 +53,8 @@ class StackPlugin implements Plugin
         $this->collector->addStack($stack);
         $this->collector->activateStack($stack);
 
-        $onFulfilled = function (ResponseInterface $response) use ($stack) {
-            $stack->setResponse($this->formatter->formatResponse($response));
+        $onFulfilled = function (ResponseInterface $response) use ($stack, $request) {
+            $stack->setResponse($this->formatter->formatResponseForRequest($response, $request));
 
             return $response;
         };

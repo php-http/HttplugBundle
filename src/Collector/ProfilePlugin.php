@@ -48,6 +48,9 @@ class ProfilePlugin implements Plugin
         $profile = new Profile(get_class($this->plugin));
 
         $stack = $this->collector->getActiveStack();
+        if (null === $stack) {
+            throw new \LogicException('No active stack');
+        }
         $stack->addProfile($profile);
 
         // wrap the next callback to profile the plugin request changes
@@ -83,31 +86,25 @@ class ProfilePlugin implements Plugin
         });
     }
 
-    /**
-     * @param Stack $stack
-     */
     private function onException(
         RequestInterface $request,
         Profile $profile,
         Exception $exception,
-        Stack $stack = null
-    ) {
+        Stack $stack
+    ): void {
         $profile->setFailed(true);
         $profile->setResponse($this->formatter->formatException($exception));
         $this->collectRequestInformation($request, $stack);
     }
 
-    private function onOutgoingRequest(RequestInterface $request, Profile $profile)
+    private function onOutgoingRequest(RequestInterface $request, Profile $profile): void
     {
         $profile->setRequest($this->formatter->formatRequest($request));
     }
 
-    /**
-     * @param Stack $stack
-     */
-    private function onOutgoingResponse(ResponseInterface $response, Profile $profile, RequestInterface $request, Stack $stack = null)
+    private function onOutgoingResponse(ResponseInterface $response, Profile $profile, RequestInterface $request, Stack $stack): void
     {
-        $profile->setResponse($this->formatter->formatResponse($response));
+        $profile->setResponse($this->formatter->formatResponseForRequest($response, $request));
         $this->collectRequestInformation($request, $stack);
     }
 
@@ -115,7 +112,7 @@ class ProfilePlugin implements Plugin
      * Collect request information when not already done by the HTTP client. This happens when using the CachePlugin
      * and the cache is hit without re-validation.
      */
-    private function collectRequestInformation(RequestInterface $request, Stack $stack = null)
+    private function collectRequestInformation(RequestInterface $request, Stack $stack): void
     {
         $uri = $request->getUri();
         if (empty($stack->getRequestTarget())) {
@@ -127,7 +124,7 @@ class ProfilePlugin implements Plugin
         if (empty($stack->getRequestScheme())) {
             $stack->setRequestScheme($uri->getScheme());
         }
-        if (empty($stack->getRequestPort())) {
+        if (null === $stack->getRequestPort()) {
             $stack->setRequestPort($uri->getPort());
         }
         if (empty($stack->getRequestHost())) {
