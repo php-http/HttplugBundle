@@ -62,7 +62,7 @@
         "symfony/dom-crawler": "^5.4 || ^6.0 || ^7.0",
         "symfony/framework-bundle": "^5.4 || ^6.0 || ^7.0",
         "symfony/http-foundation": "^5.4 || ^6.0 || ^7.0",
-        "symfony/phpunit-bridge": "^5.4 || ^6.0 || ^7.0",
+        "symfony/phpunit-bridge": "^7.0.3",
         "symfony/stopwatch": "^5.4 || ^6.0 || ^7.0",
         "symfony/twig-bundle": "^5.4 || ^6.0 || ^7.0",
         "symfony/web-profiler-bundle": "^5.4 || ^6.0 || ^7.0",
