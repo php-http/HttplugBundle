@@ -43,6 +43,7 @@
     },
     "conflict": {
         "php-http/guzzle6-adapter": "<1.1",
+        "php-http/cache-plugin": "<1.7.0",
         "php-http/curl-client": "<2.0",
         "php-http/socket-client": "<2.0"
     },
