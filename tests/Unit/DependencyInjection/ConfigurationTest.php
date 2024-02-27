@@ -348,7 +348,7 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
         $file = __DIR__.'/../../Resources/Fixtures/config/invalid_cache_config.yml';
 
         $this->expectException(InvalidConfigurationException::class);
-        $this->expectExceptionMessage('Invalid configuration for path "httplug.plugins.cache.config": You can\'t provide config option "respect_cache_headers" and "respect_response_cache_directives" simultaniously. Use "respect_response_cache_directives" instead.');
+        $this->expectExceptionMessage('Invalid configuration for path "httplug.plugins.cache.config": You can\'t provide config option "respect_cache_headers" and "respect_response_cache_directives" simultaneously. Use "respect_response_cache_directives" instead.');
         $this->assertProcessedConfigurationEquals([], [$file]);
     }
 

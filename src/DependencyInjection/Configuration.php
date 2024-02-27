@@ -13,8 +13,8 @@ use Http\Client\Plugin\Vcr\Recorder\PlayerInterface;
 use Http\Client\Plugin\Vcr\Recorder\RecorderInterface;
 use Http\Message\CookieJar;
 use Http\Message\Formatter;
-use Http\Message\StreamFactory;
 use Psr\Cache\CacheItemPoolInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\NodeDefinition;
@@ -739,7 +739,7 @@ class Configuration implements ConfigurationInterface
                     // Cannot set both respect_cache_headers and respect_response_cache_directives
                     return isset($config['respect_cache_headers'], $config['respect_response_cache_directives']);
                 })
-                ->thenInvalid('You can\'t provide config option "respect_cache_headers" and "respect_response_cache_directives" simultaniously. Use "respect_response_cache_directives" instead.')
+                ->thenInvalid('You can\'t provide config option "respect_cache_headers" and "respect_response_cache_directives" simultaneously. Use "respect_response_cache_directives" instead.')
             ->end()
             ->children()
                 ->scalarNode('cache_key_generator')
@@ -851,7 +851,7 @@ class Configuration implements ConfigurationInterface
                     ->cannotBeEmpty()
                 ->end()
                 ->scalarNode('stream_factory')
-                    ->info('This must be a service id to a service implementing '.StreamFactory::class)
+                    ->info('This must be a service id to a service implementing '.StreamFactoryInterface::class)
                     ->defaultValue('httplug.psr17_stream_factory')
                     ->cannotBeEmpty()
                 ->end()
