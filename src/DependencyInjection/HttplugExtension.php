@@ -112,6 +112,12 @@ final class HttplugExtension extends Extension
             $container->removeAlias(ClientInterface::class);
         }
 
+        if (!$config['default_client']) {
+            $container->removeAlias('httplug.client');
+            $container->removeAlias('httplug.client.default');
+            $container->removeDefinition('httplug.client.default');
+        }
+
         if ($this->useVcrPlugin) {
             if (!\class_exists(RecordPlugin::class)) {
                 throw new InvalidConfigurationException('You need to require the VCR plugin to be able to use it: "composer require --dev php-http/vcr-plugin".');
@@ -137,6 +143,10 @@ final class HttplugExtension extends Extension
 
             $this->configureClient($container, $name, $arguments);
             $clients[] = $name;
+        }
+
+        if (!$config['default_client']) {
+            return;
         }
 
         // If we have clients configured

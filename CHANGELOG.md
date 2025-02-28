@@ -4,6 +4,10 @@ The change log describes what is "Added", "Removed", "Changed" or "Fixed" betwee
 
 # Version 2
 
+# 2.2.0
+
+- Added `default_client` configuration option to disable assigning the first client as default client and to remove the default client service.
+
 # 2.1.0 - 2024-11-24
 
 - Added [PluginConfigurator](https://docs.php-http.org/en/latest/integrations/symfony-bundle.html#configure-a-custom-plugin)
