@@ -1,35 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/7.4/phpunit.xsd"
-         bootstrap="./vendor/autoload.php"
-         colors="true"
-         convertErrorsToExceptions="true"
-         convertNoticesToExceptions="true"
-         convertWarningsToExceptions="true">
-    <php>
-        <env name="SHELL_VERBOSITY" value="-1" />
-        <server name="KERNEL_DIR" value="./tests/Resources/app" />
-        <server name="KERNEL_CLASS" value="AppKernel" />
-    </php>
-
-    <testsuites>
-        <testsuite name="HttplugBundle unit tests">
-            <directory suffix="Test.php">./tests/Unit</directory>
-        </testsuite>
-        <testsuite name="HttplugBundle functional tests">
-            <directory suffix="Test.php">./tests/Functional</directory>
-        </testsuite>
-    </testsuites>
-
-    <filter>
-        <whitelist>
-            <directory>./</directory>
-            <exclude>
-                <directory>./Resources</directory>
-                <directory>./tests</directory>
-                <directory>./vendor</directory>
-            </exclude>
-        </whitelist>
-    </filter>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd" bootstrap="./vendor/autoload.php" colors="true" convertErrorsToExceptions="true" convertNoticesToExceptions="true" convertWarningsToExceptions="true">
+  <coverage>
+    <include>
+      <directory>./src</directory>
+    </include>
+  </coverage>
+  <php>
+    <env name="SHELL_VERBOSITY" value="-1"/>
+    <server name="KERNEL_DIR" value="./tests/Resources/app"/>
+    <server name="KERNEL_CLASS" value="AppKernel"/>
+  </php>
+  <testsuites>
+    <testsuite name="HttplugBundle unit tests">
+      <directory suffix="Test.php">./tests/Unit</directory>
+    </testsuite>
+    <testsuite name="HttplugBundle functional tests">
+      <directory suffix="Test.php">./tests/Functional</directory>
+    </testsuite>
+  </testsuites>
 </phpunit>
