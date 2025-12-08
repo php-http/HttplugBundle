@@ -66,8 +66,10 @@ class AppKernel extends Kernel
         $collection->add('/', new Route('/', ['_controller' => 'kernel::indexAction']));
 
         $routes = new RoutingConfigurator($collection, $kernelLoader, $file, $file);
-        $routes->import('@WebProfilerBundle/Resources/config/routing/wdt.xml')->prefix('_wdt');
-        $routes->import('@WebProfilerBundle/Resources/config/routing/profiler.xml')->prefix('_profiler');
+        // TODO hardcode xml when we support only Symfony 7.3 or higher.
+        $extension = self::MAJOR_VERSION >= 7 ? 'php' : 'xml';
+        $routes->import('@WebProfilerBundle/Resources/config/routing/wdt.'.$extension)->prefix('_wdt');
+        $routes->import('@WebProfilerBundle/Resources/config/routing/profiler.'.$extension)->prefix('_profiler');
 
         return $collection;
     }

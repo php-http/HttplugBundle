@@ -65,8 +65,8 @@ jobs:
             symfony-require: "6.4.*"
             php-version: "8.2"
             symfony-deprecations-helper: "weak"
-          - dependencies: "php-http/guzzle7-adapter symfony/http-client:^7.1"
-            symfony-require: "7.1.*"
+          - dependencies: "php-http/guzzle7-adapter symfony/http-client:^7.3"
+            symfony-require: "7.3.*"
             php-version: "8.2"
             symfony-deprecations-helper: "weak"
 
