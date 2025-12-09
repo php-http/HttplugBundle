@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Http\HttplugBundle\Tests\Functional;
 
 use Http\Client\Common\HttpMethodsClient;
-use Http\Client\Common\PluginClient;
 use Http\Client\Common\PluginClientFactory;
 use Http\Discovery\Psr18ClientDiscovery;
 use Nyholm\Psr7\Factory\Psr17Factory;
@@ -24,6 +23,6 @@ final class Issue206 extends WebTestCase
         $pluginClient = (new PluginClientFactory())->createClient($myCustomClient, []);
 
         // If we get to this line, no exceptions has been thrown.
-        $this->assertInstanceOf(PluginClient::class, $pluginClient);
+        $this->addToAssertionCount(1);
     }
 }

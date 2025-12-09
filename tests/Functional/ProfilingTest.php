@@ -95,7 +95,7 @@ final class ProfilingTest extends TestCase
         $this->assertEquals('example.com', $stack->getRequestHost());
     }
 
-    private function createClient(array $plugins, $clientName = 'Acme', array $clientOptions = [])
+    private function createClient(array $plugins, string $clientName = 'Acme', array $clientOptions = [])
     {
         $plugins = array_map(fn (Plugin $plugin) => new ProfilePlugin($plugin, $this->collector, $this->formatter, $plugin::class), $plugins);
 
