@@ -33,7 +33,7 @@ use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Extension\Extension;
-use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
+use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\RateLimiter\LimiterInterface;
 use Twig\Environment as TwigEnvironment;
@@ -56,12 +56,12 @@ final class HttplugExtension extends Extension
         $configuration = $this->getConfiguration($configs, $container);
         $config = $this->processConfiguration($configuration, $configs);
 
-        $loader = new XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
+        $loader = new PhpFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
 
-        $loader->load('services.xml');
-        $loader->load('plugins.xml');
+        $loader->load('services.php');
+        $loader->load('plugins.php');
         if (\class_exists(MockClient::class)) {
-            $loader->load('mock-client.xml');
+            $loader->load('mock-client.php');
         }
 
         // Register default services
@@ -79,7 +79,7 @@ final class HttplugExtension extends Extension
         // Configure toolbar
         $profilingEnabled = $this->isConfigEnabled($container, $config['profiling']);
         if ($profilingEnabled) {
-            $loader->load('data-collector.xml');
+            $loader->load('data-collector.php');
 
             if (!empty($config['profiling']['formatter'])) {
                 // Add custom formatter
@@ -117,7 +117,7 @@ final class HttplugExtension extends Extension
                 throw new InvalidConfigurationException('You need to require the VCR plugin to be able to use it: "composer require --dev php-http/vcr-plugin".');
             }
 
-            $loader->load('vcr-plugin.xml');
+            $loader->load('vcr-plugin.php');
         }
     }
 
