@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Http\HttplugBundle\Tests\Functional;
 
 use GuzzleHttp\Psr7\Request;
+use PHPUnit\Framework\Attributes\Group;
 use Psr\Http\Client\ClientInterface;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
@@ -13,6 +14,7 @@ final class ProfilerTest extends WebTestCase
     /**
      * @group legacy
      */
+    #[Group('legacy')]
     public function testShowProfiler(): void
     {
         $client = static::createClient();

@@ -9,6 +9,8 @@ use Http\Client\Plugin\Vcr\Recorder\InMemoryRecorder;
 use Http\HttplugBundle\DependencyInjection\HttplugExtension;
 use Http\HttplugBundle\Tests\Resources\CustomPluginConfigurator;
 use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractExtensionTestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use Psr\Http\Client\ClientInterface;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
@@ -505,6 +507,8 @@ final class HttplugExtensionTest extends AbstractExtensionTestCase
      *
      * @group vcr-plugin
      */
+    #[DataProvider('provideVcrPluginConfig')]
+    #[Group('vcr-plugin')]
     public function testVcrPluginConfiguration(array $config, array $services, array $arguments = []): void
     {
         if (!class_exists(InMemoryRecorder::class)) {
@@ -529,6 +533,7 @@ final class HttplugExtensionTest extends AbstractExtensionTestCase
     /**
      * @group vcr-plugin
      */
+    #[Group('vcr-plugin')]
     public function testIsNotLoadedUnlessNeeded(): void
     {
         if (!class_exists(InMemoryRecorder::class)) {
@@ -539,7 +544,7 @@ final class HttplugExtensionTest extends AbstractExtensionTestCase
         $this->assertContainerBuilderNotHasService('httplug.plugin.vcr.recorder.in_memory');
     }
 
-    public function provideVcrPluginConfig()
+    public static function provideVcrPluginConfig(): \Generator
     {
         $config = [
             'mode' => 'record',

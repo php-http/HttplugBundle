@@ -13,6 +13,7 @@ use Http\HttplugBundle\Collector\ProfileClient;
 use Http\HttplugBundle\Collector\ProfilePlugin;
 use Http\HttplugBundle\Collector\StackPlugin;
 use Nyholm\NSA;
+use PHPUnit\Framework\Attributes\Group;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\ResponseInterface;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -55,6 +56,7 @@ final class ServiceInstantiationTest extends WebTestCase
     /**
      * @group legacy
      */
+    #[Group('legacy')]
     public function testDebugToolbar(): void
     {
         static::bootKernel(['debug' => true]);

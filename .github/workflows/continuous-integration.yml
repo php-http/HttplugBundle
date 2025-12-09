@@ -92,13 +92,20 @@ jobs:
           tools: "flex"
 
       - name: "Enforce using stable dependencies"
-        run: "composer config minimum-stability stable"
-        if: "${{ matrix.stability == 'stable' }}"
+        run: "composer config minimum-stability ${{ matrix.stability }}"
+        if: "${{ matrix.stability }}"
 
       - name: "Add dependencies and enable flex"
         run: |
           composer config allow-plugins.symfony/flex true
           composer require --no-update ${{ matrix.dependencies }}
+
+      - name: "Work around https://github.com/symfony/symfony/pull/62692"
+        run: "composer require --no-update symfony/console:*"
+
+      - name: "Get correct version for workaround"
+        run: "composer require --no-update symfony/console:${{ matrix.symfony-require }}"
+        if: "${{ matrix.symfony-require }}"
 
       - name: "Install dependencies with Composer"
         uses: "ramsey/composer-install@v3"
