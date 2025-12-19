@@ -22,9 +22,11 @@ use Symfony\Component\HttpKernel\DataCollector\DataCollector;
 final class Collector extends DataCollector
 {
     private ?Stack $activeStack = null;
+    private ?int $capturedBodyLength = null;
 
-    public function __construct(private ?int $capturedBodyLength = null)
+    public function __construct(?int $capturedBodyLength = null)
     {
+        $this->capturedBodyLength = $capturedBodyLength;
         $this->reset();
     }
 
