@@ -4,10 +4,14 @@ The change log describes what is "Added", "Removed", "Changed" or "Fixed" betwee
 
 # Version 2
 
-# 2.2.0 - unreleased
+# 2.3.0 - 2025-12-19
 
 - Compatible with Symfony 8.
+
+# 2.2.0 - 2025-12-11
+
 - Replaced XML configuration with PHP configuration.
+- Test with PHP 8.5.
 
 # 2.1.0 - 2024-11-24
 
