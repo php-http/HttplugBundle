@@ -13,8 +13,7 @@ use Nyholm\Psr7\Factory\Psr17Factory;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
-use Symfony\Component\HttpKernel\Kernel;
-use function class_exists;
+use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 
 /**
  * @author David Buchmann <mail@davidbu.ch>
@@ -117,7 +116,7 @@ final class ConfigurationTest extends AbstractExtensionConfigurationTestCase
 
     public function testSupportsAllConfigFormats(): void
     {
-        if (!class_exists(Client::class)) {
+        if (!\class_exists(Client::class)) {
             $this->markTestSkipped('Guzzle 7 adapter is not installed');
         }
 
@@ -330,7 +329,7 @@ final class ConfigurationTest extends AbstractExtensionConfigurationTestCase
         ];
 
         // XML configuration is not supported in Symfony 8+
-        if (class_exists('Symfony\Component\DependencyInjection\Loader\XmlFileLoader')) {
+        if (\class_exists(XmlFileLoader::class)) {
             $formats[] = 'config/full.xml';
         }
 
