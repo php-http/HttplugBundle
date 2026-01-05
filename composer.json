@@ -35,11 +35,11 @@
         "php-http/stopwatch-plugin": "^1.2",
         "psr/http-factory-implementation": "^1.0",
         "psr/http-message": "^1.0 || ^2.0",
-        "symfony/config": "^6.4 || ^7.1",
-        "symfony/dependency-injection": "^6.4 || ^7.1",
-        "symfony/event-dispatcher": "^6.4 || ^7.1",
-        "symfony/http-kernel": "^6.4 || ^7.1",
-        "symfony/options-resolver": "^6.4 || ^7.1"
+        "symfony/config": "^6.4 || ^7.1 || ^8.0",
+        "symfony/dependency-injection": "^6.4 || ^7.1 || ^8.0",
+        "symfony/event-dispatcher": "^6.4 || ^7.1 || ^8.0",
+        "symfony/http-kernel": "^6.4 || ^7.1 || ^8.0",
+        "symfony/options-resolver": "^6.4 || ^7.1 || ^8.0"
     },
     "conflict": {
         "kriswallsmith/buzz": "<0.17",
@@ -52,23 +52,23 @@
     },
     "require-dev": {
         "guzzlehttp/psr7": "^1.7 || ^2.0",
-        "matthiasnoback/symfony-config-test": "^5.2",
-        "matthiasnoback/symfony-dependency-injection-test": "^4.3.1 || ^5.0",
+        "matthiasnoback/symfony-config-test": "^5.2 || ^v6.1.0",
+        "matthiasnoback/symfony-dependency-injection-test": "^4.3.1 || ^5.0 || ^6.2.0",
         "nyholm/nsa": "^1.1",
         "nyholm/psr7": "^1.2.1",
-        "php-http/cache-plugin": "^1.7",
+        "php-http/cache-plugin": "^1.7 || ^2.0",
         "php-http/mock-client": "^1.2",
         "php-http/promise": "^1.0",
         "php-http/throttle-plugin": "^1.1",
-        "phpunit/phpunit": "^9",
-        "symfony/browser-kit": "^6.4 || ^7.1",
-        "symfony/cache": "^6.4 || ^7.1",
-        "symfony/dom-crawler": "^6.4 || ^7.1",
-        "symfony/framework-bundle": "^6.4 || ^7.1",
-        "symfony/http-foundation": "^6.4 || ^7.1",
-        "symfony/stopwatch": "^6.4 || ^7.1",
-        "symfony/twig-bundle": "^6.4 || ^7.1",
-        "symfony/web-profiler-bundle": "^6.4 || ^7.1",
+        "phpunit/phpunit": "^9 || ^10.0 || ^11.0 || ^12.0",
+        "symfony/browser-kit": "^6.4 || ^7.1 || ^8.0",
+        "symfony/cache": "^6.4 || ^7.1 || ^8.0",
+        "symfony/dom-crawler": "^6.4 || ^7.1 || ^8.0",
+        "symfony/framework-bundle": "^6.4 || ^7.1 || ^8.0",
+        "symfony/http-foundation": "^6.4 || ^7.1 || ^8.0",
+        "symfony/stopwatch": "^6.4 || ^7.1 || ^8.0",
+        "symfony/twig-bundle": "^6.4 || ^7.1 || ^8.0",
+        "symfony/web-profiler-bundle": "^6.4 || ^7.1 || ^8.0",
         "twig/twig": "^1.41 || ^2.10 || ^3.0"
     },
     "suggest": {
@@ -96,7 +96,6 @@
             "tests/Resources/app/AppKernel.php"
         ]
     },
-    "prefer-stable": false,
     "scripts": {
         "test": "vendor/bin/phpunit",
         "test-ci": "vendor/bin/phpunit --coverage-text --coverage-clover=build/coverage.xml"

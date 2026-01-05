@@ -7,8 +7,7 @@ namespace Http\HttplugBundle\Tests\Functional;
 use GuzzleHttp\Psr7\Request;
 use Http\Client\Common\Plugin;
 use Http\Client\Common\PluginClient;
-use Http\Discovery\StreamFactoryDiscovery;
-use Http\Discovery\UriFactoryDiscovery;
+use Http\Discovery\Psr17FactoryDiscovery;
 use Http\HttplugBundle\Collector\Collector;
 use Http\HttplugBundle\Collector\Formatter;
 use Http\HttplugBundle\Collector\ProfileClient;
@@ -40,7 +39,7 @@ final class ProfilingTest extends TestCase
     public function testProfilingWithCachePlugin(): void
     {
         $client = $this->createClient([
-            new Plugin\CachePlugin(new ArrayAdapter(), StreamFactoryDiscovery::find(), [
+            new Plugin\CachePlugin(new ArrayAdapter(), Psr17FactoryDiscovery::findStreamFactory(), [
                 'respect_response_cache_directives' => [],
                 'default_ttl' => 86400,
             ]),
@@ -79,7 +78,7 @@ final class ProfilingTest extends TestCase
     public function testProfiling(): void
     {
         $client = $this->createClient([
-            new Plugin\AddHostPlugin(UriFactoryDiscovery::find()->createUri('https://example.com')),
+            new Plugin\AddHostPlugin(Psr17FactoryDiscovery::findUriFactory()->createUri('https://example.com')),
             new Plugin\RedirectPlugin(),
             new Plugin\RetryPlugin(),
         ]);
@@ -95,7 +94,7 @@ final class ProfilingTest extends TestCase
         $this->assertEquals('example.com', $stack->getRequestHost());
     }
 
-    private function createClient(array $plugins, $clientName = 'Acme', array $clientOptions = [])
+    private function createClient(array $plugins, string $clientName = 'Acme', array $clientOptions = [])
     {
         $plugins = array_map(fn (Plugin $plugin) => new ProfilePlugin($plugin, $this->collector, $this->formatter, $plugin::class), $plugins);
 

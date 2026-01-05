@@ -12,6 +12,7 @@ use Http\HttplugBundle\Collector\Formatter;
 use Http\Message\Formatter as MessageFormatter;
 use Http\Message\Formatter\CurlCommandFormatter;
 use Http\Message\Formatter\SimpleFormatter;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -66,6 +67,7 @@ final class FormatterTest extends TestCase
     /**
      * @group legacy
      */
+    #[Group('legacy')]
     public function testFormatResponse(): void
     {
         $response = new Response();

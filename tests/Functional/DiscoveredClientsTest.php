@@ -15,6 +15,7 @@ use Http\HttplugBundle\Discovery\ConfiguredClientsStrategyListener;
 use Nyholm\NSA;
 use Psr\Http\Client\ClientInterface;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 final class DiscoveredClientsTest extends WebTestCase
 {
@@ -119,7 +120,7 @@ final class DiscoveredClientsTest extends WebTestCase
         $this->assertEquals($container->get('httplug.client.acme'), HttpAsyncClientDiscovery::find());
     }
 
-    private function getCustomContainer($debug, $environment = 'test')
+    private function getCustomContainer($debug, $environment = 'test'): ContainerInterface
     {
         static::bootKernel(['debug' => $debug, 'environment' => $environment]);
 
