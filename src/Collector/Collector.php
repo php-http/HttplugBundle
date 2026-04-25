@@ -7,6 +7,7 @@ namespace Http\HttplugBundle\Collector;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\DataCollector\DataCollector;
+use Symfony\Component\HttpKernel\Kernel;
 
 /**
  * The Collector holds profiled Stacks pushed by the StackPlugin. It also has a list of the configured clients.
@@ -19,7 +20,7 @@ use Symfony\Component\HttpKernel\DataCollector\DataCollector;
  *
  * @internal
  */
-final class Collector extends DataCollector
+class BaseCollector extends DataCollector
 {
     private ?Stack $activeStack = null;
     private ?int $capturedBodyLength = null;
@@ -28,13 +29,6 @@ final class Collector extends DataCollector
     {
         $this->capturedBodyLength = $capturedBodyLength;
         $this->reset();
-    }
-
-    public function __wakeup(): void
-    {
-        $this->capturedBodyLength = null;
-
-        parent::__wakeup();
     }
 
     public function reset(): void
@@ -157,5 +151,46 @@ final class Collector extends DataCollector
     public function collect(Request $request, Response $response, $exception = null): void
     {
         // We do not need to collect any data from the Symfony Request and Response
+    }
+
+    protected function resetBodyLength(): void
+    {
+        $this->capturedBodyLength = null;
+    }
+}
+
+if (version_compare('7.4.0', Kernel::VERSION, '>')) {
+    /**
+     * @legacy Support Symfony < 7.4
+     *
+     * When we drop Support for Symfony < 7.4, remove this hackery.
+     * - Rename BaseCollector back to Collector
+     * - Make it final again
+     * - move __unserialize into BaseCollector and inline resetBodyLength
+     * - remove the if statement completely
+     *
+     * @internal
+     */
+    final class Collector extends BaseCollector
+    {
+        public function __wakeup(): void
+        {
+            $this->resetBodyLength();
+
+            parent::__wakeup(); /* @phpstan-ignore staticMethod.notFound */
+        }
+    }
+} else {
+    /**
+     * @internal
+     */
+    final class Collector extends BaseCollector
+    {
+        public function __unserialize(array $data): void
+        {
+            $this->resetBodyLength();
+
+            parent::__unserialize($data);
+        }
     }
 }
