@@ -4,6 +4,10 @@ The change log describes what is "Added", "Removed", "Changed" or "Fixed" betwee
 
 # Version 2
 
+# 2.3.1 - 2026-04-25
+
+- Fix compatibility issue with Symfony 8.
+
 # 2.3.0 - 2025-01-05
 
 - Compatibility with Symfony 8.
